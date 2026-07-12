@@ -352,7 +352,7 @@ Expected:
 - ASGI/FastAPI research does not carry `blocked:upstream`;
 - all required labels have exact names and metadata.
 
-- [ ] **Step 4: Validate and commit the durable evidence**
+- [x] **Step 4: Validate and commit the durable evidence**
 
 Run:
 
@@ -373,13 +373,25 @@ push is made to protected integration branch `develop`.
 
 ### Task 7: Stop before example implementation
 
-- [ ] **Step 1: Render the phase DoD**
+- [x] **Step 1: Render the phase DoD**
 
 Report repository URL, commit, Epic and child URLs, milestone/label/assignee
 verification, unchecked items, and exact P0/P1 status. Recommend the bootstrap
 issue as the first implementation unit.
 
-- [ ] **Step 2: Hold the implementation boundary**
+- [x] **Step 2: Hold the implementation boundary**
 
 Do not create Python source, dependency metadata, workflows, PRs, releases, or
 example branches. Wait for the user's explicit selection of the first issue.
+
+## Execution evidence
+
+- Repository baseline: public, issues enabled, default branch `develop`, approved topics and description.
+- Upstream gates: bluetape-py #21, #22, #51, #54, #55, and #56 were open at registration time.
+- Milestones: `0.1.0` has seven open issues; `0.2.0` has two open issues.
+- Roadmap: Epic #1 links child issues #2 through #10 in dependency order.
+- Metadata: all ten open issues are assigned to `debop`; all bodies are non-empty.
+- Blocking: only Redis coordination #10 carries `blocked:upstream`; research #9 remains actionable.
+- Durable links: the design records ten unique workshop issue URLs.
+- Validation: `git diff --check` passed and `.omx/` remained ignored.
+- Branch boundary: durable evidence was pushed only to `docs/register-workshop-roadmap`; no direct `develop` push or PR creation occurred during execution.
