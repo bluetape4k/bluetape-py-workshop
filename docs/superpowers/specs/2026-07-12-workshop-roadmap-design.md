@@ -232,3 +232,16 @@ Every child issue must include:
 - Live GitHub metadata is re-read after creation.
 - Work stops before example implementation and reports the recommended first
   implementation issue.
+
+## Live GitHub artifacts
+
+- Epic: [#1 — Milestone-aligned bluetape-py backend workshop roadmap](https://github.com/bluetape4k/bluetape-py-workshop/issues/1)
+- [#2 — Bootstrap the workshop repository](https://github.com/bluetape4k/bluetape-py-workshop/issues/2)
+- [#3 — Validated order intake service](https://github.com/bluetape4k/bluetape-py-workshop/issues/3)
+- [#4 — Bounded catalog enrichment service](https://github.com/bluetape4k/bluetape-py-workshop/issues/4)
+- [#5 — Cached product catalog service](https://github.com/bluetape4k/bluetape-py-workshop/issues/5)
+- [#6 — Bounded payload processing service](https://github.com/bluetape4k/bluetape-py-workshop/issues/6)
+- [#7 — Redis-backed integration test workshop](https://github.com/bluetape4k/bluetape-py-workshop/issues/7)
+- [#8 — Integrated order backend](https://github.com/bluetape4k/bluetape-py-workshop/issues/8)
+- [#9 — ASGI and FastAPI workshop boundary research](https://github.com/bluetape4k/bluetape-py-workshop/issues/9)
+- [#10 — Redis cache coordination examples](https://github.com/bluetape4k/bluetape-py-workshop/issues/10)

@@ -23,7 +23,7 @@ No Python source, package metadata, CI workflow, or example implementation chang
 
 ### Task 1: Revalidate the approved baseline
 
-- [ ] **Step 1: Confirm repository and branch state**
+- [x] **Step 1: Confirm repository and branch state**
 
 Run:
 
@@ -38,7 +38,7 @@ gh repo view bluetape4k/bluetape-py-workshop \
 Expected: clean `develop`, `origin/develop` synchronized, public repository,
 issues enabled, and the approved description/topics.
 
-- [ ] **Step 2: Confirm the upstream feature gates are still current**
+- [x] **Step 2: Confirm the upstream feature gates are still current**
 
 Run:
 
@@ -56,7 +56,7 @@ unless the provider issues are all closed and a stable adoption ref exists.
 
 ### Task 2: Create milestones and labels
 
-- [ ] **Step 1: Create milestone `0.1.0`**
+- [x] **Step 1: Create milestone `0.1.0`**
 
 Run only when an exact-title lookup returns no milestone:
 
@@ -68,7 +68,7 @@ gh api --method POST repos/bluetape4k/bluetape-py-workshop/milestones \
 
 Expected: one open `0.1.0` milestone.
 
-- [ ] **Step 2: Create milestone `0.2.0`**
+- [x] **Step 2: Create milestone `0.2.0`**
 
 Run only when an exact-title lookup returns no milestone:
 
@@ -80,7 +80,7 @@ gh api --method POST repos/bluetape4k/bluetape-py-workshop/milestones \
 
 Expected: one open `0.2.0` milestone.
 
-- [ ] **Step 3: Create or reconcile structured labels**
+- [x] **Step 3: Create or reconcile structured labels**
 
 Use `gh label create --force` for this exact label set:
 
@@ -104,7 +104,7 @@ the default `documentation` and `enhancement` labels.
 
 ### Task 3: Register the roadmap Epic
 
-- [ ] **Step 1: Create the Epic body**
+- [x] **Step 1: Create the Epic body**
 
 Create `.omx/issues/epic.md` with these sections and facts:
 
@@ -152,7 +152,7 @@ Child links are added after creation in dependency order.
 - The integrated backend reuses focused examples without copying reusable library code.
 ```
 
-- [ ] **Step 2: Create and verify the Epic**
+- [x] **Step 2: Create and verify the Epic**
 
 Run:
 
@@ -173,7 +173,7 @@ For every issue below, create the exact body under `.omx/issues/`, call
 `gh issue create` with the listed metadata, then immediately verify title,
 body, labels, milestone, assignee, state, and URL using `gh issue view`.
 
-- [ ] **Step 1: Bootstrap issue**
+- [x] **Step 1: Bootstrap issue**
 
 Title: `chore: bootstrap the bluetape-py workshop repository`
 
@@ -188,7 +188,7 @@ Body requirements:
 - Acceptance: `uv sync --locked`, Ruff format/lint, pytest, `git diff --check`, bilingual root README, thin repo-local `AGENTS.md`.
 - Non-goal: no domain example implementation.
 
-- [ ] **Step 2: Validated order intake issue**
+- [x] **Step 2: Validated order intake issue**
 
 Title: `feat: add a validated order intake service`
 
@@ -204,7 +204,7 @@ Body requirements:
 - Add matching English/Korean example README files and root navigation.
 - Non-goal: ASGI/FastAPI adapters remain in the research issue.
 
-- [ ] **Step 3: Bounded catalog enrichment issue**
+- [x] **Step 3: Bounded catalog enrichment issue**
 
 Title: `feat: add a bounded catalog enrichment service`
 
@@ -219,7 +219,7 @@ Body requirements:
 - Depend on the bootstrap issue; reuse foundation validation/logging where useful.
 - Add matching README locales and run commands.
 
-- [ ] **Step 4: Cached product catalog issue**
+- [x] **Step 4: Cached product catalog issue**
 
 Title: `feat: add a cached product catalog service`
 
@@ -234,7 +234,7 @@ Body requirements:
 - Depend on the bootstrap issue; keep Redis behavior out of scope.
 - Add matching README locales and deterministic tests.
 
-- [ ] **Step 5: Bounded payload processing issue**
+- [x] **Step 5: Bounded payload processing issue**
 
 Title: `feat: add a bounded payload processing service`
 
@@ -249,7 +249,7 @@ Body requirements:
 - Keep Apache Fory in an explicit trusted-internal optional lane; do not load it in the default example.
 - Add matching README locales and deterministic tests.
 
-- [ ] **Step 6: Redis integration testing issue**
+- [x] **Step 6: Redis integration testing issue**
 
 Title: `feat: add a Redis-backed integration test workshop`
 
@@ -264,7 +264,7 @@ Body requirements:
 - Keep production Redis cache providers and distributed coordination out of scope.
 - Add deterministic non-Docker coverage where practical and matching README locales.
 
-- [ ] **Step 7: Integrated order backend issue**
+- [x] **Step 7: Integrated order backend issue**
 
 Title: `feat: compose the foundation examples into an order backend`
 
@@ -282,7 +282,7 @@ Body requirements:
 
 ### Task 5: Register the `0.2.0` upstream-aligned issues
 
-- [ ] **Step 1: ASGI/FastAPI research issue**
+- [x] **Step 1: ASGI/FastAPI research issue**
 
 Title: `research: define the ASGI and FastAPI workshop boundary`
 
@@ -298,7 +298,7 @@ Body requirements:
 - Produce an accepted decision before any framework-specific workshop issue starts.
 - Research may proceed while upstream #22 remains open.
 
-- [ ] **Step 2: Redis coordination issue**
+- [x] **Step 2: Redis coordination issue**
 
 Title: `feat: add Redis cache coordination examples`
 
@@ -315,7 +315,7 @@ Body requirements:
 
 ### Task 6: Link and verify the live roadmap
 
-- [ ] **Step 1: Replace the initial Epic child-link sentence with live links**
+- [x] **Step 1: Replace the initial Epic child-link sentence with live links**
 
 Query every issue by its exact title, sort the resulting URLs in approved
 dependency order, and edit the Epic body so `## Child Issues` contains a
@@ -323,7 +323,7 @@ Markdown task list. Preserve all other Epic sections byte-for-byte.
 
 Expected: nine unique child links and no stale initial child-link sentence.
 
-- [ ] **Step 2: Add live links to the committed design**
+- [x] **Step 2: Add live links to the committed design**
 
 Use `apply_patch` to add a `## Live GitHub artifacts` section to
 `docs/superpowers/specs/2026-07-12-workshop-roadmap-design.md`. Record the Epic
@@ -331,7 +331,7 @@ and all nine child issue URLs in the same dependency order.
 
 Expected: exactly ten unique GitHub issue URLs in the section.
 
-- [ ] **Step 3: Verify live metadata in one report**
+- [x] **Step 3: Verify live metadata in one report**
 
 Run:
 
@@ -364,11 +364,12 @@ git status --short
 git add docs/superpowers/specs/2026-07-12-workshop-roadmap-design.md \
   docs/superpowers/plans/2026-07-12-workshop-roadmap-registration-plan.md
 git commit -m 'docs: register workshop roadmap'
-git push origin develop
+git push -u origin docs/register-workshop-roadmap
 ```
 
 Expected: validation passes, `.omx/` is not tracked, the durable links and
-checked plan are committed, and local `develop` matches `origin/develop`.
+checked plan are committed on `docs/register-workshop-roadmap`, and no direct
+push is made to protected integration branch `develop`.
 
 ### Task 7: Stop before example implementation
 
