@@ -1,9 +1,9 @@
 # Issue #4 Implementation Review
 
-Date: 2026-07-15 KST  
-Base: `b40df76bce2c13825c8247a050cfefdcd1e988e8` (`origin/develop`)  
-Reviewed implementation head: `3056554e193a8dcea5da218c8ec7185d62f7706f` plus the documented pre-PR corrections below  
-Specification: `docs/superpowers/specs/2026-07-15-issue-4-bounded-catalog-enrichment-design.md`  
+Date: 2026-07-15 KST
+Base: `b40df76bce2c13825c8247a050cfefdcd1e988e8` (`origin/develop`)
+Reviewed implementation head: `3056554e193a8dcea5da218c8ec7185d62f7706f` plus the documented pre-PR corrections below
+Specification: `docs/superpowers/specs/2026-07-15-issue-4-bounded-catalog-enrichment-design.md`
 Plan: `docs/superpowers/plans/2026-07-15-issue-4-bounded-catalog-enrichment-plan.md`
 
 ## Scope and Method
