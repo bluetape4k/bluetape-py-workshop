@@ -8,33 +8,32 @@ workshop foundation and runnable examples.
 
 ## Current Target
 
-Issue [#2](https://github.com/bluetape4k/bluetape-py-workshop/issues/2):
-bootstrap the Python 3.13+ `uv` project, lockfile- and source-pinned validation, pinned
-`bluetape-py` source baseline, CI, and bilingual setup documentation.
+Issue [#3](https://github.com/bluetape4k/bluetape-py-workshop/issues/3):
+build the first runnable, framework-neutral order intake service using
+`bluetape-core`, `bluetape-logging`, and `bluetape-testing`.
 
-Active branch: `chore/issue-2-workshop-bootstrap`
+Active branch: `feat/issue-3-validated-order-intake`
 Base branch: `develop`
 Stop boundary: report the exact PR head as merge-ready; merging requires a fresh
 explicit approval and auto-merge is forbidden.
 
 ## Resume Checkpoint
 
-- Branch/last validated head: `chore/issue-2-workshop-bootstrap` /
-  `bf26334974efced57b55ff8ecff36bb60030b616`
-- Pull request: [#12](https://github.com/bluetape4k/bluetape-py-workshop/pull/12)
-- Last completed gate: fresh full validation and implemented-diff review;
-  24 tests, Ruff, actionlint, full-branch diff check, and P0=0/P1=0 passed on
-  2026-07-15 KST
-- Blocker: exact-head PR CI and live review are pending
-- Next command: validate and push this checkpoint commit, then verify PR #12 CI
-- Runnable now: the repository foundation is runnable; domain examples begin at #3
+- Branch/base head: `feat/issue-3-validated-order-intake` /
+  `a711f4747bc1abcf430d4c209b789a60aa0a7dce`
+- Pull request: not created; approved target is this branch into `develop`
+- Workflow run: `20260715T114045Z-5a50ae94`
+- Last completed gate: clean worktree, locked sync, and baseline `24 passed`
+- Last completed gate: converged Type A design review at P0=0/P1=0
+- Current gate: explicit written-spec approval
+- Next action: after approval, produce and review the implementation plan
+- Runnable now: repository foundation only; issue #3 runtime is not implemented yet
 
-Current artifacts: [issue #2](https://github.com/bluetape4k/bluetape-py-workshop/issues/2),
-[written design](docs/superpowers/specs/2026-07-15-issue-2-workshop-bootstrap-design.md),
-[design review](docs/superpowers/reviews/2026-07-15-issue-2-design-review.md),
-[implementation plan](docs/superpowers/plans/2026-07-15-issue-2-workshop-bootstrap-plan.md),
-[plan review](docs/superpowers/reviews/2026-07-15-issue-2-plan-review.md),
-[pull request #12](https://github.com/bluetape4k/bluetape-py-workshop/pull/12).
+Current artifacts: [issue #3](https://github.com/bluetape4k/bluetape-py-workshop/issues/3),
+[written design](docs/superpowers/specs/2026-07-15-issue-3-validated-order-intake-design.md),
+[design review](docs/superpowers/reviews/2026-07-15-issue-3-design-review.md),
+and the milestone dependency map below. Issue #2 closed through
+[PR #12](https://github.com/bluetape4k/bluetape-py-workshop/pull/12).
 
 ## Dependency Baseline
 
@@ -68,8 +67,8 @@ Current artifacts: [issue #2](https://github.com/bluetape4k/bluetape-py-workshop
 
 | Order | Issue | Outcome | Dependencies | State |
 |---:|---|---|---|---|
-| 1 | [#2](https://github.com/bluetape4k/bluetape-py-workshop/issues/2) | Reproducible `uv` foundation and CI | None | In progress |
-| 2 | [#3](https://github.com/bluetape4k/bluetape-py-workshop/issues/3) | Validated order intake service | #2 | Pending |
+| 1 | [#2](https://github.com/bluetape4k/bluetape-py-workshop/issues/2) | Reproducible `uv` foundation and CI | None | Completed |
+| 2 | [#3](https://github.com/bluetape4k/bluetape-py-workshop/issues/3) | Validated order intake service | #2 | Awaiting spec approval |
 | 3 | [#4](https://github.com/bluetape4k/bluetape-py-workshop/issues/4) | Bounded catalog enrichment service | #2 | Pending |
 | 4 | [#5](https://github.com/bluetape4k/bluetape-py-workshop/issues/5) | Cached product catalog service | #2 | Pending |
 | 5 | [#6](https://github.com/bluetape4k/bluetape-py-workshop/issues/6) | Bounded payload processing service | #2 | Pending |
@@ -112,7 +111,7 @@ not allowed.
 - After an approved merge, sync local `develop`, remove the merged worktree and
   local feature branch, and then start the next dependency-ready issue.
 
-## Issue #2 Validation Contract
+## Repository Validation Contract
 
 ```bash
 uv --version  # must report 0.11.28
@@ -130,6 +129,15 @@ CI must use `uv 0.11.28`, `uv-build 0.11.28`, the committed lockfile, and the
 same Python line. The default lane installs the approved Testcontainers wrapper
 baseline but must not contact Docker or start containers; Apache Fory and native
 compression providers must remain absent.
+
+Issue #3 adds these focused commands after implementation:
+
+```bash
+uv run --locked python -m examples.order_intake
+uv run --locked pytest examples/order_intake/tests -q
+```
+
+The example must also pass the full repository validation contract above.
 
 ## Holds and Exclusions
 
@@ -153,3 +161,6 @@ compression providers must remain absent.
   has no Docker runtime side effect.
 - 2026-07-15: verify action pins against their canonical repositories; use the
   `setup-uv` v8.3.2 commit instead of the stale SHA found in an upstream workflow.
+- 2026-07-15: implement issue #3 as a small importable application package with
+  immutable contracts and an injected application-owned logger; reject both a
+  single-file script and premature adapter layering.
