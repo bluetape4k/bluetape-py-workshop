@@ -286,7 +286,8 @@ select = ["A", "B", "C4", "E", "F", "I", "N", "RUF", "UP", "W"]
 Run:
 
 ```bash
-test "$(uv --version)" = "uv 0.11.28"
+uv --version
+uv --version | grep -Eq '^uv 0\.11\.28([[:space:]]|$)'
 uv lock --python 3.13.14
 rm -rf .venv
 uv sync --locked --python 3.13.14
@@ -443,7 +444,8 @@ jobs:
       - name: Report exact toolchain and head
         run: |
           git rev-parse HEAD
-          test "$(uv --version)" = "uv 0.11.28"
+          uv --version
+          uv --version | grep -Eq '^uv 0\.11\.28([[:space:]]|$)'
           test "$(python --version)" = "Python 3.13.14"
 
       - name: Synchronize locked environment
@@ -657,7 +659,8 @@ Run sequentially:
 
 ```bash
 rm -rf .venv
-test "$(uv --version)" = "uv 0.11.28"
+uv --version
+uv --version | grep -Eq '^uv 0\.11\.28([[:space:]]|$)'
 uv sync --locked --python 3.13.14
 uv run --locked pytest tests/test_dependency_baseline.py -q
 uv run --locked pytest tests/test_ci_contract.py -q
