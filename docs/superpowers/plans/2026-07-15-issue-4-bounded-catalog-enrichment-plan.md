@@ -95,9 +95,9 @@ provider trust, eager collection bounds, and generated visuals.
 
 ### Task 1: Add immutable public values, errors, and provider protocols with TDD
 
-**Complexity:** Medium  
-**Dependencies:** Approved spec and approved implementation plan  
-**Required skills:** `test-driven-development`, `bluetape-py-patterns`  
+**Complexity:** Medium
+**Dependencies:** Approved spec and approved implementation plan
+**Required skills:** `test-driven-development`, `bluetape-py-patterns`
 **Files:**
 - Create: `examples/catalog_enrichment/__init__.py`
 - Create: `examples/catalog_enrichment/models.py`
@@ -300,9 +300,9 @@ behavior as the next task.
 
 ### Task 2: Implement deterministic normalization, batching, provider policy, and aggregation with TDD
 
-**Complexity:** High  
-**Dependencies:** Task 1 GREEN  
-**Required skills:** `test-driven-development`, `bluetape-py-patterns`  
+**Complexity:** High
+**Dependencies:** Task 1 GREEN
+**Required skills:** `test-driven-development`, `bluetape-py-patterns`
 **Files:**
 - Modify: `examples/catalog_enrichment/tests/test_service.py`
 - Create: `examples/catalog_enrichment/service.py`
@@ -652,9 +652,9 @@ that duplicate provider work must remain deduplicated.
 
 ### Task 3: Prove concurrency, timeout, cancellation, cleanup, and runnable output
 
-**Complexity:** High  
-**Dependencies:** Task 2 GREEN  
-**Required skills:** `test-driven-development`, `bluetape-py-patterns`  
+**Complexity:** High
+**Dependencies:** Task 2 GREEN
+**Required skills:** `test-driven-development`, `bluetape-py-patterns`
 **Files:**
 - Modify: `examples/catalog_enrichment/tests/test_service.py`
 - Create: `examples/catalog_enrichment/__main__.py`
@@ -866,9 +866,9 @@ Commit Task 3 files with Lore intent
 
 ### Task 4: Add aligned bilingual guidance and source-backed diagrams
 
-**Complexity:** High  
-**Dependencies:** Task 3 implementation and CLI GREEN  
-**Required skills:** `bluetape-writer`, `bluetape-diagram`  
+**Complexity:** High
+**Dependencies:** Task 3 implementation and CLI GREEN
+**Required skills:** `bluetape-writer`, `bluetape-diagram`
 **Files:**
 - Create: `examples/catalog_enrichment/README.md`
 - Create: `examples/catalog_enrichment/README.ko.md`
@@ -987,9 +987,9 @@ and diff check.
 
 ### Task 5: Converge validation, review, lesson, and exact-head PR delivery
 
-**Complexity:** High  
-**Dependencies:** Tasks 1–4 GREEN  
-**Required skills:** `verification-before-completion`, `requesting-code-review`, `bluetape-py-patterns`, `bluetape-writer`, `bluetape-diagram`  
+**Complexity:** High
+**Dependencies:** Tasks 1–4 GREEN
+**Required skills:** `verification-before-completion`, `requesting-code-review`, `bluetape-py-patterns`, `bluetape-writer`, `bluetape-diagram`
 **Files:**
 - Modify: `WIP.md`
 - Create: `docs/superpowers/reviews/2026-07-15-issue-4-implementation-review.md`
