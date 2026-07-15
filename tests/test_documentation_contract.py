@@ -37,8 +37,8 @@ def test_wip_keeps_the_dependency_order_and_current_issue() -> None:
         WIP.index(f"| {order} | [#{issue}]") for order, issue in enumerate(range(2, 9), start=1)
     ]
     assert positions == sorted(positions)
-    assert "Issue [#3]" in WIP
-    assert "Validated order intake service" in WIP
+    assert "Issue [#4]" in WIP
+    assert "Bounded catalog enrichment service" in WIP
 
 
 def test_readme_pair_links_the_first_runnable_example() -> None:
