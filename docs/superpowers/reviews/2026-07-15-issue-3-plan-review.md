@@ -60,6 +60,13 @@ assertion used the first issue occurrence and failed after #3 became the current
 target. The assertion now checks the ordered dependency-table rows directly;
 this repair is verified before example source is created.
 
+During Task 1 GREEN, `uv run pytest` also proved that its console-script
+entrypoint omitted the repository root from `sys.path`, although
+`uv run python -m pytest` passed the same two tests. The plan and
+`pyproject.toml` now declare `pythonpath = ["."]`, keeping the authoritative CI
+command and non-package examples layout compatible without changing the
+lockfile or adding a package.
+
 ## Non-blocking Improvements Applied
 
 - Frozen models and problem values are keyword-only to prevent positional
