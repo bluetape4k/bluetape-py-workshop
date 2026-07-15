@@ -20,13 +20,14 @@ explicit approval and auto-merge is forbidden.
 ## Resume Checkpoint
 
 - Branch/last validated head: `chore/issue-2-workshop-bootstrap` /
-  `dd449526ab207928d0ecf67e1b7a69d205f2b51d`
+  `8697beca9c6b351ec01064e49fd3d45d96c50646`
 - Pull request: pending
-- Last completed gate: six-perspective written-design review; `git diff --check`
-  passed and the review converged at P0=0, P1=0 on 2026-07-15 KST
-- Blocker: implementation-plan approval pending
-- Next command: after approval, execute Task 1 with failing dependency tests
-- Runnable now: none; the bootstrap commands below are planned until #2 lands
+- Last completed gate: locked dependency foundation and local CI contract;
+  18 dependency tests, 2 CI tests, targeted Ruff, and actionlint passed on
+  2026-07-15 KST
+- Blocker: none
+- Next command: finish bilingual documentation validation, then review the integrated diff
+- Runnable now: the repository foundation is runnable; domain examples begin at #3
 
 Current artifacts: [issue #2](https://github.com/bluetape4k/bluetape-py-workshop/issues/2),
 [written design](docs/superpowers/specs/2026-07-15-issue-2-workshop-bootstrap-design.md),
@@ -111,7 +112,7 @@ not allowed.
 - After an approved merge, sync local `develop`, remove the merged worktree and
   local feature branch, and then start the next dependency-ready issue.
 
-## Issue #2 Planned Validation Contract
+## Issue #2 Validation Contract
 
 ```bash
 uv --version  # must report 0.11.28
@@ -150,3 +151,5 @@ compression providers must remain absent.
 - 2026-07-15: accept the root install cost of all ten milestone distributions
   so every issue detects source drift early; prove that Testcontainers import
   has no Docker runtime side effect.
+- 2026-07-15: verify action pins against their canonical repositories; use the
+  `setup-uv` v8.3.2 commit instead of the stale SHA found in an upstream workflow.
