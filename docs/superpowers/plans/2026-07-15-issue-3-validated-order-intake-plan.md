@@ -397,7 +397,7 @@ def test_invalid_quantity_is_rejected(quantity: object, log_capture) -> None:
     with pytest.raises(InvalidOrderCommand) as raised:
         make_service(logger).accept(replace(valid_command(), quantity=quantity))
     assert raised.value.field == "quantity"
-    assert isinstance(raised.value.__cause__, (TypeError, ValueError))
+    assert isinstance(raised.value.__cause__, TypeError | ValueError)
     assert get_log_context() == {}
 
 
