@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Validated order intake architecture</title>
+  <desc id="desc">Static ownership and responsibility boundaries for the validated order intake example.</desc>
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&amp;family=Comic+Mono&amp;display=swap');
+      .title { font: 42px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #263238; }
+      .subtitle { font: 22px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #546e7a; }
+      .lane-title { font: 26px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #37474f; }
+      .card-title { font: 24px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #263238; }
+      .body { font: 18px 'Comic Mono', 'SFMono-Regular', monospace; fill: #455a64; }
+      .small { font: 16px 'Comic Mono', 'SFMono-Regular', monospace; fill: #546e7a; }
+      .lane { stroke: #cfd8dc; stroke-width: 2.5; stroke-dasharray: 10 8; }
+      .card { stroke-width: 3; }
+      .flow { fill: none; stroke: #546e7a; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow); }
+      .error-flow { fill: none; stroke: #c56b5d; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow-error); }
+      .label-box { fill: #fffdf8; stroke: #cfd8dc; stroke-width: 1.5; }
+    </style>
+    <marker id="arrow" viewBox="0 0 16 16" refX="13" refY="8" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L14 8 L2 14 Z" fill="#546e7a"/>
+    </marker>
+    <marker id="arrow-error" viewBox="0 0 16 16" refX="13" refY="8" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M2 2 L14 8 L2 14 Z" fill="#c56b5d"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#455a64" flood-opacity="0.13"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="#fbf8f1"/>
+  <path d="M70 115 H1530" stroke="#d7ccc8" stroke-width="3" stroke-linecap="round"/>
+  <text x="70" y="68" class="title">Validated Order Intake</text>
+  <text x="70" y="101" class="subtitle">Application-owned policy composes small bluetape-py primitives</text>
+
+  <rect x="70" y="150" width="300" height="610" rx="26" fill="#f7eee7" class="lane"/>
+  <rect x="405" y="150" width="720" height="610" rx="26" fill="#eef3f6" class="lane"/>
+  <rect x="1160" y="150" width="370" height="610" rx="26" fill="#edf5ed" class="lane"/>
+  <text x="95" y="190" class="lane-title">Caller boundary</text>
+  <text x="430" y="190" class="lane-title">Example application</text>
+  <text x="1185" y="190" class="lane-title">bluetape-py primitives</text>
+
+  <g filter="url(#shadow)">
+    <rect x="105" y="245" width="230" height="135" rx="20" fill="#ffe7c7" stroke="#d69b55" class="card"/>
+    <text x="130" y="286" class="card-title">Partner Caller</text>
+    <text x="130" y="322" class="body">owns request input</text>
+    <text x="130" y="350" class="small">and correlation IDs</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="105" y="500" width="230" height="135" rx="20" fill="#f6ddd7" stroke="#c56b5d" class="card"/>
+    <text x="130" y="541" class="card-title">Problem Result</text>
+    <text x="130" y="577" class="body">stable public error</text>
+    <text x="130" y="605" class="small">field + message</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="445" y="230" width="280" height="125" rx="20" fill="#e8def5" stroke="#8e72b5" class="card"/>
+    <text x="470" y="271" class="card-title">PartnerOrderCommand</text>
+    <text x="470" y="307" class="body">immutable input model</text>
+    <text x="470" y="335" class="small">preserves caller values</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="790" y="230" width="290" height="210" rx="20" fill="#dcebf4" stroke="#5f8da8" class="card"/>
+    <text x="815" y="271" class="card-title">OrderIntakeService</text>
+    <text x="815" y="307" class="body">owns validation order</text>
+    <text x="815" y="337" class="body">maps public failures</text>
+    <text x="815" y="367" class="body">scopes log context</text>
+    <text x="815" y="397" class="body">emits outcome events</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="445" y="515" width="280" height="125" rx="20" fill="#e3f0df" stroke="#6f9a65" class="card"/>
+    <text x="470" y="556" class="card-title">AcceptedOrder</text>
+    <text x="470" y="592" class="body">immutable success</text>
+    <text x="470" y="620" class="small">status = accepted</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="790" y="515" width="290" height="125" rx="20" fill="#f6ddd7" stroke="#c56b5d" class="card"/>
+    <text x="815" y="556" class="card-title">OrderIntakeProblem</text>
+    <text x="815" y="592" class="body">safe error projection</text>
+    <text x="815" y="620" class="small">no hostile repr/str</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="1200" y="225" width="290" height="125" rx="20" fill="#e8def5" stroke="#8e72b5" class="card"/>
+    <text x="1225" y="266" class="card-title">bluetape-core</text>
+    <text x="1225" y="302" class="body">require_instance</text>
+    <text x="1225" y="330" class="small">require_not_blank</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="1200" y="400" width="290" height="125" rx="20" fill="#dcebf4" stroke="#5f8da8" class="card"/>
+    <text x="1225" y="441" class="card-title">bluetape-logging</text>
+    <text x="1225" y="477" class="body">log_context</text>
+    <text x="1225" y="505" class="small">context isolation</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="1200" y="575" width="290" height="125" rx="20" fill="#ffe7c7" stroke="#d69b55" class="card"/>
+    <text x="1225" y="616" class="card-title">App-owned Handler</text>
+    <text x="1225" y="652" class="body">ContextLogFilter</text>
+    <text x="1225" y="680" class="small">format + destination</text>
+  </g>
+
+  <path d="M335 312 H445" class="flow"/>
+  <path d="M725 292 H790" class="flow"/>
+  <path d="M935 440 V465 Q935 475 925 475 H595 Q585 475 585 485 V515" class="flow"/>
+  <path d="M1030 440 V515" class="error-flow"/>
+  <path d="M790 600 H770 Q760 600 760 610 V670 Q760 680 750 680 H380 Q370 680 370 670 V587 Q370 577 360 577 H335" class="error-flow"/>
+  <path d="M1080 285 H1200" class="flow"/>
+  <path d="M1080 345 H1130 Q1140 345 1140 355 V452 Q1140 462 1150 462 H1200" class="flow"/>
+  <path d="M1080 405 H1100 Q1110 405 1110 415 V627 Q1110 637 1120 637 H1200" class="flow"/>
+
+  <g>
+    <rect x="349" y="276" width="90" height="29" rx="14" class="label-box"/>
+    <text x="364" y="297" class="small">command</text>
+    <rect x="1118" y="247" width="76" height="29" rx="14" class="label-box"/>
+    <text x="1133" y="268" class="small">uses</text>
+    <rect x="346" y="607" width="88" height="29" rx="14" class="label-box"/>
+    <text x="361" y="628" class="small">failure</text>
+  </g>
+
+  <rect x="70" y="800" width="1460" height="58" rx="18" fill="#f0ebe2" stroke="#d7ccc8" stroke-width="2"/>
+  <circle cx="105" cy="829" r="9" fill="#5f8da8"/>
+  <text x="125" y="836" class="small">Application owns policy and logger configuration</text>
+  <circle cx="610" cy="829" r="9" fill="#8e72b5"/>
+  <text x="630" y="836" class="small">Libraries provide focused primitives</text>
+  <circle cx="1030" cy="829" r="9" fill="#c56b5d"/>
+  <text x="1050" y="836" class="small">Public failures stay data-safe</text>
+</svg>

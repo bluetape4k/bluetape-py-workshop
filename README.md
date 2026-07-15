@@ -8,9 +8,9 @@ Runnable, application-shaped Python backend examples using
 ## Current Status
 
 The repository foundation is runnable: dependency resolution, source provenance,
-provider isolation, lint, and tests are locked and automated. Domain examples
-begin with issue #3, so issue #2 intentionally has no runtime Architecture or
-Sequence Diagram to illustrate.
+provider isolation, lint, and tests are locked and automated. The first runnable
+domain scenario is the [validated order intake example](examples/order_intake/README.md),
+with aligned bilingual guidance, Architecture, and Sequence Diagram assets.
 
 Follow [WIP.md](WIP.md) for the current issue, dependency order, validation
 evidence, and next action.
@@ -32,7 +32,7 @@ evidence, and next action.
 - Python 3.13 or newer; the reference interpreter is Python 3.13.14.
 - uv 0.11.28. The project configuration rejects a different uv version.
 - Git access to the public `bluetape-py` repository.
-- Docker is not required for the deterministic issue #2 validation lane.
+- Docker is not required for the deterministic foundation or order-intake lanes.
 
 ## Setup
 

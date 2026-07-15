@@ -8,8 +8,9 @@
 ## 현재 상태
 
 의존성 해석, source provenance, provider 격리, lint, 테스트를 lockfile과 자동화된
-계약으로 검증하는 저장소 기반은 실행할 수 있습니다. 도메인 예제는 이슈 #3부터
-시작하므로 이슈 #2에는 설명할 런타임 Architecture 또는 Sequence Diagram이 없습니다.
+계약으로 검증하는 저장소 기반은 실행할 수 있습니다. 첫 번째 실행 가능한 domain
+scenario는 다국어 안내, Architecture, Sequence Diagram을 갖춘
+[검증된 주문 접수 예제](examples/order_intake/README.ko.md)입니다.
 
 현재 이슈, 의존 순서, 검증 근거와 다음 작업은 [WIP.md](WIP.md)에서 확인하세요.
 
@@ -30,7 +31,7 @@
 - Python 3.13 이상. 기준 interpreter는 Python 3.13.14입니다.
 - uv 0.11.28. 프로젝트 설정이 다른 uv 버전을 거부합니다.
 - 공개 `bluetape-py` 저장소에 접근할 수 있는 Git 환경.
-- 결정적인 이슈 #2 검증 경로에는 Docker가 필요하지 않습니다.
+- 결정적인 foundation 및 주문 접수 경로에는 Docker가 필요하지 않습니다.
 
 ## 설치
 

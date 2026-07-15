@@ -23,13 +23,16 @@ explicit approval and auto-merge is forbidden.
   `a711f4747bc1abcf430d4c209b789a60aa0a7dce`
 - Pull request: not created; approved target is this branch into `develop`
 - Workflow run: `20260715T114045Z-5a50ae94`
-- Last completed gate: clean worktree, locked sync, and baseline `24 passed`
-- Last completed gate: converged Type A design review at P0=0/P1=0
-- Last completed gate: explicit written-spec approval
-- Last completed gate: Type A implementation-plan review at P0=0/P1=0
-- Current gate: explicit implementation-plan approval
-- Next action: after approval, commit the plan checkpoint and begin Task 1 with TDD
-- Runnable now: repository foundation only; issue #3 runtime is not implemented yet
+- Last completed gate: converged design and implementation-plan reviews at
+  P0=0/P1=0 with explicit user approval
+- Last completed gate: immutable contracts, deterministic service policy, and
+  runnable module implemented through TDD
+- Last completed gate: bilingual example documentation and source-backed
+  Architecture and Sequence Diagram assets implemented
+- Current gate: documentation contract and repository-wide validation
+- Next action: run the full validation contract, complete implementation review
+  and lesson evidence, then create the approved pull request
+- Runnable now: `uv run --locked python -m examples.order_intake`
 
 Current artifacts: [issue #3](https://github.com/bluetape4k/bluetape-py-workshop/issues/3),
 [written design](docs/superpowers/specs/2026-07-15-issue-3-validated-order-intake-design.md),
@@ -72,7 +75,7 @@ and the milestone dependency map below. Issue #2 closed through
 | Order | Issue | Outcome | Dependencies | State |
 |---:|---|---|---|---|
 | 1 | [#2](https://github.com/bluetape4k/bluetape-py-workshop/issues/2) | Reproducible `uv` foundation and CI | None | Completed |
-| 2 | [#3](https://github.com/bluetape4k/bluetape-py-workshop/issues/3) | Validated order intake service | #2 | Awaiting spec approval |
+| 2 | [#3](https://github.com/bluetape4k/bluetape-py-workshop/issues/3) | Validated order intake service | #2 | Implementation validation |
 | 3 | [#4](https://github.com/bluetape4k/bluetape-py-workshop/issues/4) | Bounded catalog enrichment service | #2 | Pending |
 | 4 | [#5](https://github.com/bluetape4k/bluetape-py-workshop/issues/5) | Cached product catalog service | #2 | Pending |
 | 5 | [#6](https://github.com/bluetape4k/bluetape-py-workshop/issues/6) | Bounded payload processing service | #2 | Pending |
