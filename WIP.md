@@ -29,16 +29,20 @@ explicit approval and auto-merge is forbidden.
   approved in the active thread
 - Last completed gate: isolated worktree created from current `origin/develop`;
   locked baseline passed with `57 passed`
-- Last completed gate: written design review converged at P0=0/P1=0 with
-  bounded native-review fallback to the main session
-- Current gate: explicit approval of the converged written spec
-- Next action: after written-spec approval, create and review the executable
-  implementation plan before code changes
+- Last completed gate: written design review converged at P0=0/P1=0 and the
+  converged written spec received explicit user approval
+- Last completed gate: executable implementation plan review converged at
+  P0=0/P1=0 through six separated main-session perspectives
+- Current gate: explicit approval of the converged implementation plan
+- Next action: after plan approval, commit the plan checkpoint, record workflow
+  review evidence, load TDD/execution skills, and start Task 1 RED
 - Runnable now: `uv run --locked python -m examples.order_intake`
 
 Current artifacts: [issue #4](https://github.com/bluetape4k/bluetape-py-workshop/issues/4),
 [written design](docs/superpowers/specs/2026-07-15-issue-4-bounded-catalog-enrichment-design.md),
 [design review](docs/superpowers/reviews/2026-07-15-issue-4-design-review.md),
+[implementation plan](docs/superpowers/plans/2026-07-15-issue-4-bounded-catalog-enrichment-plan.md),
+[plan review](docs/superpowers/reviews/2026-07-15-issue-4-plan-review.md),
 and the milestone dependency map below. Issue #2 closed through
 [PR #12](https://github.com/bluetape4k/bluetape-py-workshop/pull/12), and issue
 #3 closed through [PR #13](https://github.com/bluetape4k/bluetape-py-workshop/pull/13).
