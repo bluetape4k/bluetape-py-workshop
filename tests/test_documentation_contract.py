@@ -53,4 +53,21 @@ def test_agents_keeps_authoritative_commands_and_rules() -> None:
         assert command in AGENTS
     assert "Keep each example independently runnable and testable." in AGENTS
     assert "Keep `README.md` and `README.ko.md` aligned" in AGENTS
+    assert "Every example README pair must embed" in AGENTS
     assert "Docker-backed examples sequentially" in AGENTS
+
+
+def test_every_runnable_example_embeds_required_diagrams_in_both_locales() -> None:
+    examples = sorted(path.parent for path in Path("examples").glob("*/__main__.py"))
+    assert examples
+
+    for example in examples:
+        english = (example / "README.md").read_text(encoding="utf-8")
+        korean = (example / "README.ko.md").read_text(encoding="utf-8")
+
+        for name in ("architecture.png", "architecture.svg", "sequence.png", "sequence.svg"):
+            asset = example / "docs" / "images" / name
+            assert asset.is_file(), f"missing required diagram asset: {asset}"
+            link = f"docs/images/{name}"
+            assert link in english, f"{example}/README.md must link {link}"
+            assert link in korean, f"{example}/README.ko.md must link {link}"

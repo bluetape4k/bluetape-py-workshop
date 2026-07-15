@@ -30,6 +30,8 @@ GOTOOLCHAIN=go1.26.1 go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.12 \
 - Keep examples application-shaped; reusable helpers belong in `bluetape-py`.
 - Keep each example independently runnable and testable.
 - Keep `README.md` and `README.ko.md` aligned for every user-facing change.
+- Every example README pair must embed source-backed Architecture and Sequence
+  Diagram PNGs and link their SVG sources; a diagramless example is incomplete.
 - Run Docker-backed examples sequentially and use ecosystem Testcontainers
   wrappers when available.
 - Link examples to the exact `bluetape-py` package status and upstream issue
