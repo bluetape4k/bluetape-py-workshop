@@ -5,7 +5,7 @@
 - Workflow: Type A - Full Feature
 - Issue: <https://github.com/bluetape4k/bluetape-py-workshop/issues/2>
 - High-level design approved in conversation: 2026-07-15
-- Written spec approval: pending
+- Written spec approved in conversation: 2026-07-15
 - Independent review: P0=0, P1=0
 - Review record: `../reviews/2026-07-15-issue-2-design-review.md`
 - Target branch: `chore/issue-2-workshop-bootstrap`

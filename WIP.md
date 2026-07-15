@@ -24,14 +24,16 @@ explicit approval and auto-merge is forbidden.
 - Pull request: pending
 - Last completed gate: six-perspective written-design review; `git diff --check`
   passed and the review converged at P0=0, P1=0 on 2026-07-15 KST
-- Blocker: written-spec approval pending
-- Next command: after approval, create the implementation/test plan
+- Blocker: implementation-plan approval pending
+- Next command: after approval, execute Task 1 with failing dependency tests
 - Runnable now: none; the bootstrap commands below are planned until #2 lands
 
 Current artifacts: [issue #2](https://github.com/bluetape4k/bluetape-py-workshop/issues/2),
 [written design](docs/superpowers/specs/2026-07-15-issue-2-workshop-bootstrap-design.md),
 [design review](docs/superpowers/reviews/2026-07-15-issue-2-design-review.md),
-implementation plan pending, pull request pending.
+[implementation plan](docs/superpowers/plans/2026-07-15-issue-2-workshop-bootstrap-plan.md),
+[plan review](docs/superpowers/reviews/2026-07-15-issue-2-plan-review.md),
+pull request pending.
 
 ## Dependency Baseline
 
