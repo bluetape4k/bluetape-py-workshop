@@ -24,6 +24,11 @@ class CaptureHandler(logging.Handler):
         self.records.append(record)
 
 
+class FailingHandler(logging.Handler):
+    def emit(self, record: logging.LogRecord) -> None:
+        raise RuntimeError("logging unavailable")
+
+
 @pytest.fixture
 def log_capture():
     root = logging.getLogger()
@@ -39,6 +44,19 @@ def log_capture():
         logger.removeHandler(handler)
         handler.close()
         assert (root.level, tuple(root.handlers), tuple(root.filters)) == root_before
+
+
+@pytest.fixture
+def failing_logger():
+    logger = logging.Logger("order-intake-failure", level=logging.INFO)
+    logger.propagate = False
+    handler = FailingHandler()
+    logger.addHandler(handler)
+    try:
+        yield logger
+    finally:
+        logger.removeHandler(handler)
+        handler.close()
 
 
 def valid_command():
@@ -128,8 +146,13 @@ def test_blank_text_is_rejected(field: str, value: str, log_capture) -> None:
         make_service(logger).accept(replace(valid_command(), **{field: value}))
     assert raised.value.field == field
     assert isinstance(raised.value.__cause__, ValueError)
-    assert handler.records[-1].getMessage() == "order_intake.rejected"
-    assert handler.records[-1].error_field == field
+    record = handler.records[-1]
+    assert record.getMessage() == "order_intake.rejected"
+    assert record.error_field == field
+    assert record.request_id == (value if field == "request_id" else " req-1 ")
+    assert record.partner_id == (value if field == "partner_id" else "partner-1")
+    assert record.order_id == (value if field == "order_id" else "order-1")
+    assert "sku-1" not in record.getMessage()
     assert get_log_context() == {}
 
 
@@ -203,19 +226,13 @@ def test_eventually_api_demo_observes_an_existing_record(log_capture) -> None:
     assert record is handler.records[-1]
 
 
-def test_logger_failure_propagates_and_context_resets() -> None:
-    class FailingHandler(logging.Handler):
-        def emit(self, record: logging.LogRecord) -> None:
-            raise RuntimeError("logging unavailable")
+def test_logger_failure_propagates_and_context_resets(failing_logger) -> None:
+    with pytest.raises(RuntimeError, match="logging unavailable"):
+        make_service(failing_logger).accept(valid_command())
+    assert get_log_context() == {}
 
-    logger = logging.Logger("order-intake-failure", level=logging.INFO)
-    logger.propagate = False
-    handler = FailingHandler()
-    logger.addHandler(handler)
-    try:
-        with pytest.raises(RuntimeError, match="logging unavailable"):
-            make_service(logger).accept(valid_command())
-    finally:
-        logger.removeHandler(handler)
-        handler.close()
+
+def test_rejection_logger_failure_is_not_mapped_and_context_resets(failing_logger) -> None:
+    with pytest.raises(RuntimeError, match="logging unavailable"):
+        make_service(failing_logger).accept(replace(valid_command(), sku=""))
     assert get_log_context() == {}

@@ -114,7 +114,7 @@
   <path d="M559 720 H640 Q650 720 650 730 V755 Q650 765 640 765 H559" class="callRed"/>
   <rect x="585" y="691" width="34" height="28" rx="14" fill="#f6ddd7" stroke="#c56b5d" class="label"/>
   <text x="602" y="705" fill="#a84f42" class="num">7</text>
-  <text x="675" y="747" class="detail">map to safe public problem</text>
+  <text x="675" y="747" class="detail">map to InvalidOrderCommand</text>
 
   <path d="M559 805 H1591" class="callRed"/>
   <rect x="585" y="776" width="34" height="28" rx="14" fill="#f6ddd7" stroke="#c56b5d" class="label"/>
