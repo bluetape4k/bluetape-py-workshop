@@ -23,6 +23,8 @@ explicit approval and auto-merge is forbidden.
 
 - Branch/base head: `feat/issue-4-bounded-catalog-enrichment` /
   `b40df76bce2c13825c8247a050cfefdcd1e988e8`
+- Last validated content head: `d61ab48`; the pre-PR checkpoint commit that
+  records this evidence must be verified again as the new exact head
 - Pull request: not created; approved target is this branch into `develop`
 - Workflow run: `20260715T130803Z-2df009df`
 - Last completed gate: Type A classification and concrete execution plan
@@ -37,10 +39,17 @@ explicit approval and auto-merge is forbidden.
   25 focused tests and committed as `315996f` and `c627a68`
 - Last completed gate: concurrency, timeout, cancellation, cleanup, CLI, Ruff,
   and the 89-test repository suite passed and committed as `1337d91`
-- Current gate: bilingual documentation, diagram QA, final validation, and PR
-  exact-head review
-- Next action: finish documentation contracts, run the complete repository
-  validation and review/lesson gates, then create the approved PR into `develop`
+- Last completed gate: bilingual documentation contracts passed; Architecture
+  and Sequence SVG/PNG pairs passed XML, connector, geometry, endpoint,
+  mixed-corner, sequence-style, and full-size PNG inspection gates
+- Last completed gate: 34 focused catalog tests, 18 dependency tests, 91 full
+  tests, Ruff, actionlint 1.7.12, diff check, and dependency SHA parity passed
+- Last completed gate: six-lens implementation review converged at P0=0/P1=0
+  and the required Type A lesson was committed as `d61ab48`
+- Current gate: commit the pre-PR checkpoint, rerun the full ladder on that exact
+  head, then publish the authorized branch and PR into `develop`
+- Next action after issue #4 merge: start dependency-ready issue
+  [#5](https://github.com/bluetape4k/bluetape-py-workshop/issues/5)
 - Runnable now: `uv run --locked python -m examples.order_intake`
 - Runnable now: `uv run --locked python -m examples.catalog_enrichment`
 
@@ -87,8 +96,8 @@ and the milestone dependency map below. Issue #2 closed through
 |---:|---|---|---|---|
 | 1 | [#2](https://github.com/bluetape4k/bluetape-py-workshop/issues/2) | Reproducible `uv` foundation and CI | None | Completed |
 | 2 | [#3](https://github.com/bluetape4k/bluetape-py-workshop/issues/3) | Validated order intake service | #2 | Completed |
-| 3 | [#4](https://github.com/bluetape4k/bluetape-py-workshop/issues/4) | Bounded catalog enrichment service | #2 | Documentation and validation in progress |
-| 4 | [#5](https://github.com/bluetape4k/bluetape-py-workshop/issues/5) | Cached product catalog service | #2 | Pending |
+| 3 | [#4](https://github.com/bluetape4k/bluetape-py-workshop/issues/4) | Bounded catalog enrichment service | #2 | Pre-PR validation complete |
+| 4 | [#5](https://github.com/bluetape4k/bluetape-py-workshop/issues/5) | Cached product catalog service | #2 | Next after #4 merge |
 | 5 | [#6](https://github.com/bluetape4k/bluetape-py-workshop/issues/6) | Bounded payload processing service | #2 | Pending |
 | 6 | [#7](https://github.com/bluetape4k/bluetape-py-workshop/issues/7) | Redis-backed integration-test workshop | #2 | Pending |
 | 7 | [#8](https://github.com/bluetape4k/bluetape-py-workshop/issues/8) | Integrated framework-neutral order backend | #3, #4, #5, #6 | Pending |

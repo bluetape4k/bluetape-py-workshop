@@ -112,8 +112,8 @@ service therefore adds no semaphore or task registry of its own.
 ## Input and Trust Boundary
 
 - One request accepts at most 1,000 input occurrences.
-- After trimming, a product ID must be at most 64 ASCII `[A-Z0-9._-]`
-  characters.
+- After trimming, a product ID must be at most 64 ASCII characters, start with
+  `[A-Z0-9]`, and use only `[A-Z0-9._-]` afterward.
 - Batch size must be between 1 and 100.
 - `concurrency_limit` must be between 1 and 1,024 and applies across every
   provider job.

@@ -112,7 +112,8 @@ semaphore나 task registry를 만들지 않는 이유입니다.
 ## Input and Trust Boundary
 
 - 한 요청은 최대 1,000개 occurrence를 받습니다.
-- product ID는 trim 후 64자 이하의 ASCII `[A-Z0-9._-]` 형식이어야 합니다.
+- product ID는 trim 후 64자 이하의 ASCII여야 하며 `[A-Z0-9]`로 시작하고 나머지는
+  `[A-Z0-9._-]`만 사용할 수 있습니다.
 - batch size는 1 이상 100 이하입니다.
 - `concurrency_limit`은 1 이상 1,024 이하이며 모든 provider 작업에 함께 적용됩니다.
 - provider mapping은 요청한 key와 record의 내부 `product_id`가 일치해야 합니다.
