@@ -1,0 +1,54 @@
+[project]
+name = "bluetape-py-workshop"
+version = "0.1.0"
+description = "Runnable backend service examples using bluetape-py."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "bluetape-async==0.1.0",
+    "bluetape-cache==0.1.0",
+    "bluetape-codec==0.1.0",
+    "bluetape-collections==0.1.0",
+    "bluetape-compression==0.1.0",
+    "bluetape-core==0.1.0",
+    "bluetape-logging==0.1.0",
+    "bluetape-serde==0.1.0",
+    "bluetape-testcontainers==0.1.0",
+    "bluetape-testing==0.1.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.0,<9",
+    "pytest-asyncio>=1.1.0,<2",
+    "ruff>=0.12.0,<0.13",
+]
+
+[tool.uv]
+package = false
+required-version = "==0.11.28"
+build-constraint-dependencies = ["uv-build==0.11.28"]
+
+[tool.uv.sources]
+bluetape-async = { git = "https://github.com/bluetape4k/bluetape-py.git", rev = "4b7458f22cea0a9e757b5fbf7f5ff4bc8c23cb9a", subdirectory = "packages/bluetape-async" }
+bluetape-cache = { git = "https://github.com/bluetape4k/bluetape-py.git", rev = "4b7458f22cea0a9e757b5fbf7f5ff4bc8c23cb9a", subdirectory = "packages/bluetape-cache" }
+bluetape-codec = { git = "https://github.com/bluetape4k/bluetape-py.git", rev = "4b7458f22cea0a9e757b5fbf7f5ff4bc8c23cb9a", subdirectory = "packages/bluetape-codec" }
+bluetape-collections = { git = "https://github.com/bluetape4k/bluetape-py.git", rev = "4b7458f22cea0a9e757b5fbf7f5ff4bc8c23cb9a", subdirectory = "packages/bluetape-collections" }
+bluetape-compression = { git = "https://github.com/bluetape4k/bluetape-py.git", rev = "4b7458f22cea0a9e757b5fbf7f5ff4bc8c23cb9a", subdirectory = "packages/bluetape-compression" }
+bluetape-core = { git = "https://github.com/bluetape4k/bluetape-py.git", rev = "4b7458f22cea0a9e757b5fbf7f5ff4bc8c23cb9a", subdirectory = "packages/bluetape-core" }
+bluetape-logging = { git = "https://github.com/bluetape4k/bluetape-py.git", rev = "4b7458f22cea0a9e757b5fbf7f5ff4bc8c23cb9a", subdirectory = "packages/bluetape-logging" }
+bluetape-serde = { git = "https://github.com/bluetape4k/bluetape-py.git", rev = "4b7458f22cea0a9e757b5fbf7f5ff4bc8c23cb9a", subdirectory = "packages/bluetape-serde" }
+bluetape-testcontainers = { git = "https://github.com/bluetape4k/bluetape-py.git", rev = "4b7458f22cea0a9e757b5fbf7f5ff4bc8c23cb9a", subdirectory = "packages/bluetape-testcontainers" }
+bluetape-testing = { git = "https://github.com/bluetape4k/bluetape-py.git", rev = "4b7458f22cea0a9e757b5fbf7f5ff4bc8c23cb9a", subdirectory = "packages/bluetape-testing" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+asyncio_mode = "auto"
+
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["A", "B", "C4", "E", "F", "I", "N", "RUF", "UP", "W"]

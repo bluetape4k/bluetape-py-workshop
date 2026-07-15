@@ -161,7 +161,7 @@ def test_lock_resolves_every_bluetape_distribution_to_the_full_commit() -> None:
         source_url = locked[name]["source"]["git"]
         parsed = urlsplit(source_url)
         query = parse_qs(parsed.query)
-        assert f"{parsed.scheme}://{parsed.netloc}{parsed.path}" == f"git+{UPSTREAM_REPOSITORY}"
+        assert f"{parsed.scheme}://{parsed.netloc}{parsed.path}" == UPSTREAM_REPOSITORY
         assert parsed.fragment == UPSTREAM_COMMIT
         assert query["subdirectory"] == [subdirectory]
     assert FORBIDDEN_DISTRIBUTIONS.isdisjoint(locked)
