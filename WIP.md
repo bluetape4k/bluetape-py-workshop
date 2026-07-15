@@ -25,13 +25,17 @@ explicit approval and auto-merge is forbidden.
 - Workflow run: `20260715T114045Z-5a50ae94`
 - Last completed gate: clean worktree, locked sync, and baseline `24 passed`
 - Last completed gate: converged Type A design review at P0=0/P1=0
-- Current gate: explicit written-spec approval
-- Next action: after approval, produce and review the implementation plan
+- Last completed gate: explicit written-spec approval
+- Last completed gate: Type A implementation-plan review at P0=0/P1=0
+- Current gate: explicit implementation-plan approval
+- Next action: after approval, commit the plan checkpoint and begin Task 1 with TDD
 - Runnable now: repository foundation only; issue #3 runtime is not implemented yet
 
 Current artifacts: [issue #3](https://github.com/bluetape4k/bluetape-py-workshop/issues/3),
 [written design](docs/superpowers/specs/2026-07-15-issue-3-validated-order-intake-design.md),
 [design review](docs/superpowers/reviews/2026-07-15-issue-3-design-review.md),
+[implementation plan](docs/superpowers/plans/2026-07-15-issue-3-validated-order-intake-plan.md),
+[plan review](docs/superpowers/reviews/2026-07-15-issue-3-plan-review.md),
 and the milestone dependency map below. Issue #2 closed through
 [PR #12](https://github.com/bluetape4k/bluetape-py-workshop/pull/12).
 
