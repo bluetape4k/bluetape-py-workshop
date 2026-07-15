@@ -97,9 +97,11 @@ Every runnable example from issue #3 onward provides aligned `README.md` and
 5. prerequisites, working directory, run command, observable result, targeted
    test, cleanup command, and troubleshooting boundary.
 
-Diagram source and rendered assets are created only after the implementing code
-exists. Both locales share the same English-label assets and link back to the
-relevant source.
+The Architecture and Sequence Diagram embeds are mandatory for every example;
+an example is incomplete without both visuals in both README locales. Diagram
+source and rendered assets are created only after the implementing code exists.
+Both locales share the same English-label assets and link back to the relevant
+source.
 
 ## Current Limits
 

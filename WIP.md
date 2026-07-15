@@ -117,10 +117,11 @@ files with these reader-facing sections:
    result, targeted test, cleanup/stop command, and unsupported configuration;
 7. failure, cancellation, troubleshooting, cleanup, and trust-boundary policies.
 
-Each example receives architecture and sequence SVG/PNG assets only after the
-implementing source exists. English-label assets are shared by both README
-locales. Placeholder diagrams and visuals modeled from old rendered images are
-not allowed.
+Every example README pair must embed both architecture and sequence PNGs and
+link their SVG sources. Missing either visual blocks example completion. Assets
+are created only after the implementing source exists, and English-label assets
+are shared by both README locales. Placeholder diagrams and visuals modeled
+from old rendered images are not allowed.
 
 ## Working Rules
 

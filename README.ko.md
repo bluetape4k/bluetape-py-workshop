@@ -95,6 +95,8 @@ uv run --locked pytest tests/test_dependency_baseline.py -q
 5. 선행 조건, 작업 directory, 실행 명령, 관찰 가능한 결과, targeted test, cleanup
    명령과 troubleshooting 경계.
 
+모든 예제는 두 README 언어 문서에 Architecture와 Sequence Diagram을 반드시 직접
+표시해야 합니다. 두 시각 자료 중 하나라도 빠지면 예제가 완료된 것으로 보지 않습니다.
 Diagram source와 rendered asset은 구현 code가 생긴 뒤에만 만듭니다. 두 언어 문서는
 같은 English-label asset을 공유하고 관련 source로 연결합니다.
 
