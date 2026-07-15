@@ -44,7 +44,7 @@ bluetape-testing = { git = "https://github.com/bluetape4k/bluetape-py.git", rev 
 [tool.pytest.ini_options]
 testpaths = ["tests", "examples"]
 pythonpath = ["."]
-addopts = "-ra"
+addopts = "-ra --import-mode=importlib"
 asyncio_mode = "auto"
 
 [tool.ruff]

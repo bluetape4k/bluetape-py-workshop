@@ -1,3 +1,4 @@
+import asyncio
 import importlib
 from collections.abc import Mapping
 from dataclasses import FrozenInstanceError
@@ -7,12 +8,74 @@ import pytest
 
 from examples.catalog_enrichment import (
     CatalogEnrichmentFailed,
+    CatalogEnrichmentService,
     CatalogRecord,
     InvalidProductIdentifier,
     ProviderUnavailable,
     RecommendationRecord,
+    RequiredProviderFailure,
     TooManyProductIdentifiers,
 )
+
+
+def _assert_no_helper_tasks() -> None:
+    assert not [
+        task
+        for task in asyncio.all_tasks()
+        if task is not asyncio.current_task()
+        and task.get_name().startswith("bluetape.map_bounded.")
+    ]
+
+
+class ConcurrencyGate:
+    def __init__(self, release: asyncio.Event) -> None:
+        self.release = release
+        self.active = 0
+        self.maximum = 0
+        self.admitted = asyncio.Event()
+        self.cleaned = 0
+
+    async def enter(self) -> None:
+        self.active += 1
+        self.maximum = max(self.maximum, self.active)
+        if self.maximum >= 2:
+            self.admitted.set()
+        try:
+            await self.release.wait()
+        finally:
+            self.active -= 1
+            self.cleaned += 1
+
+
+class GatedCatalogProvider:
+    def __init__(self, gate: ConcurrencyGate) -> None:
+        self.gate = gate
+
+    async def fetch(self, product_ids: tuple[str, ...]) -> object:
+        await self.gate.enter()
+        return {
+            product_id: CatalogRecord(
+                product_id=product_id,
+                name=f"Product {product_id}",
+                price_cents=1000,
+            )
+            for product_id in product_ids
+        }
+
+
+class GatedRecommendationProvider:
+    def __init__(self, gate: ConcurrencyGate) -> None:
+        self.gate = gate
+
+    async def fetch(self, product_ids: tuple[str, ...]) -> object:
+        await self.gate.enter()
+        return {
+            product_id: RecommendationRecord(
+                product_id=product_id,
+                recommendation=f"PAIR-{product_id}",
+            )
+            for product_id in product_ids
+        }
 
 
 def _load_api() -> ModuleType:
@@ -288,3 +351,127 @@ async def test_optional_extra_key_discards_the_batch(providers) -> None:
         "optional_response_invalid",
     ]
     assert "secret-extra" not in str(result)
+
+
+async def test_provider_calls_share_one_global_concurrency_limit() -> None:
+    release = asyncio.Event()
+    gate = ConcurrencyGate(release)
+    catalog = GatedCatalogProvider(gate)
+    recommendations = GatedRecommendationProvider(gate)
+    service = CatalogEnrichmentService(catalog, recommendations)
+
+    task = asyncio.create_task(
+        service.enrich(
+            ["SKU-1", "SKU-2", "SKU-3"],
+            batch_size=1,
+            concurrency_limit=2,
+            timeout=None,
+        )
+    )
+    await asyncio.wait_for(gate.admitted.wait(), timeout=1.0)
+    assert gate.active == 2
+    assert gate.maximum == 2
+    release.set()
+    await asyncio.wait_for(task, timeout=1.0)
+    assert gate.maximum == 2
+    _assert_no_helper_tasks()
+
+
+async def test_total_timeout_waits_for_mapper_cleanup() -> None:
+    release = asyncio.Event()
+    gate = ConcurrencyGate(release)
+    service = CatalogEnrichmentService(
+        GatedCatalogProvider(gate),
+        GatedRecommendationProvider(gate),
+    )
+
+    with pytest.raises(TimeoutError):
+        await service.enrich(["SKU-1"], batch_size=1, concurrency_limit=2, timeout=0.01)
+    assert gate.active == 0
+    assert gate.cleaned == 2
+    _assert_no_helper_tasks()
+
+
+async def test_caller_cancellation_remains_native_and_cleans_siblings() -> None:
+    release = asyncio.Event()
+    gate = ConcurrencyGate(release)
+    service = CatalogEnrichmentService(
+        GatedCatalogProvider(gate),
+        GatedRecommendationProvider(gate),
+    )
+    task = asyncio.create_task(
+        service.enrich(["SKU-1"], batch_size=1, concurrency_limit=2, timeout=None)
+    )
+    await asyncio.wait_for(gate.admitted.wait(), timeout=1.0)
+    task.cancel()
+    with pytest.raises(asyncio.CancelledError):
+        await task
+    assert gate.active == 0
+    assert gate.cleaned == 2
+    _assert_no_helper_tasks()
+
+
+async def test_required_outage_cleans_optional_sibling() -> None:
+    sibling_entered = asyncio.Event()
+    sibling_cleaned = 0
+
+    class OutageCatalogProvider:
+        async def fetch(self, product_ids: tuple[str, ...]) -> object:
+            await sibling_entered.wait()
+            raise ProviderUnavailable()
+
+    class WaitingRecommendationProvider:
+        async def fetch(self, product_ids: tuple[str, ...]) -> object:
+            nonlocal sibling_cleaned
+            sibling_entered.set()
+            try:
+                await asyncio.Event().wait()
+            finally:
+                sibling_cleaned += 1
+
+    service = CatalogEnrichmentService(OutageCatalogProvider(), WaitingRecommendationProvider())
+
+    with pytest.raises(CatalogEnrichmentFailed):
+        await service.enrich(["SKU-1"], batch_size=1, concurrency_limit=2, timeout=None)
+    assert sibling_cleaned == 1
+    _assert_no_helper_tasks()
+
+
+async def test_mixed_operational_outage_and_defect_propagates_exception_group() -> None:
+    both_entered = asyncio.Event()
+    release = asyncio.Event()
+    entered = 0
+
+    async def rendezvous() -> None:
+        nonlocal entered
+        entered += 1
+        if entered == 2:
+            both_entered.set()
+        await release.wait()
+
+    class OutageCatalogProvider:
+        async def fetch(self, product_ids: tuple[str, ...]) -> object:
+            await rendezvous()
+            raise ProviderUnavailable()
+
+    class DefectiveRecommendationProvider:
+        async def fetch(self, product_ids: tuple[str, ...]) -> object:
+            await rendezvous()
+            raise AssertionError("programming defect")
+
+    service = CatalogEnrichmentService(
+        OutageCatalogProvider(),
+        DefectiveRecommendationProvider(),
+    )
+    task = asyncio.create_task(
+        service.enrich(["SKU-1"], batch_size=1, concurrency_limit=2, timeout=None)
+    )
+    await asyncio.wait_for(both_entered.wait(), timeout=1.0)
+    release.set()
+
+    with pytest.raises(ExceptionGroup) as captured:
+        await task
+    leaves = captured.value.exceptions
+    assert any(isinstance(error, AssertionError) for error in leaves)
+    assert any(isinstance(error, RequiredProviderFailure) for error in leaves)
+    _assert_no_helper_tasks()
