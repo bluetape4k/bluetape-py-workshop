@@ -80,9 +80,9 @@ behavior, and Testcontainers runtime ownership.
 
 ### Task 1: Establish the locked dependency baseline with TDD
 
-**Complexity:** High  
-**Dependencies:** Approved spec and reviewed upstream commit  
-**Required skills:** `bluetape-py-patterns`, `test-driven-development`  
+**Complexity:** High
+**Dependencies:** Approved spec and reviewed upstream commit
+**Required skills:** `bluetape-py-patterns`, `test-driven-development`
 **Files:**
 - Create: `tests/test_dependency_baseline.py`
 - Create: `pyproject.toml`
@@ -325,9 +325,9 @@ git commit -m "Make every workshop run resolve the same source baseline" \
 
 ### Task 2: Add exact-head least-privilege CI with TDD
 
-**Complexity:** Medium  
-**Dependencies:** Task 1 green lock and tests  
-**Required skills:** `bluetape-py-patterns`, `test-driven-development`  
+**Complexity:** Medium
+**Dependencies:** Task 1 green lock and tests
+**Required skills:** `bluetape-py-patterns`, `test-driven-development`
 **Files:**
 - Create: `tests/test_ci_contract.py`
 - Create: `.github/workflows/ci.yml`
@@ -489,9 +489,9 @@ git commit -m "Make pull request evidence represent the exact unprivileged head"
 
 ### Task 3: Replace roadmap-only docs with the bilingual foundation guide
 
-**Complexity:** Medium  
-**Dependencies:** Tasks 1 and 2 establish commands and workflow facts  
-**Required skills:** `bluetape-writer`, `test-driven-development`  
+**Complexity:** Medium
+**Dependencies:** Tasks 1 and 2 establish commands and workflow facts
+**Required skills:** `bluetape-writer`, `test-driven-development`
 **Files:**
 - Create: `tests/test_documentation_contract.py`
 - Modify: `README.md`
@@ -643,9 +643,9 @@ git commit -m "Let readers reproduce the workshop foundation before examples arr
 
 ### Task 4: Prove the integrated branch and record Type A evidence
 
-**Complexity:** High  
-**Dependencies:** Tasks 1-3 green and committed  
-**Required skills:** `verification-before-completion`, `requesting-code-review`, `bluetape-writer`  
+**Complexity:** High
+**Dependencies:** Tasks 1-3 green and committed
+**Required skills:** `verification-before-completion`, `requesting-code-review`, `bluetape-writer`
 **Files:**
 - Create: `docs/superpowers/risks/2026-07-15-issue-2-bootstrap-risk.md`
 - Create: `docs/superpowers/reviews/2026-07-15-issue-2-implementation-review.md`
@@ -729,9 +729,9 @@ git commit -m "Preserve the evidence needed to trust the workshop bootstrap" \
 
 ### Task 5: Create the issue-linked PR and stop at the merge gate
 
-**Complexity:** Medium  
-**Dependencies:** Task 4 evidence commit; exact local head remains clean  
-**Required skills:** `bluetape-workflow`, `verification-before-completion`  
+**Complexity:** Medium
+**Dependencies:** Task 4 evidence commit; exact local head remains clean
+**Required skills:** `bluetape-workflow`, `verification-before-completion`
 **Files:**
 - Modify: `WIP.md` with actual PR/checkpoint state
 - Create then remove after PR creation: `.omx/pr/issue-2-body.md`
