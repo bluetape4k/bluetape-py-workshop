@@ -359,7 +359,7 @@ def test_ci_has_safe_events_permissions_and_exact_head_checkout() -> None:
 def test_ci_pins_tools_cache_inputs_and_locked_commands() -> None:
     text = WORKFLOW.read_text(encoding="utf-8")
     assert "actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd" in text
-    assert "astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9" in text
+    assert "astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990" in text
     assert "actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1" in text
     assert 'version: "0.11.28"' in text
     assert 'python-version: "3.13.14"' in text
@@ -389,7 +389,7 @@ canonical repository:
 
 ```bash
 gh api repos/actions/checkout/commits/93cb6efe18208431cddfb8368fd83d5badbf9bfd --jq .sha
-gh api repos/astral-sh/setup-uv/commits/94527f2e458b27549849d47d273a16bec83a01e9 --jq .sha
+gh api repos/astral-sh/setup-uv/commits/11f9893b081a58869d3b5fccaea48c9e9e46f990 --jq .sha
 gh api repos/actions/setup-python/commits/ece7cb06caefa5fff74198d8649806c4678c61a1 --jq .sha
 ```
 
@@ -426,7 +426,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up uv
-        uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9
+        uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990
         with:
           version: "0.11.28"
           enable-cache: true

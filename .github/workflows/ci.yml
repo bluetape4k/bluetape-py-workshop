@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [develop]
+  push:
+    branches: [develop]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact source head
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990
+        with:
+          version: "0.11.28"
+          enable-cache: true
+          cache-dependency-glob: |
+            pyproject.toml
+            uv.lock
+          prune-cache: true
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: "3.13.14"
+
+      - name: Report exact toolchain and head
+        run: |
+          git rev-parse HEAD
+          test "$(uv --version)" = "uv 0.11.28"
+          test "$(python --version)" = "Python 3.13.14"
+
+      - name: Synchronize locked environment
+        run: uv sync --locked --python 3.13.14
+
+      - name: Verify dependency and provider boundary
+        run: uv run --locked pytest tests/test_dependency_baseline.py -q
+
+      - name: Check Ruff lint
+        run: uv run --locked ruff check .
+
+      - name: Check Ruff formatting
+        run: uv run --locked ruff format --check .
+
+      - name: Run tests
+        run: uv run --locked pytest
