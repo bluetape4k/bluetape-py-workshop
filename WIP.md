@@ -21,6 +21,9 @@ explicit approval and auto-merge is forbidden.
 
 - Branch/base head: `feat/issue-3-validated-order-intake` /
   `a711f4747bc1abcf430d4c209b789a60aa0a7dce`
+- Validated implementation/review head:
+  `5cbe5f5d269db381794b9fbb561481b3e2f600f7`; the following WIP-only
+  checkpoint cannot contain its own eventual commit hash
 - Pull request: not created; approved target is this branch into `develop`
 - Workflow run: `20260715T114045Z-5a50ae94`
 - Last completed gate: converged design and implementation-plan reviews at
@@ -29,9 +32,13 @@ explicit approval and auto-merge is forbidden.
   runnable module implemented through TDD
 - Last completed gate: bilingual example documentation and source-backed
   Architecture and Sequence Diagram assets implemented
-- Current gate: documentation contract and repository-wide validation
-- Next action: run the full validation contract, complete implementation review
-  and lesson evidence, then create the approved pull request
+- Last completed gate: pre-PR implementation review converged at P0=0/P1=0;
+  Architecture and Sequence PNG renders passed full-size inspection
+- Last completed gate: locked focused suite `32 passed`, full suite `57 passed`,
+  Ruff, actionlint, lock immutability, SVG audits, and diff checks passed
+- Current gate: WIP-only checkpoint and exact-head PR publication
+- Next action: commit this checkpoint, rerun the final exact-head validation,
+  publish without force, and create the approved pull request
 - Runnable now: `uv run --locked python -m examples.order_intake`
 
 Current artifacts: [issue #3](https://github.com/bluetape4k/bluetape-py-workshop/issues/3),
@@ -39,6 +46,8 @@ Current artifacts: [issue #3](https://github.com/bluetape4k/bluetape-py-workshop
 [design review](docs/superpowers/reviews/2026-07-15-issue-3-design-review.md),
 [implementation plan](docs/superpowers/plans/2026-07-15-issue-3-validated-order-intake-plan.md),
 [plan review](docs/superpowers/reviews/2026-07-15-issue-3-plan-review.md),
+[implementation review](docs/superpowers/reviews/2026-07-15-issue-3-implementation-review.md),
+[lesson](docs/superpowers/lessons/2026-07-15-issue-3-order-intake.md),
 and the milestone dependency map below. Issue #2 closed through
 [PR #12](https://github.com/bluetape4k/bluetape-py-workshop/pull/12).
 
@@ -75,7 +84,7 @@ and the milestone dependency map below. Issue #2 closed through
 | Order | Issue | Outcome | Dependencies | State |
 |---:|---|---|---|---|
 | 1 | [#2](https://github.com/bluetape4k/bluetape-py-workshop/issues/2) | Reproducible `uv` foundation and CI | None | Completed |
-| 2 | [#3](https://github.com/bluetape4k/bluetape-py-workshop/issues/3) | Validated order intake service | #2 | Implementation validation |
+| 2 | [#3](https://github.com/bluetape4k/bluetape-py-workshop/issues/3) | Validated order intake service | #2 | Pre-PR convergence |
 | 3 | [#4](https://github.com/bluetape4k/bluetape-py-workshop/issues/4) | Bounded catalog enrichment service | #2 | Pending |
 | 4 | [#5](https://github.com/bluetape4k/bluetape-py-workshop/issues/5) | Cached product catalog service | #2 | Pending |
 | 5 | [#6](https://github.com/bluetape4k/bluetape-py-workshop/issues/6) | Bounded payload processing service | #2 | Pending |
