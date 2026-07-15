@@ -1,6 +1,6 @@
 # WIP
 
-Snapshot: 2026-07-15 KST  
+Snapshot: 2026-07-15 KST
 Scope: [`0.1.0`](https://github.com/bluetape4k/bluetape-py-workshop/milestone/1)
 workshop foundation and runnable examples.
 
@@ -12,8 +12,8 @@ Issue [#2](https://github.com/bluetape4k/bluetape-py-workshop/issues/2):
 bootstrap the Python 3.13+ `uv` project, lockfile- and source-pinned validation, pinned
 `bluetape-py` source baseline, CI, and bilingual setup documentation.
 
-Active branch: `chore/issue-2-workshop-bootstrap`  
-Base branch: `develop`  
+Active branch: `chore/issue-2-workshop-bootstrap`
+Base branch: `develop`
 Stop boundary: report the exact PR head as merge-ready; merging requires a fresh
 explicit approval and auto-merge is forbidden.
 
