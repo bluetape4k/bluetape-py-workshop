@@ -20,13 +20,13 @@ explicit approval and auto-merge is forbidden.
 ## Resume Checkpoint
 
 - Branch/last validated head: `chore/issue-2-workshop-bootstrap` /
-  `8697beca9c6b351ec01064e49fd3d45d96c50646`
-- Pull request: pending
-- Last completed gate: locked dependency foundation and local CI contract;
-  18 dependency tests, 2 CI tests, targeted Ruff, and actionlint passed on
+  `bf26334974efced57b55ff8ecff36bb60030b616`
+- Pull request: [#12](https://github.com/bluetape4k/bluetape-py-workshop/pull/12)
+- Last completed gate: fresh full validation and implemented-diff review;
+  24 tests, Ruff, actionlint, full-branch diff check, and P0=0/P1=0 passed on
   2026-07-15 KST
-- Blocker: none
-- Next command: finish bilingual documentation validation, then review the integrated diff
+- Blocker: exact-head PR CI and live review are pending
+- Next command: validate and push this checkpoint commit, then verify PR #12 CI
 - Runnable now: the repository foundation is runnable; domain examples begin at #3
 
 Current artifacts: [issue #2](https://github.com/bluetape4k/bluetape-py-workshop/issues/2),
@@ -34,7 +34,7 @@ Current artifacts: [issue #2](https://github.com/bluetape4k/bluetape-py-workshop
 [design review](docs/superpowers/reviews/2026-07-15-issue-2-design-review.md),
 [implementation plan](docs/superpowers/plans/2026-07-15-issue-2-workshop-bootstrap-plan.md),
 [plan review](docs/superpowers/reviews/2026-07-15-issue-2-plan-review.md),
-pull request pending.
+[pull request #12](https://github.com/bluetape4k/bluetape-py-workshop/pull/12).
 
 ## Dependency Baseline
 
