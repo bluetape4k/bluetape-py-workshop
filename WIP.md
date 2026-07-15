@@ -31,12 +31,18 @@ explicit approval and auto-merge is forbidden.
   locked baseline passed with `57 passed`
 - Last completed gate: written design review converged at P0=0/P1=0 and the
   converged written spec received explicit user approval
-- Last completed gate: executable implementation plan review converged at
-  P0=0/P1=0 through six separated main-session perspectives
-- Current gate: explicit approval of the converged implementation plan
-- Next action: after plan approval, commit the plan checkpoint, record workflow
-  review evidence, load TDD/execution skills, and start Task 1 RED
+- Last completed gate: executable implementation plan approved and committed as
+  `e147923`
+- Last completed gate: immutable API and deterministic provider policy passed
+  25 focused tests and committed as `315996f` and `c627a68`
+- Last completed gate: concurrency, timeout, cancellation, cleanup, CLI, Ruff,
+  and the 89-test repository suite passed and committed as `1337d91`
+- Current gate: bilingual documentation, diagram QA, final validation, and PR
+  exact-head review
+- Next action: finish documentation contracts, run the complete repository
+  validation and review/lesson gates, then create the approved PR into `develop`
 - Runnable now: `uv run --locked python -m examples.order_intake`
+- Runnable now: `uv run --locked python -m examples.catalog_enrichment`
 
 Current artifacts: [issue #4](https://github.com/bluetape4k/bluetape-py-workshop/issues/4),
 [written design](docs/superpowers/specs/2026-07-15-issue-4-bounded-catalog-enrichment-design.md),
@@ -81,7 +87,7 @@ and the milestone dependency map below. Issue #2 closed through
 |---:|---|---|---|---|
 | 1 | [#2](https://github.com/bluetape4k/bluetape-py-workshop/issues/2) | Reproducible `uv` foundation and CI | None | Completed |
 | 2 | [#3](https://github.com/bluetape4k/bluetape-py-workshop/issues/3) | Validated order intake service | #2 | Completed |
-| 3 | [#4](https://github.com/bluetape4k/bluetape-py-workshop/issues/4) | Bounded catalog enrichment service | #2 | Design in progress |
+| 3 | [#4](https://github.com/bluetape4k/bluetape-py-workshop/issues/4) | Bounded catalog enrichment service | #2 | Documentation and validation in progress |
 | 4 | [#5](https://github.com/bluetape4k/bluetape-py-workshop/issues/5) | Cached product catalog service | #2 | Pending |
 | 5 | [#6](https://github.com/bluetape4k/bluetape-py-workshop/issues/6) | Bounded payload processing service | #2 | Pending |
 | 6 | [#7](https://github.com/bluetape4k/bluetape-py-workshop/issues/7) | Redis-backed integration-test workshop | #2 | Pending |

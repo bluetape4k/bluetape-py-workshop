@@ -44,6 +44,8 @@ def test_wip_keeps_the_dependency_order_and_current_issue() -> None:
 def test_readme_pair_links_the_first_runnable_example() -> None:
     assert "examples/order_intake/README.md" in ENGLISH
     assert "examples/order_intake/README.ko.md" in KOREAN
+    assert "examples/catalog_enrichment/README.md" in ENGLISH
+    assert "examples/catalog_enrichment/README.ko.md" in KOREAN
 
 
 def test_agents_keeps_authoritative_commands_and_rules() -> None:
