@@ -33,10 +33,12 @@ def test_readme_pair_shares_setup_status_and_validation_facts() -> None:
 
 
 def test_wip_keeps_the_dependency_order_and_current_issue() -> None:
-    positions = [WIP.index(f"#{issue}") for issue in range(2, 9)]
+    positions = [
+        WIP.index(f"| {order} | [#{issue}]") for order, issue in enumerate(range(2, 9), start=1)
+    ]
     assert positions == sorted(positions)
-    assert "Issue #2" in WIP
-    assert "In progress" in WIP
+    assert "Issue [#3]" in WIP
+    assert "Validated order intake service" in WIP
 
 
 def test_agents_keeps_authoritative_commands_and_rules() -> None:
