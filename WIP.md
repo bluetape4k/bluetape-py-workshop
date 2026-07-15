@@ -4,10 +4,12 @@ Snapshot: 2026-07-15 KST
 Scope: [`0.1.0`](https://github.com/bluetape4k/bluetape-py-workshop/milestone/1)
 workshop foundation and runnable examples.
 
+[English README](README.md) | [한국어 README](README.ko.md)
+
 ## Current Target
 
 Issue [#2](https://github.com/bluetape4k/bluetape-py-workshop/issues/2):
-bootstrap the Python 3.13+ `uv` project, deterministic quality gates, pinned
+bootstrap the Python 3.13+ `uv` project, lockfile- and source-pinned validation, pinned
 `bluetape-py` source baseline, CI, and bilingual setup documentation.
 
 Active branch: `chore/issue-2-workshop-bootstrap`  
@@ -15,12 +17,31 @@ Base branch: `develop`
 Stop boundary: report the exact PR head as merge-ready; merging requires a fresh
 explicit approval and auto-merge is forbidden.
 
+## Resume Checkpoint
+
+- Branch/full head: `chore/issue-2-workshop-bootstrap` /
+  `ea88eb0b660a2e0e1788c74234de8e1a5e415e43`
+- Pull request: pending
+- Last completed gate: initial WIP/spec commit; `git diff --check` passed on
+  2026-07-15 KST
+- Blocker: none; independent written-design review is in progress
+- Next command: review the written spec, then create the implementation/test plan
+- Runnable now: none; the bootstrap commands below are planned until #2 lands
+
+Current artifacts: [issue #2](https://github.com/bluetape4k/bluetape-py-workshop/issues/2),
+[written design](docs/superpowers/specs/2026-07-15-issue-2-workshop-bootstrap-design.md),
+[design review](docs/superpowers/reviews/2026-07-15-issue-2-design-review.md),
+implementation plan pending, pull request pending.
+
 ## Dependency Baseline
 
 - Source repository: <https://github.com/bluetape4k/bluetape-py>
 - Pinned source commit: `4b7458f22cea0a9e757b5fbf7f5ff4bc8c23cb9a`
+  (`origin/develop`, post-release source-only baseline; not the `v0.1.0` tag)
 - GitHub Release: [`v0.1.0`](https://github.com/bluetape4k/bluetape-py/releases/tag/v0.1.0)
-- PyPI publication: HOLD; workshop dependencies use commit-pinned Git sources.
+- PyPI publication: HOLD; the focused distributions are not a supported PyPI
+  install path and the GitHub Release is not the workshop installation source.
+  Use root `uv sync` with the commit-pinned Git sources.
 - Local path overrides are developer-local only and are not part of the
   committed reproducibility contract.
 - Apache Fory and native compression providers remain outside the default
@@ -57,13 +78,15 @@ explicit approval and auto-merge is forbidden.
 Every runnable example must provide equivalent `README.md` and `README.ko.md`
 files with these reader-facing sections:
 
-1. `English | 한국어` locale navigation;
+1. exact reciprocal locale navigation: `English | [한국어](README.ko.md)` in
+   English and `[English](README.md) | 한국어` in Korean;
 2. business-shaped scenario and explicit non-goals;
 3. source-backed architecture and ownership boundaries;
 4. source-backed request or lifecycle sequence;
 5. exact `bluetape-py` distributions and APIs used;
-6. run and targeted-test commands;
-7. failure, cancellation, cleanup, and trust-boundary policies where relevant.
+6. prerequisites, exact working directory, run command, expected observable
+   result, targeted test, cleanup/stop command, and unsupported configuration;
+7. failure, cancellation, troubleshooting, cleanup, and trust-boundary policies.
 
 Each example receives architecture and sequence SVG/PNG assets only after the
 implementing source exists. English-label assets are shared by both README
@@ -86,18 +109,24 @@ not allowed.
 - After an approved merge, sync local `develop`, remove the merged worktree and
   local feature branch, and then start the next dependency-ready issue.
 
-## Issue #2 Validation Contract
+## Issue #2 Planned Validation Contract
 
 ```bash
+uv --version  # must report 0.11.28
 uv sync --locked --python 3.13.14
-uv run ruff format --check .
-uv run ruff check .
-uv run pytest
+uv run --locked pytest tests/test_dependency_baseline.py -q
+uv run --locked ruff format --check .
+uv run --locked ruff check .
+uv run --locked pytest
+GOTOOLCHAIN=go1.26.1 go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.12 \
+  .github/workflows/ci.yml
 git diff --check
 ```
 
-CI must use the committed lockfile and the same Python line. The default lane
-must not require Docker, Apache Fory, or native compression providers.
+CI must use `uv 0.11.28`, `uv-build 0.11.28`, the committed lockfile, and the
+same Python line. The default lane installs the approved Testcontainers wrapper
+baseline but must not contact Docker or start containers; Apache Fory and native
+compression providers must remain absent.
 
 ## Holds and Exclusions
 
@@ -116,3 +145,6 @@ must not require Docker, Apache Fory, or native compression providers.
   implementation, review, and lesson artifacts remain under `docs/`.
 - 2026-07-15: create diagrams only from implemented behavior, starting with
   issue #3 rather than adding speculative assets during bootstrap.
+- 2026-07-15: accept the root install cost of all ten milestone distributions
+  so every issue detects source drift early; prove that Testcontainers import
+  has no Docker runtime side effect.
