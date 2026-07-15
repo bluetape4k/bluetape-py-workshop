@@ -42,7 +42,7 @@ bluetape-testcontainers = { git = "https://github.com/bluetape4k/bluetape-py.git
 bluetape-testing = { git = "https://github.com/bluetape4k/bluetape-py.git", rev = "4b7458f22cea0a9e757b5fbf7f5ff4bc8c23cb9a", subdirectory = "packages/bluetape-testing" }
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests", "examples"]
 pythonpath = ["."]
 addopts = "-ra"
 asyncio_mode = "auto"
