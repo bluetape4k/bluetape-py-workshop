@@ -24,6 +24,7 @@ def test_ci_pins_tools_cache_inputs_and_locked_commands() -> None:
     assert "actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1" in text
     assert 'version: "0.11.28"' in text
     assert 'python-version: "3.13.14"' in text
+    assert "grep -Eq '^uv 0\\.11\\.28([[:space:]]|$)'" in text
     assert "cache-dependency-glob: |" in text
     assert "pyproject.toml" in text
     assert "uv.lock" in text

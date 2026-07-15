@@ -50,3 +50,12 @@ The following ran from a deleted and recreated `.venv` on 2026-07-15 KST:
   contract.
 - Docker libraries are installed through the approved wrapper baseline, but the
   default lane proves import has no Docker runtime side effect.
+
+## PR CI recovery
+
+PR #12 run `29406125329` checked out exact head
+`ea99dfe0c7d9c6c646810f1e90e54f19e402662a` and installed uv 0.11.28, but the
+toolchain step compared the entire platform-specific `uv --version` string.
+Linux build metadata made that equality fail before dependency sync. The repair
+prints the full diagnostic value and verifies the anchored `uv 0.11.28` prefix,
+with the expression itself guarded by `test_ci_contract.py`.
