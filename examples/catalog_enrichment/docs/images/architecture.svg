@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Bounded catalog enrichment architecture</title>
+  <desc id="desc">Static ownership boundaries between caller input, application policy, providers, and bluetape-py primitives.</desc>
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&amp;family=Comic+Mono&amp;display=swap');
+      .title { font: 42px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #263238; }
+      .subtitle { font: 22px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #546e7a; }
+      .lane-title { font: 26px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #37474f; }
+      .card-title { font: 23px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #263238; }
+      .body { font: 17px 'Comic Mono', 'SFMono-Regular', monospace; fill: #455a64; }
+      .small { font: 15px 'Comic Mono', 'SFMono-Regular', monospace; fill: #546e7a; }
+      .lane { stroke: #cfd8dc; stroke-width: 2.5; stroke-dasharray: 10 8; }
+      .card { stroke-width: 3; }
+      .flow { fill: none; stroke: #546e7a; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow); }
+      .optional { fill: none; stroke: #b07a36; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow-optional); }
+      .label-box { fill: #fffdf8; stroke: #cfd8dc; stroke-width: 1.5; }
+    </style>
+    <marker id="arrow" viewBox="0 0 14 14" refX="12" refY="7" markerWidth="14" markerHeight="14" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M1 1 L13 7 L1 13 Z" fill="#546e7a"/>
+    </marker>
+    <marker id="arrow-optional" viewBox="0 0 14 14" refX="12" refY="7" markerWidth="14" markerHeight="14" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M1 1 L13 7 L1 13 Z" fill="#b07a36"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#455a64" flood-opacity="0.13"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="#fbf8f1"/>
+  <path d="M70 115 H1530" stroke="#d7ccc8" stroke-width="3" stroke-linecap="round"/>
+  <text x="70" y="68" class="title">Bounded Catalog Enrichment</text>
+  <text x="70" y="101" class="subtitle">Application policy deduplicates work and restores caller order</text>
+
+  <rect x="70" y="150" width="300" height="610" rx="26" fill="#f7eee7" class="lane"/>
+  <rect x="405" y="150" width="730" height="610" rx="26" fill="#eef3f6" class="lane"/>
+  <rect x="1170" y="150" width="360" height="610" rx="26" fill="#edf5ed" class="lane"/>
+  <text x="95" y="190" class="lane-title">Caller boundary</text>
+  <text x="430" y="190" class="lane-title">Example application</text>
+  <text x="1195" y="190" class="lane-title">Injected + library APIs</text>
+
+  <g filter="url(#shadow)">
+    <rect x="105" y="245" width="230" height="145" rx="20" fill="#ffe7c7" stroke="#d69b55" class="card"/>
+    <text x="130" y="286" class="card-title">Product ID Stream</text>
+    <text x="130" y="322" class="body">caller-owned iterable</text>
+    <text x="130" y="352" class="small">duplicates + order kept</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="105" y="520" width="230" height="145" rx="20" fill="#e3f0df" stroke="#6f9a65" class="card"/>
+    <text x="130" y="561" class="card-title">EnrichedProduct</text>
+    <text x="130" y="597" class="body">one per occurrence</text>
+    <text x="130" y="627" class="small">safe optional warnings</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="445" y="225" width="310" height="175" rx="20" fill="#dcebf4" stroke="#5f8da8" class="card"/>
+    <text x="470" y="266" class="card-title">CatalogEnrichmentService</text>
+    <text x="470" y="302" class="body">normalize + validate limits</text>
+    <text x="470" y="332" class="body">deduplicate provider work</text>
+    <text x="470" y="362" class="small">restore normalized input order</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="805" y="225" width="290" height="175" rx="20" fill="#e8def5" stroke="#8e72b5" class="card"/>
+    <text x="830" y="266" class="card-title">Batch Job Plan</text>
+    <text x="830" y="302" class="body">required + optional jobs</text>
+    <text x="830" y="332" class="body">one ordered job list</text>
+    <text x="830" y="362" class="small">global concurrency budget</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="445" y="500" width="310" height="165" rx="20" fill="#f6ddd7" stroke="#c56b5d" class="card"/>
+    <text x="470" y="541" class="card-title">Failure Policy</text>
+    <text x="470" y="577" class="body">required failures stop</text>
+    <text x="470" y="607" class="body">optional outages warn</text>
+    <text x="470" y="637" class="small">timeout/cancel stay native</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="805" y="500" width="290" height="165" rx="20" fill="#e3f0df" stroke="#6f9a65" class="card"/>
+    <text x="830" y="541" class="card-title">Result Assembly</text>
+    <text x="830" y="577" class="body">validate provider data</text>
+    <text x="830" y="607" class="body">attach recommendations</text>
+    <text x="830" y="637" class="small">replay duplicate occurrences</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="1205" y="215" width="290" height="125" rx="20" fill="#e8def5" stroke="#8e72b5" class="card"/>
+    <text x="1230" y="256" class="card-title">bluetape-collections</text>
+    <text x="1230" y="292" class="body">distinct + chunked</text>
+    <text x="1230" y="320" class="small">stable batch transforms</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="1205" y="385" width="290" height="125" rx="20" fill="#dcebf4" stroke="#5f8da8" class="card"/>
+    <text x="1230" y="426" class="card-title">bluetape-async</text>
+    <text x="1230" y="462" class="body">map_bounded</text>
+    <text x="1230" y="490" class="small">task ownership + cleanup</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="1205" y="555" width="290" height="145" rx="20" fill="#ffe7c7" stroke="#d69b55" class="card"/>
+    <text x="1230" y="596" class="card-title">Injected Providers</text>
+    <text x="1230" y="632" class="body">required catalog</text>
+    <text x="1230" y="662" class="body">optional recommendations</text>
+  </g>
+
+  <path d="M335 315 H445" class="flow"/>
+  <path d="M755 310 H805" class="flow"/>
+  <path d="M1095 280 H1205" class="flow"/>
+  <path d="M1095 345 H1138 Q1150 345 1150 357 V435 Q1150 447 1162 447 H1205" class="flow"/>
+  <path d="M950 400 V473 Q950 485 938 485 H612 Q600 485 600 497 V500" class="flow"/>
+  <path d="M950 400 V500" class="flow"/>
+  <path d="M1095 582 H1205" class="optional"/>
+  <path d="M805 582 H755" class="flow"/>
+  <path d="M445 582 H392 Q380 582 380 594 V598 Q380 610 368 610 H335" class="flow"/>
+
+  <g>
+    <rect x="348" y="278" width="82" height="29" rx="14" class="label-box"/>
+    <text x="363" y="299" class="small">iterable</text>
+    <rect x="1110" y="245" width="80" height="29" rx="14" class="label-box"/>
+    <text x="1125" y="266" class="small">groups</text>
+    <rect x="1110" y="547" width="82" height="29" rx="14" class="label-box"/>
+    <text x="1125" y="568" class="small">fetches</text>
+  </g>
+
+  <rect x="70" y="800" width="1460" height="58" rx="18" fill="#f0ebe2" stroke="#d7ccc8" stroke-width="2"/>
+  <circle cx="105" cy="829" r="9" fill="#5f8da8"/>
+  <text x="125" y="836" class="small">Application owns normalization, response policy, and order restoration</text>
+  <circle cx="830" cy="829" r="9" fill="#8e72b5"/>
+  <text x="850" y="836" class="small">Libraries own collection transforms and bounded task cleanup</text>
+</svg>
