@@ -21,7 +21,7 @@
 | `examples/order_intake/__main__.py` | Direct logger ownership and deterministic runnable sample | 3 |
 | `examples/order_intake/tests/test_service.py` | Success, invalid, boundary, mutation, context, logging, API demonstration | 1, 2 |
 | `examples/order_intake/tests/test_application.py` | Subprocess runnable-output contract | 3 |
-| `pyproject.toml` | Include `examples` in configured pytest discovery | 3 |
+| `pyproject.toml` | Keep repository root importable and include `examples` in pytest discovery | 1, 3 |
 | `examples/order_intake/README.md` | English scenario, architecture, sequence, APIs, commands, limits | 4 |
 | `examples/order_intake/README.ko.md` | Natural Korean equivalent of the example contract | 4 |
 | `examples/order_intake/tests/test_documentation.py` | Locale, command, link, and asset parity | 4 |
@@ -103,6 +103,7 @@ untrusted runtime values, and generated visual artifacts.
 - Create: `examples/order_intake/models.py`
 - Create: `examples/order_intake/errors.py`
 - Create: `examples/order_intake/tests/test_service.py`
+- Modify: `pyproject.toml`
 
 - [ ] **Step 1: Write failing model and error contract tests**
 
@@ -172,7 +173,22 @@ uv run --locked pytest examples/order_intake/tests/test_service.py -q
 Expected: both tests fail with the explicit assertion
 `order intake API is missing`; pytest collection itself succeeds.
 
-- [ ] **Step 3: Implement the minimal frozen models**
+- [ ] **Step 3: Keep repository examples importable under the CI pytest command**
+
+The console-script form `uv run pytest` does not place the repository root on
+`sys.path`, while `uv run python -m pytest` does. Add this exact line to the
+existing pytest configuration so local and CI authority commands can import
+the non-package `examples` namespace:
+
+```toml
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra"
+asyncio_mode = "auto"
+```
+
+- [ ] **Step 4: Implement the minimal frozen models**
 
 Create `examples/order_intake/models.py`:
 
@@ -200,7 +216,7 @@ class AcceptedOrder:
     status: Literal["accepted"] = "accepted"
 ```
 
-- [ ] **Step 4: Implement the safe public error mapping**
+- [ ] **Step 5: Implement the safe public error mapping**
 
 Create `examples/order_intake/errors.py`:
 
@@ -209,7 +225,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 
-class InvalidOrderCommand(ValueError):
+class InvalidOrderCommand(ValueError):  # noqa: N818 - approved domain exception name
     def __init__(self, field: str, reason: str) -> None:
         self.field = field
         self.reason = reason
@@ -246,7 +262,7 @@ __all__ = [
 ]
 ```
 
-- [ ] **Step 5: Run focused tests and Ruff and observe GREEN**
+- [ ] **Step 6: Run focused tests and Ruff and observe GREEN**
 
 Run:
 
@@ -258,7 +274,7 @@ uv run --locked ruff format --check examples/order_intake
 
 Expected: 2 tests pass and Ruff reports no changes or findings.
 
-- [ ] **Step 6: Commit the immutable boundary**
+- [ ] **Step 7: Commit the immutable boundary**
 
 Stage the four Task 1 files and commit with Lore trailers. The intent line is
 `Make order acceptance preserve caller-owned values` and `Tested:` records the
@@ -680,6 +696,7 @@ Change only the pytest path line in `pyproject.toml`:
 ```toml
 [tool.pytest.ini_options]
 testpaths = ["tests", "examples"]
+pythonpath = ["."]
 addopts = "-ra"
 asyncio_mode = "auto"
 ```
