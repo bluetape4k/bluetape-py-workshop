@@ -19,13 +19,13 @@ explicit approval and auto-merge is forbidden.
 
 ## Resume Checkpoint
 
-- Branch/full head: `chore/issue-2-workshop-bootstrap` /
-  `ea88eb0b660a2e0e1788c74234de8e1a5e415e43`
+- Branch/last validated head: `chore/issue-2-workshop-bootstrap` /
+  `dd449526ab207928d0ecf67e1b7a69d205f2b51d`
 - Pull request: pending
-- Last completed gate: initial WIP/spec commit; `git diff --check` passed on
-  2026-07-15 KST
-- Blocker: none; independent written-design review is in progress
-- Next command: review the written spec, then create the implementation/test plan
+- Last completed gate: six-perspective written-design review; `git diff --check`
+  passed and the review converged at P0=0, P1=0 on 2026-07-15 KST
+- Blocker: written-spec approval pending
+- Next command: after approval, create the implementation/test plan
 - Runnable now: none; the bootstrap commands below are planned until #2 lands
 
 Current artifacts: [issue #2](https://github.com/bluetape4k/bluetape-py-workshop/issues/2),
