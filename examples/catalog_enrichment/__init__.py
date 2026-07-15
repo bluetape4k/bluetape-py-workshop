@@ -14,9 +14,19 @@ from .models import (
     WarningCode,
 )
 from .providers import OptionalRecommendationProvider, RequiredCatalogProvider
+from .service import (
+    MAX_BATCH_SIZE,
+    MAX_PRODUCT_ID_LENGTH,
+    MAX_PRODUCT_IDENTIFIERS,
+    CatalogEnrichmentService,
+)
 
 __all__ = [
+    "MAX_BATCH_SIZE",
+    "MAX_PRODUCT_IDENTIFIERS",
+    "MAX_PRODUCT_ID_LENGTH",
     "CatalogEnrichmentFailed",
+    "CatalogEnrichmentService",
     "CatalogRecord",
     "EnrichedProduct",
     "EnrichmentWarning",
