@@ -1,11 +1,22 @@
 import asyncio
+import logging
+from collections.abc import Mapping
 
 import pytest
 from bluetape.cache import AsyncTTLCache
 
 from examples.cached_product_catalog import AsyncProductCatalogService, ProductSummary
-from examples.catalog_enrichment import CatalogRecord, ProviderUnavailable
-from examples.integrated_order_backend import CachedCatalogProvider
+from examples.catalog_enrichment import (
+    CatalogRecord,
+    ProviderUnavailable,
+    RecommendationRecord,
+)
+from examples.integrated_order_backend import (
+    CachedCatalogProvider,
+    OrderBackendCommand,
+    OrderLineCommand,
+    build_application,
+)
 
 
 def _active_cache_tasks() -> list[asyncio.Task[object]]:
@@ -86,3 +97,63 @@ async def test_loader_failure_is_not_cached_and_later_call_recovers() -> None:
 def test_adapter_requires_the_existing_async_catalog_service() -> None:
     with pytest.raises(TypeError, match="exact AsyncProductCatalogService"):
         CachedCatalogProvider(catalog=object())  # type: ignore[arg-type]
+
+
+class Recommendations:
+    async def fetch(
+        self,
+        product_ids: tuple[str, ...],
+    ) -> Mapping[str, RecommendationRecord]:
+        return {}
+
+
+async def test_composition_root_shares_one_cache_across_requests() -> None:
+    calls: list[str] = []
+
+    async def loader(product_id: str) -> ProductSummary:
+        calls.append(product_id)
+        return ProductSummary(
+            product_id=product_id,
+            name=f"Product {product_id}",
+            price_cents=1_000,
+        )
+
+    application = build_application(
+        logger=logging.Logger("composition-root-test", level=logging.CRITICAL),
+        catalog_loader=loader,
+        recommendation_provider=Recommendations(),
+    )
+    first = OrderBackendCommand(
+        request_id="req-1",
+        partner_id="partner-1",
+        order_id="order-1",
+        lines=(
+            OrderLineCommand(sku="SKU-1", quantity=1),
+            OrderLineCommand(sku="SKU-2", quantity=1),
+            OrderLineCommand(sku="SKU-1", quantity=1),
+        ),
+    )
+    second = OrderBackendCommand(
+        request_id="req-2",
+        partner_id="partner-1",
+        order_id="order-2",
+        lines=(OrderLineCommand(sku="SKU-2", quantity=1),),
+    )
+
+    async with application:
+        await application.process(first)
+        await application.process(second)
+        stats = await application.cache_stats()
+
+    assert calls == ["SKU-1", "SKU-2"]
+    assert (stats.hits, stats.misses, stats.loads) == (1, 2, 2)
+    assert (stats.inflight_loads, stats.abandoned_loads) == (0, 0)
+
+
+def test_composition_root_rejects_non_callable_loader() -> None:
+    with pytest.raises(TypeError, match="catalog_loader must be async-callable"):
+        build_application(
+            logger=logging.Logger("composition-root-test"),
+            catalog_loader=object(),  # type: ignore[arg-type]
+            recommendation_provider=Recommendations(),
+        )
