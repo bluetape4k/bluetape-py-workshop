@@ -13,8 +13,10 @@ scenarios now include [validated order intake](examples/order_intake/README.md),
 [bounded catalog enrichment](examples/catalog_enrichment/README.md), and the
 [cached product catalog](examples/cached_product_catalog/README.md), plus
 [bounded payload processing](examples/bounded_payload_processing/README.md) with
-separate default JSON and optional Apache Fory trust profiles. Each example
-provides aligned bilingual guidance, Architecture, and Sequence Diagram assets.
+separate default JSON and optional Apache Fory trust profiles, and a
+[Redis test server workshop](examples/redis_test_server/README.md) with explicit
+container lifecycle ownership. Each example provides aligned bilingual
+guidance, Architecture, and Sequence Diagram assets.
 
 Follow [WIP.md](WIP.md) for the current issue, dependency order, validation
 evidence, and next action.
@@ -38,7 +40,8 @@ evidence, and next action.
 - Git access to the public `bluetape-py` repository.
 - Docker is not required for the deterministic foundation, order-intake,
   catalog-enrichment, cached-product-catalog, or bounded-payload-processing
-  lanes.
+  lanes. It is required only for the explicitly selected Redis integration and
+  runnable CLI lanes.
 
 ## Setup
 
@@ -78,6 +81,13 @@ runs in the root environment, while its trusted-internal Fory lane installs
 [bilingual example guide](examples/bounded_payload_processing/README.md) for
 the exact run, test, and cleanup commands.
 
+The Redis workshop also preserves the default baseline: deterministic probe,
+application, CLI, and documentation tests do not contact Docker. Its explicit
+integration lane starts the commit-pinned `bluetape-testcontainers`
+`RedisServer`, consumes wrapper-provided connection details, and proves cleanup
+after both successful and failing application bodies. See its
+[bilingual example guide](examples/redis_test_server/README.md).
+
 ## Validation
 
 Run the same locked gates used by CI:
@@ -85,13 +95,20 @@ Run the same locked gates used by CI:
 ```bash
 uv run --locked ruff check .
 uv run --locked ruff format --check .
-uv run --locked pytest
+uv run --locked pytest -m "not testcontainers"
 ```
 
 The dependency baseline test can be run on its own:
 
 ```bash
 uv run --locked pytest tests/test_dependency_baseline.py -q
+```
+
+Run the Redis Docker lane sequentially, then run the reader-facing CLI:
+
+```bash
+uv run --locked pytest -m testcontainers examples/redis_test_server/tests/test_redis_integration.py -q
+uv run --locked python -m examples.redis_test_server
 ```
 
 ## Example Documentation Contract
@@ -115,5 +132,6 @@ source.
 ## Current Limits
 
 Milestone `0.1.0` does not introduce an ASGI/FastAPI adapter, a production Redis
-provider, package publication, or release automation. Docker-backed examples run
-sequentially when issue #7 adds them.
+provider, package publication, or release automation. The Redis example is test
+infrastructure, not a production Redis client or cache provider, and every
+Docker-backed path runs sequentially.
