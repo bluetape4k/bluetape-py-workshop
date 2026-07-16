@@ -8,64 +8,42 @@ workshop foundation and runnable examples.
 
 ## Current Target
 
-Issue [#5](https://github.com/bluetape4k/bluetape-py-workshop/issues/5):
-build a Cached product catalog service with separate sync and async application
-services, caller-owned local TTL caches, exact expiry and LRU behavior, loader
-failure recovery, shared async loading, and cancellation cleanup.
+Issue [#6](https://github.com/bluetape4k/bluetape-py-workshop/issues/6):
+build separate bounded JSON and Apache Fory payload-processing examples that
+compose strict serde metadata, gzip decompression limits, and canonical
+base64url encoding at explicit untrusted and trusted-internal boundaries.
 
-Active branch: `feat/issue-5-cached-product-catalog`
+Active branch: `feat/issue-6-bounded-payload-processing`
 Base branch: `develop`
 Stop boundary: report the exact PR head as merge-ready; merging requires a fresh
 explicit approval and auto-merge is forbidden.
 
 ## Resume Checkpoint
 
-- Branch/base head: `feat/issue-5-cached-product-catalog` /
-  `762c20fc2e7ccf4e5a5c5afdb8b7ac1d70ebcc06`
-- Last validated content head: `d640071`; the final WIP checkpoint commit must
-  be verified again as the exact head before publication
+- Branch/base head: `feat/issue-6-bounded-payload-processing` /
+  `51d7e457384ea4f84b7f18afd00a13e939218ef1`
+- Last validated content head: baseline `51d7e45`; implementation is not yet
+  committed
 - Pull request: not created; approved target is this branch into `develop`
-- Workflow run: `20260715T153541Z-f1ea2b68`
-- Last completed gate: issue #4 merged through
-  [PR #14](https://github.com/bluetape4k/bluetape-py-workshop/pull/14), local
+- Workflow run: `20260716T065828Z-3fe71fd5`
+- Last completed gate: issue #5 merged through
+  [PR #15](https://github.com/bluetape4k/bluetape-py-workshop/pull/15), local
   `develop` synced, and its worktree/local branch removed
-- Last completed gate: Type A classification and isolated worktree baseline
-  passed with `92 passed`
-- Last completed gate: written design review converged at P0=0/P1=0 and the
-  converged written spec received explicit user approval
-- Last completed gate: executable implementation plan and six-lens plan review
-  passed P0=0/P1=0 and were committed as `4041c71`
-- Last completed gate: sync/async service contracts, exact TTL, LRU, failure,
-  coalescing, and cancellation cleanup passed 28 tests and three sequential
-  stability runs; implementation committed as `0a4a25a`
-- Last completed gate: deterministic CLI emitted ten safe JSON events; CLI and
-  test committed as `b384ed8`
-- Last completed gate: aligned bilingual documentation and mandatory
-  Architecture/Sequence SVG/PNG pairs passed XML, connector, geometry,
-  endpoint, mixed-corner, sequence-style, and full-size PNG inspection gates;
-  documentation committed as `ed1c604`
-- Last completed gate: root navigation and the WIP board were aligned in
-  `665ccf4`; the documentation contract passed `8 tests`
-- Last completed gate: `31` focused cache tests, `18` dependency tests, `123`
-  repository tests, Ruff, actionlint 1.7.12, diff check, and dependency SHA
-  parity passed
-- Last completed gate: six-lens implementation review converged at P0=0/P1=0;
-  bounded event guards, explicit shared-failure identity, and the required Type
-  A lesson were committed as `d640071`
-- Current gate: commit this final WIP checkpoint, rerun the full ladder on that
-  exact head, then push and create the authorized PR into `develop`
-- Next action after issue #5 merge: start dependency-ready Issue #6,
-  [bounded payload processing](https://github.com/bluetape4k/bluetape-py-workshop/issues/6)
+- Last completed gate: Type A classification, approved separate-service design,
+  isolated worktree, locked environment, and `123 passed` baseline
+- Current gate: review the written design at P0=0/P1=0, write and review the
+  executable implementation plan, then begin RED tests
+- Next action after issue #6 merge: start dependency-ready Issue #7,
+  [Redis Testcontainers workshop](https://github.com/bluetape4k/bluetape-py-workshop/issues/7)
 - Runnable now: `uv run --locked python -m examples.order_intake`
 - Runnable now: `uv run --locked python -m examples.catalog_enrichment`
 - Runnable now: `uv run --locked python -m examples.cached_product_catalog`
 - Focused tests: `uv run --locked pytest examples/cached_product_catalog/tests -q`
+- Planned default command: `uv run --locked python -m examples.bounded_payload_processing`
+- Planned optional command: `UV_PROJECT_ENVIRONMENT=.venv-fory uv run --locked --extra fory python -m examples.bounded_payload_processing.fory_demo`
 
-Current artifacts: [issue #5](https://github.com/bluetape4k/bluetape-py-workshop/issues/5),
-[written design](docs/superpowers/specs/2026-07-16-issue-5-cached-product-catalog-design.md),
-[design review](docs/superpowers/reviews/2026-07-16-issue-5-design-review.md),
-[implementation plan](docs/superpowers/plans/2026-07-16-issue-5-cached-product-catalog-plan.md),
-[plan review](docs/superpowers/reviews/2026-07-16-issue-5-plan-review.md), and
+Current artifacts: [issue #6](https://github.com/bluetape4k/bluetape-py-workshop/issues/6),
+[written design](docs/superpowers/specs/2026-07-16-issue-6-bounded-payload-processing-design.md), and
 the milestone dependency map below. Issues #2, #3, and #4 closed through
 [PR #12](https://github.com/bluetape4k/bluetape-py-workshop/pull/12),
 [PR #13](https://github.com/bluetape4k/bluetape-py-workshop/pull/13), and
@@ -106,8 +84,8 @@ the milestone dependency map below. Issues #2, #3, and #4 closed through
 | 1 | [#2](https://github.com/bluetape4k/bluetape-py-workshop/issues/2) | Reproducible `uv` foundation and CI | None | Completed |
 | 2 | [#3](https://github.com/bluetape4k/bluetape-py-workshop/issues/3) | Validated order intake service | #2 | Completed |
 | 3 | [#4](https://github.com/bluetape4k/bluetape-py-workshop/issues/4) | Bounded catalog enrichment service | #2 | Completed |
-| 4 | [#5](https://github.com/bluetape4k/bluetape-py-workshop/issues/5) | Cached product catalog service | #2 | In progress |
-| 5 | [#6](https://github.com/bluetape4k/bluetape-py-workshop/issues/6) | Bounded payload processing service | #2 | Pending |
+| 4 | [#5](https://github.com/bluetape4k/bluetape-py-workshop/issues/5) | Cached product catalog service | #2 | Completed |
+| 5 | [#6](https://github.com/bluetape4k/bluetape-py-workshop/issues/6) | Bounded payload processing service | #2 | In progress |
 | 6 | [#7](https://github.com/bluetape4k/bluetape-py-workshop/issues/7) | Redis-backed integration-test workshop | #2 | Pending |
 | 7 | [#8](https://github.com/bluetape4k/bluetape-py-workshop/issues/8) | Integrated framework-neutral order backend | #3, #4, #5, #6 | Pending |
 
@@ -197,6 +175,24 @@ The cache tests use a manual nanosecond clock and asyncio events. They prove
 hit, miss, exact expiry, LRU eviction, loader recovery, shared async loading,
 partial cancellation, and terminal cache-task cleanup without real sleeps.
 
+Issue #6 adds separate default and optional commands:
+
+```bash
+uv run --locked python -m examples.bounded_payload_processing
+uv run --locked pytest examples/bounded_payload_processing/tests -q \
+  --ignore=examples/bounded_payload_processing/tests/test_fory_service.py
+
+UV_PROJECT_ENVIRONMENT=.venv-fory uv sync --locked --extra fory --python 3.13.14
+UV_PROJECT_ENVIRONMENT=.venv-fory uv run --locked --extra fory \
+  python -m examples.bounded_payload_processing.fory_demo
+UV_PROJECT_ENVIRONMENT=.venv-fory uv run --locked --extra fory \
+  pytest examples/bounded_payload_processing/tests/test_fory_service.py -q
+```
+
+The JSON lane is untrusted and default-install safe. The Fory lane is
+trusted-internal only, uses a fixed registered root type, and never participates
+in default imports or automatic format selection.
+
 ## Holds and Exclusions
 
 - Issues #9 and #10 belong to milestone `0.2.0` and are outside this execution
@@ -228,3 +224,6 @@ partial cancellation, and terminal cache-task cleanup without real sleeps.
 - 2026-07-16: implement issue #5 with separate sync/async services and
   caller-owned `TTLCache`/`AsyncTTLCache`; reject a workshop cache adapter so
   exact expiry, coalescing, cancellation, and public stats remain visible.
+- 2026-07-16: implement issue #6 as separate JSON and Apache Fory services;
+  accept small pipeline duplication so the untrusted/default and
+  trusted-internal/optional boundaries remain obvious to readers.
