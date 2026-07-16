@@ -152,7 +152,7 @@ and codec tests only. **Pattern:** strict TDD.
 PRODUCT_METADATA = PayloadMetadata(
     format="json",
     version=1,
-    content_type="application/vnd.bluetape.product-summary+json",
+    content_type="application/json",
     trust_profile=TrustProfile.UNTRUSTED,
 )
 ```
