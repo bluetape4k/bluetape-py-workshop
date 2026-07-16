@@ -105,6 +105,23 @@ def test_read_status_returns_none_for_missing_fixed_order_key() -> None:
     assert factory.calls[0][2].sent == (b"*2\r\n$3\r\nGET\r\n$23\r\nworkshop:order:ORD-1001\r\n")
 
 
+def test_read_status_normalizes_a_bounded_stored_status() -> None:
+    factory = ScriptedSocketFactory(b"$10\r\n Accepted \r\n")
+    probe = RedisOrderStatusProbe(details=connection_details(), socket_factory=factory)
+
+    assert probe.read_status(order_id="ORD-1001") == "accepted"
+
+
+def test_read_status_rejects_an_invalid_stored_status_without_exposing_it() -> None:
+    factory = ScriptedSocketFactory(b"$15\r\nprovider secret\r\n")
+    probe = RedisOrderStatusProbe(details=connection_details(), socket_factory=factory)
+
+    with pytest.raises(RedisProbeError, match="status was invalid") as raised:
+        probe.read_status(order_id="ORD-1001")
+
+    assert "provider secret" not in str(raised.value)
+
+
 @pytest.mark.parametrize("details", [None, object()])
 def test_probe_requires_wrapper_connection_details(details: object) -> None:
     with pytest.raises(TypeError, match="RedisConnectionDetails"):
