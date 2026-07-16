@@ -154,9 +154,10 @@ The constructor requires exact `RedisConnectionDetails` and a finite positive
 `command_timeout` (default 2 seconds). An injectable socket factory is a
 deterministic-test seam only; production composition uses
 `socket.create_connection`. The implementation fixes maximum UTF-8
-command-part length at 64 bytes, response-line length at 128 bytes, and bulk
-response length at 64 bytes; callers cannot weaken these teaching-scenario
-bounds. The public `verify(order_id, status)` method:
+command-part length at 64 bytes, order-ID length at 48 bytes so the fixed key
+also fits that part bound, status length at 64 bytes, response-line length at
+128 bytes, and bulk response length at 64 bytes; callers cannot weaken these
+teaching-scenario bounds. The public `verify(order_id, status)` method:
 
 1. normalizes and validates the two application values;
 2. sends `PING` and requires `PONG`;
@@ -281,8 +282,8 @@ after source behavior exists and are tested against source filenames.
 ## Risks and Rollback
 
 - A RESP parser can accidentally become an incomplete client. Keep its command
-  surface private, fixed to this scenario, and capped at 64-byte command parts,
-  128-byte lines, and 64-byte bulk responses.
+  surface private, fixed to this scenario, and capped at 48-byte order IDs,
+  64-byte command parts/statuses/bulk responses, and 128-byte lines.
 - Three short-lived connections add round trips. This is accepted for a
   one-shot teaching probe because it makes ownership and failure isolation
   obvious; production pooling and pipelining remain out of scope.

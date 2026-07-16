@@ -239,6 +239,8 @@ class RedisProbeError(RuntimeError):
 
 
 _MAX_PART_BYTES = 64
+_MAX_ORDER_ID_BYTES = 48
+_MAX_STATUS_BYTES = 64
 _MAX_LINE_BYTES = 128
 _MAX_BULK_BYTES = 64
 _SocketFactory = Callable[[tuple[str, int], float], socket.socket]
@@ -264,8 +266,12 @@ class RedisOrderStatusProbe:
         self._socket_factory = socket_factory
 
     def verify(self, *, order_id: str, status: str) -> RedisProbeResult:
-        normalized_order_id = _token(order_id, field="order_id", uppercase=True)
-        normalized_status = _token(status, field="status", uppercase=False)
+        normalized_order_id = _token(
+            order_id, field="order_id", uppercase=True, max_bytes=_MAX_ORDER_ID_BYTES
+        )
+        normalized_status = _token(
+            status, field="status", uppercase=False, max_bytes=_MAX_STATUS_BYTES
+        )
         key = _key(normalized_order_id)
         if self._command("PING") != b"PONG":
             raise RedisProbeError("Redis ping returned an unexpected response")
@@ -282,7 +288,9 @@ class RedisOrderStatusProbe:
         )
 
     def read_status(self, *, order_id: str) -> str | None:
-        normalized_order_id = _token(order_id, field="order_id", uppercase=True)
+        normalized_order_id = _token(
+            order_id, field="order_id", uppercase=True, max_bytes=_MAX_ORDER_ID_BYTES
+        )
         response = self._command("GET", _key(normalized_order_id))
         if response is None:
             return None
@@ -306,7 +314,7 @@ class RedisOrderStatusProbe:
             raise RedisProbeError("Redis command failed") from error
 
 
-def _token(value: str, *, field: str, uppercase: bool) -> str:
+def _token(value: str, *, field: str, uppercase: bool, max_bytes: int) -> str:
     if not isinstance(value, str):
         raise TypeError(f"{field} must be a string")
     normalized = value.strip()
@@ -317,8 +325,8 @@ def _token(value: str, *, field: str, uppercase: bool) -> str:
     ):
         raise ValueError(f"{field} must use ASCII letters, digits, '_' or '-'")
     normalized = normalized.upper() if uppercase else normalized.lower()
-    if len(normalized.encode()) > _MAX_PART_BYTES:
-        raise ValueError(f"{field} exceeds {_MAX_PART_BYTES} UTF-8 bytes")
+    if len(normalized.encode()) > max_bytes:
+        raise ValueError(f"{field} exceeds {max_bytes} UTF-8 bytes")
     return normalized
 
 
@@ -376,8 +384,9 @@ def _read_exact(stream: socket.socket, size: int) -> bytes:
     return bytes(data)
 ```
 
-Use exact private constants `_MAX_PART_BYTES = 64`, `_MAX_LINE_BYTES = 128`,
-and `_MAX_BULK_BYTES = 64`. Validate exact connection-details type, finite
+Use exact private constants `_MAX_PART_BYTES = 64`, `_MAX_ORDER_ID_BYTES = 48`,
+`_MAX_STATUS_BYTES = 64`, `_MAX_LINE_BYTES = 128`, and `_MAX_BULK_BYTES = 64`.
+Validate exact connection-details type, finite
 positive timeout, ASCII token grammar `[A-Za-z0-9_-]+`, and encoded length.
 Normalize order ID uppercase and status lowercase. The public method issues only
 fixed `PING`, `SET`, and `GET` tuples and compares exact `PONG`, `OK`, and status
@@ -414,8 +423,8 @@ Run the Step 2.2 command. Expected: public-shape and success tests pass.
 Cover and observe RED before each minimal repair:
 
 - non-`RedisConnectionDetails`, bool/string/non-finite/non-positive timeout;
-- non-string, blank, non-ASCII, grammar-invalid, and 65-byte values before any
-  socket call;
+- non-string, blank, non-ASCII, grammar-invalid, 49-byte order IDs, and 65-byte
+  statuses before any socket call;
 - `PONG` mismatch, `OK` mismatch, missing key, and stored-value mismatch;
 - `read_status()` returns `None` for a missing key and never exposes a generic
   command method;
