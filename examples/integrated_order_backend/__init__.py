@@ -1,3 +1,4 @@
+from .composition import CachedCatalogProvider
 from .errors import (
     InvalidOrderBackendCommand,
     InvalidOrderLine,
@@ -12,6 +13,7 @@ from .models import (
 )
 
 __all__ = [
+    "CachedCatalogProvider",
     "InvalidOrderBackendCommand",
     "InvalidOrderLine",
     "OrderBackendClosedError",

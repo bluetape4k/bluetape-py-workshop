@@ -109,6 +109,7 @@ def test_public_export_surface_is_deliberate() -> None:
     from examples import integrated_order_backend as api
 
     assert set(api.__all__) == {
+        "CachedCatalogProvider",
         "InvalidOrderBackendCommand",
         "InvalidOrderLine",
         "OrderBackendClosedError",

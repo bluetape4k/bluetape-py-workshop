@@ -276,7 +276,7 @@ with pytest.raises(ProviderUnavailable):
     await provider.fetch(("FAIL",))
 assert (await provider.fetch(("FAIL",)))["FAIL"].product_id == "FAIL"
 stats = await catalog.stats()
-assert (stats.misses, stats.loads, stats.load_failures) == (4, 3, 1)
+assert (stats.misses, stats.loads, stats.load_failures) == (4, 4, 1)
 ```
 
 - [ ] **Step 2.2: Observe RED**
