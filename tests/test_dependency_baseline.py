@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib
 import importlib.metadata
+import importlib.util
 import subprocess
 import sys
 import tomllib
@@ -28,8 +29,18 @@ PACKAGES = {
     ),
     "bluetape-testing": ("packages/bluetape-testing", "bluetape.testing"),
 }
+OPTIONAL_PACKAGES = {
+    "bluetape-cache-redis": (
+        "packages/bluetape-cache-redis",
+        "bluetape.cache.redis",
+    ),
+}
 FORBIDDEN_LOCKED_DISTRIBUTIONS = {"cramjam", "lz4", "zstandard"}
-FORBIDDEN_DEFAULT_DISTRIBUTIONS = FORBIDDEN_LOCKED_DISTRIBUTIONS | {"pyfory"}
+FORBIDDEN_DEFAULT_DISTRIBUTIONS = FORBIDDEN_LOCKED_DISTRIBUTIONS | {
+    "bluetape-cache-redis",
+    "pyfory",
+    "redis",
+}
 
 
 def _load_toml(path: str) -> dict[str, object]:
@@ -53,17 +64,20 @@ def test_project_declares_the_approved_root_contract() -> None:
     assert pytest_config["addopts"] == '-ra -m "not testcontainers"'
 
 
-def test_project_declares_fory_as_an_optional_provider() -> None:
+def test_project_declares_optional_providers() -> None:
     project = _load_toml("pyproject.toml")
 
-    assert project["project"]["optional-dependencies"] == {"fory": ["bluetape-serde[fory]==0.1.0"]}
+    assert project["project"]["optional-dependencies"] == {
+        "fory": ["bluetape-serde[fory]==0.1.0"],
+        "redis-coordination": ["bluetape-cache-redis==0.1.0"],
+    }
 
 
 def test_every_source_uses_one_repository_commit_and_subdirectory() -> None:
     sources = _load_toml("pyproject.toml")["tool"]["uv"]["sources"]
 
-    assert set(sources) == set(PACKAGES)
-    for name, (subdirectory, _) in PACKAGES.items():
+    assert set(sources) == set(PACKAGES) | set(OPTIONAL_PACKAGES)
+    for name, (subdirectory, _) in (PACKAGES | OPTIONAL_PACKAGES).items():
         assert sources[name] == {
             "git": UPSTREAM_REPOSITORY,
             "rev": UPSTREAM_COMMIT,
@@ -81,6 +95,14 @@ def test_lock_resolves_every_bluetape_distribution_to_the_full_commit() -> None:
         assert f"{parsed.scheme}://{parsed.netloc}{parsed.path}" == UPSTREAM_REPOSITORY
         assert parsed.fragment == UPSTREAM_COMMIT
         assert query["subdirectory"] == [subdirectory]
+    for name, (subdirectory, _) in OPTIONAL_PACKAGES.items():
+        source_url = locked[name]["source"]["git"]
+        parsed = urlsplit(source_url)
+        query = parse_qs(parsed.query)
+        assert f"{parsed.scheme}://{parsed.netloc}{parsed.path}" == UPSTREAM_REPOSITORY
+        assert parsed.fragment == UPSTREAM_COMMIT
+        assert query["subdirectory"] == [subdirectory]
+    assert locked["redis"]["version"] == "8.0.1"
     assert locked["pyfory"]["version"] == "1.3.0"
     assert FORBIDDEN_LOCKED_DISTRIBUTIONS.isdisjoint(locked)
 
@@ -99,6 +121,10 @@ def test_required_distribution_is_installed_and_importable(
 def test_optional_provider_is_not_installed(distribution: str) -> None:
     with pytest.raises(importlib.metadata.PackageNotFoundError):
         importlib.metadata.version(distribution)
+
+
+def test_redis_coordination_module_is_absent_from_the_default_environment() -> None:
+    assert importlib.util.find_spec("bluetape.cache.redis") is None
 
 
 def test_testcontainers_import_has_no_runtime_side_effect() -> None:
