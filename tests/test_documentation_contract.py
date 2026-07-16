@@ -37,8 +37,11 @@ def test_wip_keeps_the_dependency_order_and_current_issue() -> None:
         WIP.index(f"| {order} | [#{issue}]") for order, issue in enumerate(range(2, 9), start=1)
     ]
     assert positions == sorted(positions)
-    assert "Issue [#4]" in WIP
-    assert "Bounded catalog enrichment service" in WIP
+    assert "Issue [#5]" in WIP
+    assert "Cached product catalog service" in WIP
+    assert "Issue #6" in WIP
+    assert "uv run --locked python -m examples.cached_product_catalog" in WIP
+    assert "uv run --locked pytest examples/cached_product_catalog/tests -q" in WIP
 
 
 def test_readme_pair_links_the_first_runnable_example() -> None:
@@ -46,6 +49,8 @@ def test_readme_pair_links_the_first_runnable_example() -> None:
     assert "examples/order_intake/README.ko.md" in KOREAN
     assert "examples/catalog_enrichment/README.md" in ENGLISH
     assert "examples/catalog_enrichment/README.ko.md" in KOREAN
+    assert "examples/cached_product_catalog/README.md" in ENGLISH
+    assert "examples/cached_product_catalog/README.ko.md" in KOREAN
 
 
 def test_agents_keeps_authoritative_commands_and_rules() -> None:

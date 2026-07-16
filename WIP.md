@@ -1,6 +1,6 @@
 # WIP
 
-Snapshot: 2026-07-15 KST
+Snapshot: 2026-07-16 KST
 Scope: [`0.1.0`](https://github.com/bluetape4k/bluetape-py-workshop/milestone/1)
 workshop foundation and runnable examples.
 
@@ -8,59 +8,60 @@ workshop foundation and runnable examples.
 
 ## Current Target
 
-Issue [#4](https://github.com/bluetape4k/bluetape-py-workshop/issues/4):
-build a framework-neutral catalog enrichment service that normalizes and
-batches product identifiers, bounds provider concurrency, preserves input
-order, and distinguishes required failures, optional warnings, timeouts, and
-caller cancellation.
+Issue [#5](https://github.com/bluetape4k/bluetape-py-workshop/issues/5):
+build a Cached product catalog service with separate sync and async application
+services, caller-owned local TTL caches, exact expiry and LRU behavior, loader
+failure recovery, shared async loading, and cancellation cleanup.
 
-Active branch: `feat/issue-4-bounded-catalog-enrichment`
+Active branch: `feat/issue-5-cached-product-catalog`
 Base branch: `develop`
 Stop boundary: report the exact PR head as merge-ready; merging requires a fresh
 explicit approval and auto-merge is forbidden.
 
 ## Resume Checkpoint
 
-- Branch/base head: `feat/issue-4-bounded-catalog-enrichment` /
-  `b40df76bce2c13825c8247a050cfefdcd1e988e8`
-- Last validated content head: `d61ab48`; the pre-PR checkpoint commit that
-  records this evidence must be verified again as the new exact head
+- Branch/base head: `feat/issue-5-cached-product-catalog` /
+  `762c20fc2e7ccf4e5a5c5afdb8b7ac1d70ebcc06`
+- Current content head: `ed1c604`; root registration and final integration
+  evidence remain before exact-head publication
 - Pull request: not created; approved target is this branch into `develop`
-- Workflow run: `20260715T130803Z-2df009df`
-- Last completed gate: Type A classification and concrete execution plan
-  approved in the active thread
-- Last completed gate: isolated worktree created from current `origin/develop`;
-  locked baseline passed with `57 passed`
+- Workflow run: `20260715T153541Z-f1ea2b68`
+- Last completed gate: issue #4 merged through
+  [PR #14](https://github.com/bluetape4k/bluetape-py-workshop/pull/14), local
+  `develop` synced, and its worktree/local branch removed
+- Last completed gate: Type A classification and isolated worktree baseline
+  passed with `92 passed`
 - Last completed gate: written design review converged at P0=0/P1=0 and the
   converged written spec received explicit user approval
-- Last completed gate: executable implementation plan approved and committed as
-  `e147923`
-- Last completed gate: immutable API and deterministic provider policy passed
-  25 focused tests and committed as `315996f` and `c627a68`
-- Last completed gate: concurrency, timeout, cancellation, cleanup, CLI, Ruff,
-  and the 89-test repository suite passed and committed as `1337d91`
-- Last completed gate: bilingual documentation contracts passed; Architecture
-  and Sequence SVG/PNG pairs passed XML, connector, geometry, endpoint,
-  mixed-corner, sequence-style, and full-size PNG inspection gates
-- Last completed gate: 34 focused catalog tests, 18 dependency tests, 91 full
-  tests, Ruff, actionlint 1.7.12, diff check, and dependency SHA parity passed
-- Last completed gate: six-lens implementation review converged at P0=0/P1=0
-  and the required Type A lesson was committed as `d61ab48`
-- Current gate: commit the pre-PR checkpoint, rerun the full ladder on that exact
-  head, then publish the authorized branch and PR into `develop`
-- Next action after issue #4 merge: start dependency-ready issue
-  [#5](https://github.com/bluetape4k/bluetape-py-workshop/issues/5)
+- Last completed gate: executable implementation plan and six-lens plan review
+  passed P0=0/P1=0 and were committed as `4041c71`
+- Last completed gate: sync/async service contracts, exact TTL, LRU, failure,
+  coalescing, and cancellation cleanup passed 28 tests and three sequential
+  stability runs; implementation committed as `0a4a25a`
+- Last completed gate: deterministic CLI emitted ten safe JSON events; CLI and
+  test committed as `b384ed8`
+- Last completed gate: aligned bilingual documentation and mandatory
+  Architecture/Sequence SVG/PNG pairs passed XML, connector, geometry,
+  endpoint, mixed-corner, sequence-style, and full-size PNG inspection gates;
+  documentation committed as `ed1c604`
+- Current gate: register root navigation, run the full validation/review ladder,
+  commit the Type A lesson, then publish the authorized PR into `develop`
+- Next action after issue #5 merge: start dependency-ready Issue #6,
+  [bounded payload processing](https://github.com/bluetape4k/bluetape-py-workshop/issues/6)
 - Runnable now: `uv run --locked python -m examples.order_intake`
 - Runnable now: `uv run --locked python -m examples.catalog_enrichment`
+- Runnable now: `uv run --locked python -m examples.cached_product_catalog`
+- Focused tests: `uv run --locked pytest examples/cached_product_catalog/tests -q`
 
-Current artifacts: [issue #4](https://github.com/bluetape4k/bluetape-py-workshop/issues/4),
-[written design](docs/superpowers/specs/2026-07-15-issue-4-bounded-catalog-enrichment-design.md),
-[design review](docs/superpowers/reviews/2026-07-15-issue-4-design-review.md),
-[implementation plan](docs/superpowers/plans/2026-07-15-issue-4-bounded-catalog-enrichment-plan.md),
-[plan review](docs/superpowers/reviews/2026-07-15-issue-4-plan-review.md),
-and the milestone dependency map below. Issue #2 closed through
-[PR #12](https://github.com/bluetape4k/bluetape-py-workshop/pull/12), and issue
-#3 closed through [PR #13](https://github.com/bluetape4k/bluetape-py-workshop/pull/13).
+Current artifacts: [issue #5](https://github.com/bluetape4k/bluetape-py-workshop/issues/5),
+[written design](docs/superpowers/specs/2026-07-16-issue-5-cached-product-catalog-design.md),
+[design review](docs/superpowers/reviews/2026-07-16-issue-5-design-review.md),
+[implementation plan](docs/superpowers/plans/2026-07-16-issue-5-cached-product-catalog-plan.md),
+[plan review](docs/superpowers/reviews/2026-07-16-issue-5-plan-review.md), and
+the milestone dependency map below. Issues #2, #3, and #4 closed through
+[PR #12](https://github.com/bluetape4k/bluetape-py-workshop/pull/12),
+[PR #13](https://github.com/bluetape4k/bluetape-py-workshop/pull/13), and
+[PR #14](https://github.com/bluetape4k/bluetape-py-workshop/pull/14).
 
 ## Dependency Baseline
 
@@ -96,8 +97,8 @@ and the milestone dependency map below. Issue #2 closed through
 |---:|---|---|---|---|
 | 1 | [#2](https://github.com/bluetape4k/bluetape-py-workshop/issues/2) | Reproducible `uv` foundation and CI | None | Completed |
 | 2 | [#3](https://github.com/bluetape4k/bluetape-py-workshop/issues/3) | Validated order intake service | #2 | Completed |
-| 3 | [#4](https://github.com/bluetape4k/bluetape-py-workshop/issues/4) | Bounded catalog enrichment service | #2 | Pre-PR validation complete |
-| 4 | [#5](https://github.com/bluetape4k/bluetape-py-workshop/issues/5) | Cached product catalog service | #2 | Next after #4 merge |
+| 3 | [#4](https://github.com/bluetape4k/bluetape-py-workshop/issues/4) | Bounded catalog enrichment service | #2 | Completed |
+| 4 | [#5](https://github.com/bluetape4k/bluetape-py-workshop/issues/5) | Cached product catalog service | #2 | In progress |
 | 5 | [#6](https://github.com/bluetape4k/bluetape-py-workshop/issues/6) | Bounded payload processing service | #2 | Pending |
 | 6 | [#7](https://github.com/bluetape4k/bluetape-py-workshop/issues/7) | Redis-backed integration-test workshop | #2 | Pending |
 | 7 | [#8](https://github.com/bluetape4k/bluetape-py-workshop/issues/8) | Integrated framework-neutral order backend | #3, #4, #5, #6 | Pending |
@@ -167,7 +168,7 @@ uv run --locked pytest examples/order_intake/tests -q
 
 The example must also pass the full repository validation contract above.
 
-Issue #4 will add these focused commands after implementation:
+Issue #4 adds these focused commands:
 
 ```bash
 uv run --locked python -m examples.catalog_enrichment
@@ -176,6 +177,17 @@ uv run --locked pytest examples/catalog_enrichment/tests -q
 
 The async tests must use bounded event-driven synchronization rather than long
 sleeps and must prove concurrency, timeout, cancellation, and task cleanup.
+
+Issue #5 adds these focused commands:
+
+```bash
+uv run --locked python -m examples.cached_product_catalog
+uv run --locked pytest examples/cached_product_catalog/tests -q
+```
+
+The cache tests use a manual nanosecond clock and asyncio events. They prove
+hit, miss, exact expiry, LRU eviction, loader recovery, shared async loading,
+partial cancellation, and terminal cache-task cleanup without real sleeps.
 
 ## Holds and Exclusions
 
@@ -205,3 +217,6 @@ sleeps and must prove concurrency, timeout, cancellation, and task cleanup.
 - 2026-07-15: implement issue #4 as deterministic batch-provider jobs under one
   `map_bounded` budget; deduplicate provider work while restoring duplicate
   results in normalized input occurrence order.
+- 2026-07-16: implement issue #5 with separate sync/async services and
+  caller-owned `TTLCache`/`AsyncTTLCache`; reject a workshop cache adapter so
+  exact expiry, coalescing, cancellation, and public stats remain visible.

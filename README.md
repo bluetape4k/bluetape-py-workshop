@@ -9,10 +9,10 @@ Runnable, application-shaped Python backend examples using
 
 The repository foundation is runnable: dependency resolution, source provenance,
 provider isolation, lint, and tests are locked and automated. Runnable domain
-scenarios now include [validated order intake](examples/order_intake/README.md)
-and [bounded catalog enrichment](examples/catalog_enrichment/README.md). Each
-example provides aligned bilingual guidance, Architecture, and Sequence Diagram
-assets.
+scenarios now include [validated order intake](examples/order_intake/README.md),
+[bounded catalog enrichment](examples/catalog_enrichment/README.md), and the
+[cached product catalog](examples/cached_product_catalog/README.md). Each example
+provides aligned bilingual guidance, Architecture, and Sequence Diagram assets.
 
 Follow [WIP.md](WIP.md) for the current issue, dependency order, validation
 evidence, and next action.
@@ -34,8 +34,8 @@ evidence, and next action.
 - Python 3.13 or newer; the reference interpreter is Python 3.13.14.
 - uv 0.11.28. The project configuration rejects a different uv version.
 - Git access to the public `bluetape-py` repository.
-- Docker is not required for the deterministic foundation, order-intake, or
-  catalog-enrichment lanes.
+- Docker is not required for the deterministic foundation, order-intake,
+  catalog-enrichment, or cached-product-catalog lanes.
 
 ## Setup
 
