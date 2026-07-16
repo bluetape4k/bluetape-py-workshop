@@ -8,39 +8,30 @@ workshop foundation and runnable examples.
 
 ## Current Target
 
-Issue [#6](https://github.com/bluetape4k/bluetape-py-workshop/issues/6):
-build separate bounded JSON and Apache Fory payload-processing examples that
-compose strict serde metadata, gzip decompression limits, and canonical
-base64url encoding at explicit untrusted and trusted-internal boundaries.
+Issue [#7](https://github.com/bluetape4k/bluetape-py-workshop/issues/7):
+build a Redis integration-test workshop that composes the ecosystem-owned
+`RedisServer`, wrapper-provided connection details, a bounded application-owned
+RESP probe, and explicit success/failure cleanup.
 
-Active branch: `feat/issue-6-bounded-payload-processing`
+Active branch: `feat/issue-7-redis-test-server`
 Base branch: `develop`
 Stop boundary: report the exact PR head as merge-ready; merging requires a fresh
 explicit approval and auto-merge is forbidden.
 
 ## Resume Checkpoint
 
-- Branch/base head: `feat/issue-6-bounded-payload-processing` /
-  `51d7e457384ea4f84b7f18afd00a13e939218ef1`
-- Last reviewed content head: `f7f0fc6`; local default/optional ladders and
-  hosted CI passed before this delivery-checkpoint update
-- Pull request: [#16](https://github.com/bluetape4k/bluetape-py-workshop/pull/16),
-  `feat/issue-6-bounded-payload-processing` into `develop`
-- Workflow run: `20260716T065828Z-3fe71fd5`
-- Last completed gate: issue #5 merged through
-  [PR #15](https://github.com/bluetape4k/bluetape-py-workshop/pull/15), local
+- Branch/base head: `feat/issue-7-redis-test-server` /
+  `55c0555bb0ac778df838db077afd1cbcf4eed21e`
+- Last completed gate: issue #6 merged through
+  [PR #16](https://github.com/bluetape4k/bluetape-py-workshop/pull/16), local
   `develop` synced, and its worktree/local branch removed
-- Last completed gate: separate JSON/Fory services, real-provider tests,
-  bilingual README pair, mandatory Architecture/Sequence assets, and final
-  six-lens review at P0=0/P1=0
-- Validation: default dependency baseline `19 passed`; example `41 passed`;
-  repository `165 passed, 1 skipped` with Fory absent; isolated
-  `pyfory==1.3.0` suite `17 passed`; Ruff, actionlint, diagram audits, and diff
-  check passed
-- Current gate: publish this final WIP checkpoint, rerun exact-head CI and live
-  review/thread checks, then stop for fresh merge approval
-- Next action after issue #6 merge: start dependency-ready Issue #7,
-  [Redis Testcontainers workshop](https://github.com/bluetape4k/bluetape-py-workshop/issues/7)
+- Baseline validation: dependency boundary `19 passed`; repository
+  `165 passed, 1 skipped`; Docker server `28.4.0` reachable; no labeled
+  Bluetape Redis test container present
+- Current gate: written design reviewed at P0=0/P1=0; explicit spec approval is
+  required before the implementation plan or source changes
+- Next action: user review of the written design, then an executable TDD plan
+  and six-perspective plan review
 - Runnable now: `uv run --locked python -m examples.order_intake`
 - Runnable now: `uv run --locked python -m examples.catalog_enrichment`
 - Runnable now: `uv run --locked python -m examples.cached_product_catalog`
@@ -50,11 +41,9 @@ explicit approval and auto-merge is forbidden.
 - Optional runnable: after activating `.venv-fory`, `python -m examples.bounded_payload_processing.fory_demo`
 - Optional tests: after activating `.venv-fory`, `pytest examples/bounded_payload_processing/tests/test_fory_service.py -q`
 
-Current artifacts: [issue #6](https://github.com/bluetape4k/bluetape-py-workshop/issues/6),
-[written design](docs/superpowers/specs/2026-07-16-issue-6-bounded-payload-processing-design.md),
-[implementation plan](docs/superpowers/plans/2026-07-16-issue-6-bounded-payload-processing-plan.md),
-[final review](docs/superpowers/reviews/2026-07-16-issue-6-implementation-review.md),
-[lesson](docs/superpowers/lessons/2026-07-16-issue-6-payload-trust-boundaries.md), and
+Current artifacts: [issue #7](https://github.com/bluetape4k/bluetape-py-workshop/issues/7),
+[written design](docs/superpowers/specs/2026-07-16-issue-7-redis-test-server-design.md),
+[design review](docs/superpowers/reviews/2026-07-16-issue-7-design-review.md), and
 the milestone dependency map below. Issues #2, #3, and #4 closed through
 [PR #12](https://github.com/bluetape4k/bluetape-py-workshop/pull/12),
 [PR #13](https://github.com/bluetape4k/bluetape-py-workshop/pull/13), and
@@ -96,8 +85,8 @@ the milestone dependency map below. Issues #2, #3, and #4 closed through
 | 2 | [#3](https://github.com/bluetape4k/bluetape-py-workshop/issues/3) | Validated order intake service | #2 | Completed |
 | 3 | [#4](https://github.com/bluetape4k/bluetape-py-workshop/issues/4) | Bounded catalog enrichment service | #2 | Completed |
 | 4 | [#5](https://github.com/bluetape4k/bluetape-py-workshop/issues/5) | Cached product catalog service | #2 | Completed |
-| 5 | [#6](https://github.com/bluetape4k/bluetape-py-workshop/issues/6) | Bounded payload processing service | #2 | In progress |
-| 6 | [#7](https://github.com/bluetape4k/bluetape-py-workshop/issues/7) | Redis-backed integration-test workshop | #2 | Pending |
+| 5 | [#6](https://github.com/bluetape4k/bluetape-py-workshop/issues/6) | Bounded payload processing service | #2 | Completed |
+| 6 | [#7](https://github.com/bluetape4k/bluetape-py-workshop/issues/7) | Redis-backed integration-test workshop | #2 | In progress |
 | 7 | [#8](https://github.com/bluetape4k/bluetape-py-workshop/issues/8) | Integrated framework-neutral order backend | #3, #4, #5, #6 | Pending |
 
 ## Example Documentation Contract
