@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Cached product catalog architecture</title>
+  <desc id="desc">Static ownership map for caller-owned caches, separate catalog services, injected loaders, immutable values, and public statistics.</desc>
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&amp;family=Comic+Mono&amp;display=swap');
+      .title { font: 42px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #263238; }
+      .subtitle { font: 21px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #546e7a; }
+      .lane-title { font: 26px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #37474f; }
+      .card-title { font: 23px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #263238; }
+      .body { font: 17px 'Comic Mono', 'SFMono-Regular', monospace; fill: #455a64; }
+      .small { font: 15px 'Comic Mono', 'SFMono-Regular', monospace; fill: #546e7a; }
+      .lane { stroke: #cfd8dc; stroke-width: 2.5; stroke-dasharray: 10 8; }
+      .card { stroke-width: 3; }
+      .flow { fill: none; stroke: #5f8da8; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow-blue); }
+      .state { fill: none; stroke: #6f9a65; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow-green); }
+      .label { fill: #fffdf8; stroke: #cfd8dc; stroke-width: 1.5; }
+    </style>
+    <marker id="arrow-blue" viewBox="0 0 14 14" refX="12" refY="7" markerWidth="14" markerHeight="14" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M1 1 L13 7 L1 13 Z" fill="#5f8da8"/>
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 14 14" refX="12" refY="7" markerWidth="14" markerHeight="14" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M1 1 L13 7 L1 13 Z" fill="#6f9a65"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#455a64" flood-opacity="0.13"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="#fbf8f1"/>
+  <path d="M70 115 H1530" stroke="#d7ccc8" stroke-width="3" stroke-linecap="round"/>
+  <text x="70" y="68" class="title">Cached Product Catalog</text>
+  <text x="70" y="101" class="subtitle">The composition root owns lifecycle; services reveal the exact cache API</text>
+
+  <rect x="70" y="150" width="350" height="610" rx="26" fill="#f7eee7" class="lane"/>
+  <rect x="455" y="150" width="480" height="610" rx="26" fill="#eef3f6" class="lane"/>
+  <rect x="970" y="150" width="560" height="610" rx="26" fill="#edf5ed" class="lane"/>
+  <text x="95" y="190" class="lane-title">Caller / composition root</text>
+  <text x="480" y="190" class="lane-title">Example services</text>
+  <text x="995" y="190" class="lane-title">Injected + bluetape-cache</text>
+
+  <g filter="url(#shadow)">
+    <rect x="105" y="235" width="280" height="175" rx="20" fill="#ffe7c7" stroke="#d69b55" class="card"/>
+    <text x="130" y="278" class="card-title">Composition Root</text>
+    <text x="130" y="316" class="body">owns cache + loader</text>
+    <text x="130" y="346" class="body">owns clock + event loop</text>
+    <text x="130" y="378" class="small">chooses TTL and entry count</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="105" y="510" width="280" height="155" rx="20" fill="#e3f0df" stroke="#6f9a65" class="card"/>
+    <text x="130" y="553" class="card-title">Caller</text>
+    <text x="130" y="591" class="body">requests ProductSummary</text>
+    <text x="130" y="623" class="small">reads immutable CacheStats</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="495" y="225" width="400" height="190" rx="20" fill="#dcebf4" stroke="#5f8da8" class="card"/>
+    <text x="520" y="268" class="card-title">SyncProductCatalogService</text>
+    <text x="520" y="306" class="body">normalize ASCII SKU</text>
+    <text x="520" y="336" class="body">TTLCache.get_or_load</text>
+    <text x="520" y="368" class="small">returns cached object by identity</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="495" y="490" width="400" height="190" rx="20" fill="#e8def5" stroke="#8e72b5" class="card"/>
+    <text x="520" y="533" class="card-title">AsyncProductCatalogService</text>
+    <text x="520" y="571" class="body">normalize ASCII SKU</text>
+    <text x="520" y="601" class="body">await AsyncTTLCache.get_or_load</text>
+    <text x="520" y="633" class="small">preserves native cancellation</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="1010" y="215" width="220" height="150" rx="20" fill="#dcebf4" stroke="#5f8da8" class="card"/>
+    <text x="1035" y="258" class="card-title">TTLCache</text>
+    <text x="1035" y="296" class="body">TTL + LRU + loading</text>
+    <text x="1035" y="326" class="small">caller-owned instance</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="1270" y="215" width="220" height="150" rx="20" fill="#e8def5" stroke="#8e72b5" class="card"/>
+    <text x="1295" y="258" class="card-title">AsyncTTLCache</text>
+    <text x="1295" y="296" class="body">coalescing + cleanup</text>
+    <text x="1295" y="326" class="small">one event loop</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="1010" y="455" width="220" height="150" rx="20" fill="#ffe7c7" stroke="#d69b55" class="card"/>
+    <text x="1035" y="498" class="card-title">Injected Loaders</text>
+    <text x="1035" y="536" class="body">sync / async callable</text>
+    <text x="1035" y="566" class="small">errors stay unchanged</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="1270" y="455" width="220" height="150" rx="20" fill="#e3f0df" stroke="#6f9a65" class="card"/>
+    <text x="1295" y="498" class="card-title">ProductSummary</text>
+    <text x="1295" y="536" class="body">frozen + slotted</text>
+    <text x="1295" y="566" class="small">safe cached identity</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="1140" y="640" width="240" height="90" rx="20" fill="#f6ddd7" stroke="#c56b5d" class="card"/>
+    <text x="1165" y="681" class="card-title">CacheStats</text>
+    <text x="1165" y="711" class="small">lifetime counters + gauges</text>
+  </g>
+
+  <path d="M385 315 H495" class="flow"/>
+  <path d="M385 585 H495" class="flow"/>
+  <path d="M895 300 H1010" class="flow"/>
+  <path d="M895 570 H950 Q965 570 965 585 V735 Q965 750 980 750 H1495 Q1510 750 1510 735 V305 Q1510 290 1495 290 H1490" class="flow"/>
+  <path d="M1120 365 V430 Q1120 445 1120 455" class="flow"/>
+  <path d="M1380 365 V455" class="flow"/>
+  <path d="M1230 530 H1270" class="state"/>
+  <path d="M1120 605 V615 Q1120 625 1130 625 H1190 Q1200 625 1200 635 V640" class="state"/>
+  <path d="M1380 605 V615 Q1380 625 1370 625 H1320 Q1310 625 1310 635 V640" class="state"/>
+
+  <rect x="70" y="800" width="1460" height="58" rx="18" fill="#f0ebe2" stroke="#d7ccc8" stroke-width="2"/>
+  <circle cx="105" cy="829" r="9" fill="#5f8da8"/>
+  <text x="125" y="836" class="small">Services validate and delegate once; they never own global cache state</text>
+  <circle cx="840" cy="829" r="9" fill="#6f9a65"/>
+  <text x="860" y="836" class="small">Cache owns expiry, capacity, coalescing, task cleanup, and statistics</text>
+</svg>
