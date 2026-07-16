@@ -40,7 +40,7 @@ def test_wip_keeps_the_dependency_order_and_current_issue() -> None:
     assert "Issue [#8]" in WIP
     assert "Integrated framework-neutral order backend" in WIP
     assert "feat/issue-8-integrated-order-backend" in WIP
-    assert "Pull request: Not created" in WIP
+    assert "Pull request: [#18](https://github.com/bluetape4k/bluetape-py-workshop/pull/18)" in WIP
     assert "uv run --locked python -m examples.integrated_order_backend" in WIP
     assert 'pytest -m "not testcontainers"' in WIP
     assert (
