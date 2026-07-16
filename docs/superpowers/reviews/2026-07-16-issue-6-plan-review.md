@@ -14,7 +14,7 @@
 | Stability | Default/optional environments, malformed/trailing input, boundary cases, repeated focused runs, cleanup, and rerun points are ordered. | 0 | 0 | None open. |
 | Security | Task 3 proves metadata-first order; Task 5 fixes registration; scans and isolated imports prevent automatic selection/provider leakage. | 0 | 0 | None open. |
 | Operator/Ops | Safe events, exact commands, cleanup, rollback, PR authority, and merge hold are explicit. | 0 | 0 | None open. |
-| Developer/API | Every task names exact files, RED/GREEN commands, dependency order, small shared surface, and exception ownership. | 0 | 0 | None open. |
+| Developer/API | Every task names exact files, RED/GREEN commands, dependency order, provider-compatible model mutability, small shared surface, and exception ownership. | 0 | 0 | Frozen-model assumption repaired after actual provider proof. |
 | User/caller | Both locales, trust comparison, unsupported behavior, runnable commands, troubleshooting, and required visuals map to tests. | 0 | 0 | None open. |
 
 ## Step 3-R Integration Checks

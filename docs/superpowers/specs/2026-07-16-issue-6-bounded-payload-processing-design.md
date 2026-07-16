@@ -51,7 +51,7 @@ The pinned `bluetape-py` source baseline is commit
   `bluetape-serde[fory]`, accepts only `TRUSTED_INTERNAL`, binds one exact root
   type to fixed schema/type identifiers, and applies bounded input/output and
   concurrency limits.
-- Existing workshop examples establish immutable keyword-only models,
+- Existing workshop examples establish explicit keyword-only models,
   independently runnable packages, deterministic CLIs, focused tests, aligned
   README locales, and mandatory Architecture/Sequence SVG and PNG pairs.
 
@@ -83,7 +83,7 @@ Create `JsonPayloadService` in the default package surface and
 `ForyPayloadService` in an optional module that imports
 `bluetape.serde.fory`. The services intentionally duplicate the small
 serialize-compress-encode and decode-decompress-deserialize pipeline. They
-share only immutable transport/domain models and transport-policy error types.
+share only transport/domain models and transport-policy error types.
 
 Why chosen:
 
@@ -145,7 +145,7 @@ class EncodedPayload:
     data: str
 
 
-@dataclass(frozen=True, slots=True, kw_only=True)
+@dataclass(slots=True, kw_only=True)
 class OrderSnapshot:
     order_id: str
     product_ids: list[str]
@@ -155,13 +155,16 @@ class OrderSnapshot:
 `EncodedPayload` makes every transport decision visible. Services require an
 exact instance and validate `compression`, `encoding`, and every metadata field
 against independently constructed constants before decoding. `OrderSnapshot`
-is the exact registered Fory root. Its list demonstrates a typed object graph;
-the service does not mutate the snapshot or list.
+is the exact registered Fory root. It is deliberately not frozen: pinned
+`pyfory==1.3.0` can serialize a frozen slotted dataclass but cannot populate it
+during deserialization. The pinned upstream conformance tests likewise use a
+mutable slotted dataclass. Its list demonstrates a typed object graph; service
+tests prove that neither the snapshot nor the list is mutated.
 
 `EncodedPayload.__post_init__` requires exact `PayloadMetadata` and exact
-strings. It rejects empty transport identifiers and data larger than the model
-does not know how to bound; size policy remains service-owned because the same
-immutable payload may be evaluated by different trusted callers.
+strings. It rejects empty transport identifiers but does not enforce a data
+size; size policy remains service-owned because the same immutable payload may
+be evaluated by different trusted callers.
 
 The default package exports `EncodedPayload`, `JsonPayloadService`, and the two
 transport-policy errors. It may export `OrderSnapshot` because that model has
@@ -303,8 +306,8 @@ that importing the package and running the JSON CLI does not import
 
 ## Testing Strategy
 
-- Public shape: immutable/keyword-only/slotted contracts and exact default
-  exports.
+- Public shape: immutable envelope, provider-compatible slotted Fory model,
+  keyword-only construction, and exact default exports.
 - JSON success: object, scalar, empty object/list/string, and exact output-size
   boundary round trips.
 - Input preservation: deep-copy before encode and assert the original nested

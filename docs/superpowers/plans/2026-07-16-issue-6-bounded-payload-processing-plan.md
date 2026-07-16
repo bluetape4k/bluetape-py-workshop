@@ -10,7 +10,7 @@ and fixed trust profiles without payload-driven format selection.
 **Architecture:** `JsonPayloadService` is the default untrusted lane.
 `ForyPayloadService` lives in an optional module and accepts one fixed
 `ForyAdapter[OrderSnapshot]` for authenticated trusted-internal payloads. The
-services share immutable models and transport-policy errors only; each owns its
+services share explicit models and transport-policy errors only; each owns its
 small concrete pipeline and independent expected metadata.
 
 **Tech Stack:** Python 3.13.14, uv 0.11.28, `bluetape-codec`,
@@ -42,7 +42,7 @@ small concrete pipeline and independent expected metadata.
 |---|---|
 | `pyproject.toml`, `uv.lock` | Optional `fory` extra and reproducible provider lock |
 | `tests/test_dependency_baseline.py` | Default installed-provider absence plus optional lock contract |
-| `examples/bounded_payload_processing/models.py` | Immutable `EncodedPayload` and `OrderSnapshot` |
+| `examples/bounded_payload_processing/models.py` | Immutable envelope and provider-compatible slotted Fory model |
 | `examples/bounded_payload_processing/errors.py` | Unsupported transport and transport-limit errors |
 | `examples/bounded_payload_processing/service.py` | Default untrusted JSON service |
 | `examples/bounded_payload_processing/fory_service.py` | Optional trusted-internal Fory service |
@@ -108,9 +108,10 @@ compression provider. Regenerate and rerun the default sync before continuing.
 
 **Files:** package `__init__.py`, `models.py`, `errors.py`, `service.py`, tests
 
-- [ ] Write RED public-shape tests for frozen, slotted, keyword-only
-  `EncodedPayload`/`OrderSnapshot`, exact string/metadata validation, exact
-  package exports, and absence of `ForyPayloadService` from the default module.
+- [ ] Write RED public-shape tests for frozen/slotted `EncodedPayload`, mutable
+  slotted `OrderSnapshot` required by `pyfory==1.3.0`, keyword-only construction,
+  exact string/metadata validation, exact package exports, and absence of
+  `ForyPayloadService` from the default module.
 - [ ] Write a RED JSON round-trip test with nested caller input, configured
   limits, fixed JSON metadata, gzip, and canonical unpadded base64url.
 - [ ] Run the focused test and record collection/behavior RED.

@@ -17,6 +17,9 @@ dependencies = [
     "bluetape-testing==0.1.0",
 ]
 
+[project.optional-dependencies]
+fory = ["bluetape-serde[fory]==0.1.0"]
+
 [dependency-groups]
 dev = [
     "pytest>=8.4.0,<9",

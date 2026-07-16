@@ -28,7 +28,8 @@ PACKAGES = {
     ),
     "bluetape-testing": ("packages/bluetape-testing", "bluetape.testing"),
 }
-FORBIDDEN_DISTRIBUTIONS = {"cramjam", "lz4", "pyfory", "zstandard"}
+FORBIDDEN_LOCKED_DISTRIBUTIONS = {"cramjam", "lz4", "zstandard"}
+FORBIDDEN_DEFAULT_DISTRIBUTIONS = FORBIDDEN_LOCKED_DISTRIBUTIONS | {"pyfory"}
 
 
 def _load_toml(path: str) -> dict[str, object]:
@@ -45,6 +46,12 @@ def test_project_declares_the_approved_root_contract() -> None:
     assert uv["package"] is False
     assert uv["required-version"] == "==0.11.28"
     assert uv["build-constraint-dependencies"] == ["uv-build==0.11.28"]
+
+
+def test_project_declares_fory_as_an_optional_provider() -> None:
+    project = _load_toml("pyproject.toml")
+
+    assert project["project"]["optional-dependencies"] == {"fory": ["bluetape-serde[fory]==0.1.0"]}
 
 
 def test_every_source_uses_one_repository_commit_and_subdirectory() -> None:
@@ -69,7 +76,8 @@ def test_lock_resolves_every_bluetape_distribution_to_the_full_commit() -> None:
         assert f"{parsed.scheme}://{parsed.netloc}{parsed.path}" == UPSTREAM_REPOSITORY
         assert parsed.fragment == UPSTREAM_COMMIT
         assert query["subdirectory"] == [subdirectory]
-    assert FORBIDDEN_DISTRIBUTIONS.isdisjoint(locked)
+    assert locked["pyfory"]["version"] == "1.3.0"
+    assert FORBIDDEN_LOCKED_DISTRIBUTIONS.isdisjoint(locked)
 
 
 @pytest.mark.parametrize(("distribution", "package_info"), PACKAGES.items())
@@ -82,7 +90,7 @@ def test_required_distribution_is_installed_and_importable(
     importlib.import_module(import_name)
 
 
-@pytest.mark.parametrize("distribution", sorted(FORBIDDEN_DISTRIBUTIONS))
+@pytest.mark.parametrize("distribution", sorted(FORBIDDEN_DEFAULT_DISTRIBUTIONS))
 def test_optional_provider_is_not_installed(distribution: str) -> None:
     with pytest.raises(importlib.metadata.PackageNotFoundError):
         importlib.metadata.version(distribution)
