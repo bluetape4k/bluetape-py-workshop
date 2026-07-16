@@ -38,11 +38,12 @@ def test_wip_keeps_the_dependency_order_and_current_issue() -> None:
         WIP.index(f"| {order} | [#{issue}]") for order, issue in enumerate(range(2, 9), start=1)
     ]
     assert positions == sorted(positions)
-    assert "Issue [#9]" in WIP
-    assert "ASGI/FastAPI workshop boundary decision" in WIP
-    assert "docs/issue-9-asgi-fastapi-boundary" in WIP
-    assert "PR #18" in WIP
-    assert "a6eae41ed7b946e6859d2cc3d1866a04ea539590" in WIP
+    assert "Issue [#10]" in WIP
+    assert "Redis load coordination" in WIP
+    assert "feat/issue-10-redis-load-coordination" in WIP
+    assert "PR #19" in WIP
+    assert "836ff2090eb6a998b7247e9bf89ea3d77065c29d" in WIP
+    assert "Issue [#20]" in WIP and "blocked:upstream" in WIP
     assert "uv run --locked python -m examples.integrated_order_backend" in WIP
     assert 'pytest -m "not testcontainers"' in WIP
     assert (
@@ -64,6 +65,8 @@ def test_readme_pair_links_every_runnable_example() -> None:
     assert "examples/redis_test_server/README.ko.md" in KOREAN
     assert "examples/integrated_order_backend/README.md" in ENGLISH
     assert "examples/integrated_order_backend/README.ko.md" in KOREAN
+    assert "examples/redis_load_coordination/README.md" in ENGLISH
+    assert "examples/redis_load_coordination/README.ko.md" in KOREAN
 
 
 def test_readme_pair_documents_deterministic_and_docker_redis_lanes() -> None:
@@ -74,6 +77,10 @@ def test_readme_pair_documents_deterministic_and_docker_redis_lanes() -> None:
         "uv run --locked python -m examples.redis_test_server",
         "uv run --locked python -m examples.integrated_order_backend",
         "uv run --locked pytest examples/integrated_order_backend/tests -q",
+        "UV_PROJECT_ENVIRONMENT=.venv-redis uv sync --locked "
+        "--extra redis-coordination --python 3.13.14",
+        "--extra redis-coordination python -m examples.redis_load_coordination",
+        "examples/redis_load_coordination/tests/test_redis_integration.py -q",
     )
 
     for command in commands:
@@ -160,11 +167,11 @@ def test_asgi_fastapi_boundary_research_embeds_required_diagrams() -> None:
         assert link in korean
 
 
-def test_root_roadmap_exposes_issue_9_boundary_decision() -> None:
+def test_root_roadmap_exposes_current_milestone_boundaries() -> None:
     assert "docs/research/asgi-fastapi-boundary/README.md" in ENGLISH
     assert "docs/research/asgi-fastapi-boundary/README.ko.md" in KOREAN
-    assert "Issue [#9]" in WIP
-    assert "docs/issue-9-asgi-fastapi-boundary" in WIP
+    assert "Issue [#10]" in WIP
+    assert "feat/issue-10-redis-load-coordination" in WIP
     assert "0.2.0" in WIP
-    assert "Issue #8 completed" in WIP
-    assert "Issue #10" in WIP and "blocked" in WIP.lower()
+    assert "Issue #9 completed" in WIP
+    assert "Issue [#20]" in WIP and "blocked:upstream" in WIP
