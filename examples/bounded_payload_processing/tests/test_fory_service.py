@@ -14,8 +14,9 @@ if importlib.util.find_spec("pyfory") is None:
     pytest.skip("optional Apache Fory provider is not installed", allow_module_level=True)
 
 from bluetape.codec import base64url_decode, base64url_encode
-from bluetape.compression import GzipCompressor
+from bluetape.compression import DecompressionLimitError, GzipCompressor
 from bluetape.serde import (
+    ContentTypeMismatchError,
     FormatMismatchError,
     MalformedPayloadError,
     PayloadLimitError,
@@ -24,6 +25,7 @@ from bluetape.serde import (
     TrustProfile,
     TrustProfileMismatchError,
     TypeMismatchError,
+    UnsupportedVersionError,
 )
 from bluetape.serde.fory import (
     ForyAdapter,
@@ -35,6 +37,8 @@ from examples.bounded_payload_processing import (
     EncodedPayload,
     OrderSnapshot,
     TransportLimitError,
+    UnsupportedCompressionError,
+    UnsupportedEncodingError,
 )
 from examples.bounded_payload_processing.fory_service import (
     FORY_METADATA,
@@ -125,6 +129,24 @@ def test_fory_round_trip_preserves_caller_input(product_ids: list[str]) -> None:
         (
             PayloadMetadata(
                 format="apache-fory-xlang",
+                version=2,
+                content_type="application/x-apache-fory",
+                trust_profile=TrustProfile.TRUSTED_INTERNAL,
+            ),
+            UnsupportedVersionError,
+        ),
+        (
+            PayloadMetadata(
+                format="apache-fory-xlang",
+                version=1,
+                content_type="application/octet-stream",
+                trust_profile=TrustProfile.TRUSTED_INTERNAL,
+            ),
+            ContentTypeMismatchError,
+        ),
+        (
+            PayloadMetadata(
+                format="apache-fory-xlang",
                 version=1,
                 content_type="application/x-apache-fory",
                 trust_profile=TrustProfile.UNTRUSTED,
@@ -144,6 +166,36 @@ def test_fory_metadata_mismatch_precedes_codec(
     payload = replace(
         service.encode(OrderSnapshot(order_id="ORDER-1", product_ids=[], total_cents=0)),
         metadata=metadata,
+    )
+    monkeypatch.setattr(
+        module,
+        "base64url_decode",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("codec must not run")),
+    )
+
+    with pytest.raises(error_type):
+        service.decode(payload)
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "error_type"),
+    [
+        ("encoding", "hex", UnsupportedEncodingError),
+        ("compression", "zlib", UnsupportedCompressionError),
+    ],
+)
+def test_fory_transport_substitution_precedes_codec(
+    monkeypatch: pytest.MonkeyPatch,
+    field: str,
+    value: str,
+    error_type: type[Exception],
+) -> None:
+    import examples.bounded_payload_processing.fory_service as module
+
+    service = make_service()
+    payload = replace(
+        service.encode(OrderSnapshot(order_id="ORDER-1", product_ids=[], total_cents=0)),
+        **{field: value},
     )
     monkeypatch.setattr(
         module,
@@ -191,6 +243,24 @@ def test_fory_transport_limits_precede_downstream_stages(
     with pytest.raises(TransportLimitError) as compressed_error:
         service.decode(oversized_compressed)
     assert compressed_error.value.stage == "compressed"
+
+
+def test_fory_decompression_limit_precedes_deserialization() -> None:
+    service = ForyPayloadService(
+        adapter=make_adapter(max_input_size=20),
+        compressor=GzipCompressor(max_output_size=20),
+        max_encoded_size=1024,
+        max_compressed_size=1024,
+    )
+    payload = EncodedPayload(
+        metadata=FORY_METADATA,
+        compression="gzip",
+        encoding="base64url",
+        data=base64url_encode(GzipCompressor().compress(b"serialized data over eight bytes")),
+    )
+
+    with pytest.raises(DecompressionLimitError):
+        service.decode(payload)
 
 
 def test_fory_rejects_malformed_serialized_input() -> None:
