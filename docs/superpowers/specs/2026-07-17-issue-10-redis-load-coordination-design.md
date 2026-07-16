@@ -94,7 +94,7 @@ examples/redis_load_coordination/
 ```
 
 `ProductSummaryCodec` implements the upstream `PayloadCodec` contract using
-the public untrusted JSON serde API and exact metadata. It accepts and returns
+the public untrusted JSON serde API and exact `application/json` metadata. It accepts and returns
 the existing immutable `ProductSummary`, uses an explicit three-field
 allowlist, rejects wrong shapes/types/metadata, and never uses Fory or unsafe
 deserialization.
