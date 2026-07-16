@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Callable
+from collections.abc import Awaitable, Callable
 from contextlib import AsyncExitStack
 from dataclasses import dataclass
 
@@ -92,6 +92,25 @@ async def _cancel_tasks(tasks: tuple[asyncio.Task[ProductSummary], ...]) -> None
         await asyncio.gather(*pending, return_exceptions=True)
 
 
+async def _wait_for_signal_or_failure(
+    wait_for_signal: Callable[[], Awaitable[None]],
+    task: asyncio.Task[ProductSummary],
+) -> None:
+    signal_task = asyncio.create_task(wait_for_signal())
+    try:
+        done, _ = await asyncio.wait(
+            (signal_task, task),
+            return_when=asyncio.FIRST_COMPLETED,
+        )
+        if task in done:
+            await task
+        await signal_task
+    finally:
+        if not signal_task.done():
+            signal_task.cancel()
+            await asyncio.gather(signal_task, return_exceptions=True)
+
+
 async def run_scenario(
     redis_url: str,
     *,
@@ -163,10 +182,10 @@ async def run_scenario(
         )
         owner_task = asyncio.create_task(owner.get_product(DEFAULT_PRODUCT.product_id))
         try:
-            await loader_started.wait()
+            await _wait_for_signal_or_failure(loader_started.wait, owner_task)
             follower_task = asyncio.create_task(follower.get_product(DEFAULT_PRODUCT.product_id))
             tasks = (owner_task, follower_task)
-            await follower_provider_signal.wait()
+            await _wait_for_signal_or_failure(follower_provider_signal.wait, follower_task)
             loader_release.set()
             owner_value, follower_value = await asyncio.gather(*tasks)
             local_hit_value = await follower.get_product(DEFAULT_PRODUCT.product_id)

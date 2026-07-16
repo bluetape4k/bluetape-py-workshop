@@ -208,7 +208,10 @@ and application/Docker tests. **Hazard:** Testcontainers runs serially.
   factories must return exact provider subclasses so tests can prove closure.
 - [ ] GREEN: use `AsyncExitStack` for reverse-order provider closure. The
   default event-controlled loader admits instance B after A begins loading,
-  releases A, then verifies B's later local hit.
+  releases A, then verifies B's later local hit. Race each orchestration signal
+  against the corresponding owner/follower task so an early provider failure
+  propagates and closes both providers rather than hanging on an unreachable
+  signal.
 - [ ] RED/GREEN CLI: `python -m examples.redis_load_coordination` owns one
   `RedisServer` context, runs the async scenario, prints fixed JSON-safe summary
   fields only, and exits with no container.

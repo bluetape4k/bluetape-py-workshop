@@ -6,7 +6,13 @@ import pytest
 
 pytest.importorskip("bluetape.cache.redis")
 
-from bluetape.cache.redis import AsyncRedisProvider, RedisCoordinationOutcome
+from bluetape.cache.redis import (
+    AsyncRedisProvider,
+    RedisCoordinationOutcome,
+    RedisErrorCode,
+    RedisOperation,
+    RedisProviderError,
+)
 
 from examples.cached_product_catalog import ProductSummary
 from examples.redis_load_coordination.application import run_scenario
@@ -28,6 +34,19 @@ class ProviderFactory:
             observer=options["observer"],  # type: ignore[arg-type]
         )
         self.providers.append(provider)
+        return provider
+
+
+class FailingProviderFactory(ProviderFactory):
+    def __init__(self, error: RedisProviderError, *, failing_index: int) -> None:
+        super().__init__()
+        self.error = error
+        self.failing_index = failing_index
+
+    def __call__(self, url: str, **options: object) -> AsyncRedisProvider:
+        provider = super().__call__(url, **options)
+        if len(self.providers) == self.failing_index:
+            provider.failure = self.error
         return provider
 
 
@@ -81,6 +100,44 @@ async def test_scenario_cancellation_closes_both_providers() -> None:
     with pytest.raises(asyncio.CancelledError):
         await asyncio.wait_for(task, timeout=1.0)
 
+    assert len(factory.providers) == 2
+    assert all(provider.closed for provider in factory.providers)
+
+
+@pytest.mark.asyncio
+async def test_owner_provider_failure_propagates_and_closes_both_providers() -> None:
+    error = RedisProviderError(
+        operation=RedisOperation.SET_IF_ABSENT,
+        code=RedisErrorCode.PROVIDER_FAILURE,
+    )
+    factory = FailingProviderFactory(error, failing_index=1)
+
+    with pytest.raises(RedisProviderError) as captured:
+        await asyncio.wait_for(
+            run_scenario("redis://fake:6379/0", provider_factory=factory),
+            timeout=0.2,
+        )
+
+    assert captured.value is error
+    assert len(factory.providers) == 2
+    assert all(provider.closed for provider in factory.providers)
+
+
+@pytest.mark.asyncio
+async def test_follower_provider_failure_cancels_owner_and_closes_both_providers() -> None:
+    error = RedisProviderError(
+        operation=RedisOperation.SET_IF_ABSENT,
+        code=RedisErrorCode.PROVIDER_FAILURE,
+    )
+    factory = FailingProviderFactory(error, failing_index=2)
+
+    with pytest.raises(RedisProviderError) as captured:
+        await asyncio.wait_for(
+            run_scenario("redis://fake:6379/0", provider_factory=factory),
+            timeout=0.2,
+        )
+
+    assert captured.value is error
     assert len(factory.providers) == 2
     assert all(provider.closed for provider in factory.providers)
 

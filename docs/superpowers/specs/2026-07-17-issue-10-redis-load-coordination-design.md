@@ -72,7 +72,7 @@ environment remains Redis-provider-free; optional commands use the disposable
 
 ```text
 examples/redis_load_coordination/
-├── __init__.py              explicit example exports
+├── __init__.py              dependency-free package marker
 ├── __main__.py              Docker-backed learner entry point
 ├── codec.py                 strict ProductSummary result-envelope payload codec
 ├── observer.py              redacted terminal event recorder
@@ -116,9 +116,16 @@ two recorders, and two `RedisCatalogInstance` values sharing one versioned
 namespace. It closes both providers on success, failure, and cancellation. The
 default loader uses event-controlled orchestration so instance B starts only
 after instance A owns the load, then both complete without timing guesses.
-The default factory is `AsyncRedisProvider.from_url`; an injected test factory
-must still return exact provider subclasses and exists only to prove lifecycle
-closure without exposing production clients.
+The default factory is `AsyncRedisProvider.from_url`; the typed injected test
+factory returns provider subclasses and exists only to prove lifecycle closure
+without exposing production clients. The package initializer imports no Redis
+submodule so default pytest collection stays provider-free.
+
+Application orchestration races each teaching signal against the corresponding
+owner or follower task. If a provider fails before loader admission or follower
+lease observation, the original provider error wins immediately; the scenario
+cancels the peer task and closes both providers instead of waiting forever for
+a signal that cannot arrive.
 
 ## Request Sequence
 
