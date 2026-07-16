@@ -33,8 +33,8 @@
   <rect x="365" y="150" width="770" height="680" rx="26" fill="#eef3f6" class="lane"/>
   <rect x="1170" y="150" width="360" height="680" rx="26" fill="#edf5ed" class="lane"/>
   <text x="95" y="190" class="lane-title">Composition root</text>
-  <text x="390" y="190" class="lane-title">Two application instances</text>
-  <text x="1195" y="190" class="lane-title">Shared dependencies</text>
+  <text x="390" y="190" class="lane-title">Two instances + shared coordination</text>
+  <text x="1195" y="190" class="lane-title">Shared application helpers</text>
 
   <g filter="url(#shadow)">
     <rect x="100" y="285" width="200" height="185" rx="20" fill="#ffe7c7" stroke="#d69b55" class="card"/>
@@ -45,69 +45,78 @@
   </g>
 
   <g filter="url(#shadow)">
-    <rect x="405" y="230" width="320" height="150" rx="20" fill="#dcebf4" stroke="#5f8da8" class="card"/>
-    <text x="430" y="272" class="card-title">RedisCatalogInstance A</text>
-    <text x="430" y="310" class="body">owner candidate</text>
-    <text x="430" y="342" class="small">borrows Provider A</text>
-    <rect x="775" y="230" width="320" height="150" rx="20" fill="#dcebf4" stroke="#5f8da8" class="card"/>
-    <text x="800" y="272" class="card-title">RedisCatalogInstance B</text>
-    <text x="800" y="310" class="body">follower candidate</text>
-    <text x="800" y="342" class="small">borrows Provider B</text>
+    <rect x="405" y="225" width="320" height="135" rx="20" fill="#dcebf4" stroke="#5f8da8" class="card"/>
+    <text x="430" y="265" class="card-title">RedisCatalogInstance A</text>
+    <text x="430" y="302" class="body">owner candidate</text>
+    <text x="430" y="332" class="small">borrows Provider A</text>
+    <rect x="775" y="225" width="320" height="135" rx="20" fill="#dcebf4" stroke="#5f8da8" class="card"/>
+    <text x="800" y="265" class="card-title">RedisCatalogInstance B</text>
+    <text x="800" y="302" class="body">follower candidate</text>
+    <text x="800" y="332" class="small">borrows Provider B</text>
   </g>
 
   <g filter="url(#shadow)">
-    <rect x="405" y="440" width="320" height="135" rx="20" fill="#e3f0df" stroke="#6f9a65" class="card"/>
-    <text x="430" y="482" class="card-title">AsyncTTLCache A</text>
-    <text x="430" y="520" class="body">bounded, process-local</text>
-    <text x="430" y="550" class="small">not shared with B</text>
-    <rect x="775" y="440" width="320" height="135" rx="20" fill="#e3f0df" stroke="#6f9a65" class="card"/>
-    <text x="800" y="482" class="card-title">AsyncTTLCache B</text>
-    <text x="800" y="520" class="body">bounded, process-local</text>
-    <text x="800" y="550" class="small">next call is local hit</text>
+    <rect x="405" y="405" width="320" height="115" rx="20" fill="#e3f0df" stroke="#6f9a65" class="card"/>
+    <text x="430" y="444" class="card-title">AsyncTTLCache A</text>
+    <text x="430" y="480" class="body">bounded, process-local</text>
+    <text x="430" y="506" class="small">not shared with B</text>
+    <rect x="775" y="405" width="320" height="115" rx="20" fill="#e3f0df" stroke="#6f9a65" class="card"/>
+    <text x="800" y="444" class="card-title">AsyncTTLCache B</text>
+    <text x="800" y="480" class="body">bounded, process-local</text>
+    <text x="800" y="506" class="small">next call is local hit</text>
   </g>
 
   <g filter="url(#shadow)">
-    <rect x="405" y="635" width="320" height="135" rx="20" fill="#ffe7c7" stroke="#b07832" class="card"/>
-    <text x="430" y="677" class="card-title">AsyncRedisProvider A</text>
-    <text x="430" y="715" class="body">finite timeout, zero retry</text>
-    <text x="430" y="745" class="small">caller-owned lifecycle</text>
-    <rect x="775" y="635" width="320" height="135" rx="20" fill="#ffe7c7" stroke="#b07832" class="card"/>
-    <text x="800" y="677" class="card-title">AsyncRedisProvider B</text>
-    <text x="800" y="715" class="body">finite timeout, zero retry</text>
-    <text x="800" y="745" class="small">caller-owned lifecycle</text>
+    <rect x="405" y="565" width="320" height="115" rx="20" fill="#ffe7c7" stroke="#b07832" class="card"/>
+    <text x="430" y="604" class="card-title">AsyncRedisProvider A</text>
+    <text x="430" y="640" class="body">finite timeout, zero retry</text>
+    <text x="430" y="666" class="small">caller-owned lifecycle</text>
+    <rect x="775" y="565" width="320" height="115" rx="20" fill="#ffe7c7" stroke="#b07832" class="card"/>
+    <text x="800" y="604" class="card-title">AsyncRedisProvider B</text>
+    <text x="800" y="640" class="body">finite timeout, zero retry</text>
+    <text x="800" y="666" class="small">caller-owned lifecycle</text>
   </g>
 
   <g filter="url(#shadow)">
-    <rect x="1210" y="220" width="280" height="160" rx="20" fill="#ffe7c7" stroke="#d65a4a" class="card"/>
-    <circle cx="1250" cy="266" r="23" fill="#dc382d"/>
-    <text x="1250" y="272" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="700" fill="#ffffff">Redis</text>
-    <text x="1285" y="272" class="card-title">Redis 8</text>
-    <text x="1235" y="315" class="body">lease + result envelope</text>
-    <text x="1235" y="346" class="small">coordination, never L2 cache</text>
+    <rect x="590" y="715" width="320" height="100" rx="20" fill="#ffe7c7" stroke="#d65a4a" class="card"/>
+    <circle cx="635" cy="758" r="23" fill="#dc382d"/>
+    <text x="635" y="764" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="700" fill="#ffffff">Redis</text>
+    <text x="670" y="750" class="card-title">Shared Redis 8</text>
+    <text x="670" y="780" class="body">lease + result envelope</text>
+    <text x="670" y="804" class="small">coordination, never L2 cache</text>
   </g>
   <g filter="url(#shadow)">
-    <rect x="1210" y="445" width="280" height="135" rx="20" fill="#e8def5" stroke="#8e72b5" class="card"/>
-    <text x="1235" y="487" class="card-title">ProductSummaryCodec</text>
-    <text x="1235" y="525" class="body">strict JSON allowlist</text>
-    <text x="1235" y="555" class="small">bounded untrusted bytes</text>
+    <rect x="1210" y="225" width="280" height="135" rx="20" fill="#f6ddd7" stroke="#c56b5d" class="card"/>
+    <text x="1235" y="265" class="card-title">Authoritative Loader</text>
+    <text x="1235" y="302" class="body">called only by owner</text>
+    <text x="1235" y="332" class="small">one call in scenario</text>
   </g>
   <g filter="url(#shadow)">
-    <rect x="1210" y="645" width="280" height="135" rx="20" fill="#f6ddd7" stroke="#c56b5d" class="card"/>
-    <text x="1235" y="687" class="card-title">Authoritative Loader</text>
-    <text x="1235" y="725" class="body">called only by owner</text>
-    <text x="1235" y="755" class="small">one call in scenario</text>
+    <rect x="1210" y="430" width="280" height="125" rx="20" fill="#e8def5" stroke="#8e72b5" class="card"/>
+    <text x="1235" y="470" class="card-title">ProductSummaryCodec</text>
+    <text x="1235" y="507" class="body">strict JSON allowlist</text>
+    <text x="1235" y="537" class="small">bounded untrusted bytes</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="1210" y="625" width="280" height="125" rx="20" fill="#e8def5" stroke="#8e72b5" class="card"/>
+    <text x="1235" y="665" class="card-title">Terminal Event Recorders</text>
+    <text x="1235" y="702" class="body">one bounded tuple each</text>
+    <text x="1235" y="732" class="small">no raw keys, tokens, or values</text>
   </g>
 
-  <path d="M300 375 H350 Q365 375 365 360 V320 Q365 305 380 305 H405" class="flow"/>
-  <path d="M565 380 V440" class="cache"/>
-  <path d="M935 380 V440" class="cache"/>
-  <path d="M565 575 V635" class="coord"/>
-  <path d="M935 575 V635" class="coord"/>
-  <path d="M725 702 H750 Q765 702 765 687 V420 Q765 405 780 405 H1145 Q1160 405 1160 390 V300 Q1160 285 1175 285 H1210" class="coord"/>
-  <path d="M1095 702 H1145 Q1160 702 1160 687 V340 Q1160 325 1175 325 H1210" class="coord"/>
-  <path d="M725 305 H750 Q765 305 765 320 V395 Q765 410 780 410 H1175 Q1190 410 1190 425 V445 H1210" class="observe"/>
-  <path d="M1095 305 H1135 Q1150 305 1150 320 V415 Q1150 430 1165 430 H1195 Q1210 430 1210 445" class="observe"/>
-  <path d="M725 285 H750 Q765 285 765 270 V215 Q765 200 780 200 H1510 Q1525 200 1525 215 V710 Q1525 725 1510 725 H1490" class="flow"/>
+  <path d="M300 375 H350 Q365 375 365 360 V307 Q365 292 380 292 H405" class="flow"/>
+  <path d="M565 360 V405" class="cache"/>
+  <path d="M935 360 V405" class="cache"/>
+  <path d="M565 520 V565" class="coord"/>
+  <path d="M935 520 V565" class="coord"/>
+  <path d="M565 680 V695 Q565 710 580 710 H635 Q650 710 650 715" class="coord"/>
+  <path d="M935 680 V695 Q935 710 920 710 H865 Q850 710 850 715" class="coord"/>
+  <path d="M1135 292 H1210" class="flow"/>
+  <text x="1147" y="282" class="small">owner load</text>
+  <path d="M1135 492 H1210" class="observe"/>
+  <text x="1147" y="482" class="small">result codec</text>
+  <path d="M1135 687 H1210" class="observe"/>
+  <text x="1147" y="677" class="small">terminal events</text>
 
   <rect x="70" y="865" width="1460" height="90" rx="20" fill="#f0ebe2" stroke="#d7ccc8" stroke-width="2"/>
   <line x1="105" y1="895" x2="145" y2="895" class="flow"/><text x="165" y="901" class="small">composition / load</text>
