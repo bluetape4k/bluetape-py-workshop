@@ -89,9 +89,18 @@ class RedisOrderStatusProbe:
         if response is None:
             return None
         try:
-            return response.decode("utf-8")
+            decoded = response.decode("utf-8")
         except UnicodeError as error:
             raise RedisProbeError("Redis status was not valid UTF-8") from error
+        try:
+            return _token(
+                decoded,
+                field="stored status",
+                uppercase=False,
+                max_bytes=_MAX_STATUS_BYTES,
+            )
+        except (TypeError, ValueError) as error:
+            raise RedisProbeError("Redis status was invalid") from error
 
     def _command(self, *parts: str) -> bytes | None:
         try:
