@@ -1,12 +1,6 @@
-"""Optional two-instance Redis load-coordination workshop."""
+"""Optional two-instance Redis load-coordination workshop.
 
-from .codec import PRODUCT_METADATA, ProductSummaryCodec
-from .observer import CoordinationEventRecorder
-from .service import RedisCatalogInstance
-
-__all__ = [
-    "PRODUCT_METADATA",
-    "CoordinationEventRecorder",
-    "ProductSummaryCodec",
-    "RedisCatalogInstance",
-]
+Import the explicit ``codec``, ``observer``, ``service``, or ``application``
+submodule only after installing the ``redis-coordination`` extra. Keeping this
+package initializer dependency-free preserves default pytest collection.
+"""

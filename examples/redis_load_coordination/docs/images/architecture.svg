@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Redis load coordination workshop architecture</title>
+  <desc id="desc">Static ownership map showing two catalog instances with separate local caches and providers, one shared Redis coordination namespace, one authoritative loader, a strict result codec, and redacted terminal observers.</desc>
+  <defs>
+    <style>
+      text { font-family: 'Architects Daughter', 'Comic Sans MS', 'Comic Mono', 'SFMono-Regular', monospace; }
+      .title { font-size: 42px; fill: #263238; }
+      .subtitle { font-size: 21px; fill: #546e7a; }
+      .lane-title { font-size: 25px; fill: #37474f; }
+      .card-title { font-size: 22px; fill: #263238; }
+      .body { font-family: 'Comic Mono', 'SFMono-Regular', monospace; font-size: 16px; fill: #455a64; }
+      .small { font-family: 'Comic Mono', 'SFMono-Regular', monospace; font-size: 14px; fill: #546e7a; }
+      .lane { stroke: #cfd8dc; stroke-width: 2.5; stroke-dasharray: 10 8; }
+      .card { stroke-width: 3; }
+      .flow { fill: none; stroke: #5f8da8; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow-blue); }
+      .cache { fill: none; stroke: #6f9a65; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow-green); }
+      .coord { fill: none; stroke: #b07832; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow-amber); }
+      .observe { fill: none; stroke: #8e72b5; stroke-width: 3.5; stroke-dasharray: 10 7; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow-purple); }
+    </style>
+    <marker id="arrow-blue" viewBox="0 0 14 14" refX="12" refY="7" markerWidth="14" markerHeight="14" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L13 7 L1 13 Z" fill="#5f8da8"/></marker>
+    <marker id="arrow-green" viewBox="0 0 14 14" refX="12" refY="7" markerWidth="14" markerHeight="14" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L13 7 L1 13 Z" fill="#6f9a65"/></marker>
+    <marker id="arrow-amber" viewBox="0 0 14 14" refX="12" refY="7" markerWidth="14" markerHeight="14" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L13 7 L1 13 Z" fill="#b07832"/></marker>
+    <marker id="arrow-purple" viewBox="0 0 14 14" refX="12" refY="7" markerWidth="14" markerHeight="14" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L13 7 L1 13 Z" fill="#8e72b5"/></marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#455a64" flood-opacity="0.13"/></filter>
+  </defs>
+
+  <rect width="1600" height="1000" fill="#fbf8f1"/>
+  <path d="M70 115 H1530" stroke="#d7ccc8" stroke-width="3" stroke-linecap="round"/>
+  <text x="70" y="68" class="title">Redis Load Coordination Architecture</text>
+  <text x="70" y="101" class="subtitle">Separate process-local caches; shared short-lived coordination; one authoritative load</text>
+
+  <rect x="70" y="150" width="260" height="680" rx="26" fill="#f7eee7" class="lane"/>
+  <rect x="365" y="150" width="770" height="680" rx="26" fill="#eef3f6" class="lane"/>
+  <rect x="1170" y="150" width="360" height="680" rx="26" fill="#edf5ed" class="lane"/>
+  <text x="95" y="190" class="lane-title">Composition root</text>
+  <text x="390" y="190" class="lane-title">Two application instances</text>
+  <text x="1195" y="190" class="lane-title">Shared dependencies</text>
+
+  <g filter="url(#shadow)">
+    <rect x="100" y="285" width="200" height="185" rx="20" fill="#ffe7c7" stroke="#d69b55" class="card"/>
+    <text x="125" y="330" class="card-title">CLI / Test</text>
+    <text x="125" y="370" class="body">run_workshop</text>
+    <text x="125" y="402" class="body">owns RedisServer</text>
+    <text x="125" y="434" class="small">safe JSON summary</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="405" y="230" width="320" height="150" rx="20" fill="#dcebf4" stroke="#5f8da8" class="card"/>
+    <text x="430" y="272" class="card-title">RedisCatalogInstance A</text>
+    <text x="430" y="310" class="body">owner candidate</text>
+    <text x="430" y="342" class="small">borrows Provider A</text>
+    <rect x="775" y="230" width="320" height="150" rx="20" fill="#dcebf4" stroke="#5f8da8" class="card"/>
+    <text x="800" y="272" class="card-title">RedisCatalogInstance B</text>
+    <text x="800" y="310" class="body">follower candidate</text>
+    <text x="800" y="342" class="small">borrows Provider B</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="405" y="440" width="320" height="135" rx="20" fill="#e3f0df" stroke="#6f9a65" class="card"/>
+    <text x="430" y="482" class="card-title">AsyncTTLCache A</text>
+    <text x="430" y="520" class="body">bounded, process-local</text>
+    <text x="430" y="550" class="small">not shared with B</text>
+    <rect x="775" y="440" width="320" height="135" rx="20" fill="#e3f0df" stroke="#6f9a65" class="card"/>
+    <text x="800" y="482" class="card-title">AsyncTTLCache B</text>
+    <text x="800" y="520" class="body">bounded, process-local</text>
+    <text x="800" y="550" class="small">next call is local hit</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="405" y="635" width="320" height="135" rx="20" fill="#ffe7c7" stroke="#b07832" class="card"/>
+    <text x="430" y="677" class="card-title">AsyncRedisProvider A</text>
+    <text x="430" y="715" class="body">finite timeout, zero retry</text>
+    <text x="430" y="745" class="small">caller-owned lifecycle</text>
+    <rect x="775" y="635" width="320" height="135" rx="20" fill="#ffe7c7" stroke="#b07832" class="card"/>
+    <text x="800" y="677" class="card-title">AsyncRedisProvider B</text>
+    <text x="800" y="715" class="body">finite timeout, zero retry</text>
+    <text x="800" y="745" class="small">caller-owned lifecycle</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="1210" y="220" width="280" height="160" rx="20" fill="#ffe7c7" stroke="#d65a4a" class="card"/>
+    <circle cx="1250" cy="266" r="23" fill="#dc382d"/>
+    <text x="1250" y="272" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="700" fill="#ffffff">Redis</text>
+    <text x="1285" y="272" class="card-title">Redis 8</text>
+    <text x="1235" y="315" class="body">lease + result envelope</text>
+    <text x="1235" y="346" class="small">coordination, never L2 cache</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="1210" y="445" width="280" height="135" rx="20" fill="#e8def5" stroke="#8e72b5" class="card"/>
+    <text x="1235" y="487" class="card-title">ProductSummaryCodec</text>
+    <text x="1235" y="525" class="body">strict JSON allowlist</text>
+    <text x="1235" y="555" class="small">bounded untrusted bytes</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="1210" y="645" width="280" height="135" rx="20" fill="#f6ddd7" stroke="#c56b5d" class="card"/>
+    <text x="1235" y="687" class="card-title">Authoritative Loader</text>
+    <text x="1235" y="725" class="body">called only by owner</text>
+    <text x="1235" y="755" class="small">one call in scenario</text>
+  </g>
+
+  <path d="M300 375 H350 Q365 375 365 360 V320 Q365 305 380 305 H405" class="flow"/>
+  <path d="M565 380 V440" class="cache"/>
+  <path d="M935 380 V440" class="cache"/>
+  <path d="M565 575 V635" class="coord"/>
+  <path d="M935 575 V635" class="coord"/>
+  <path d="M725 702 H750 Q765 702 765 687 V420 Q765 405 780 405 H1145 Q1160 405 1160 390 V300 Q1160 285 1175 285 H1210" class="coord"/>
+  <path d="M1095 702 H1145 Q1160 702 1160 687 V340 Q1160 325 1175 325 H1210" class="coord"/>
+  <path d="M725 305 H750 Q765 305 765 320 V395 Q765 410 780 410 H1175 Q1190 410 1190 425 V445 H1210" class="observe"/>
+  <path d="M1095 305 H1135 Q1150 305 1150 320 V415 Q1150 430 1165 430 H1195 Q1210 430 1210 445" class="observe"/>
+  <path d="M725 285 H750 Q765 285 765 270 V215 Q765 200 780 200 H1510 Q1525 200 1525 215 V710 Q1525 725 1510 725 H1490" class="flow"/>
+
+  <rect x="70" y="865" width="1460" height="90" rx="20" fill="#f0ebe2" stroke="#d7ccc8" stroke-width="2"/>
+  <line x1="105" y1="895" x2="145" y2="895" class="flow"/><text x="165" y="901" class="small">composition / load</text>
+  <line x1="390" y1="895" x2="430" y2="895" class="cache"/><text x="450" y="901" class="small">local cache ownership</text>
+  <line x1="735" y1="895" x2="775" y2="895" class="coord"/><text x="795" y="901" class="small">Redis coordination</text>
+  <line x1="1080" y1="895" x2="1120" y2="895" class="observe"/><text x="1140" y="901" class="small">codec / bounded telemetry</text>
+  <text x="105" y="935" class="small">Each instance owns a cache and borrows a provider; only the namespace and result envelope are shared.</text>
+</svg>

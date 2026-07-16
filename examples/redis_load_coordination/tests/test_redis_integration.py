@@ -3,9 +3,10 @@ from __future__ import annotations
 import pytest
 from bluetape.testcontainers import RedisServer
 
+pytest.importorskip("bluetape.cache.redis")
+
 from examples.redis_load_coordination.application import run_workshop
 
-pytest.importorskip("bluetape.cache.redis")
 pytestmark = pytest.mark.testcontainers
 
 
