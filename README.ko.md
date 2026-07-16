@@ -21,6 +21,13 @@ enrichment, shared cache, 제한된 JSON payload, request deadline, retry 가능
 [통합 주문 backend](examples/integrated_order_backend/README.ko.md)입니다. 각 예제는 서로
 맞춘 다국어 안내, Architecture, Sequence Diagram을 제공합니다.
 
+마일스톤 `0.2.0`은 research-only
+[ASGI와 FastAPI 경계 결정](docs/research/asgi-fastapi-boundary/README.ko.md)으로
+시작합니다. 기존 framework-neutral backend를 둘러싼 현실적인 Direct FastAPI
+`POST /orders` 예제를 권장하되, 재사용 가능한 web adapter는 upstream
+`bluetape-py` 이슈 #21과 #22 뒤로 제한합니다. 이 결정에서는 FastAPI dependency나
+HTTP 구현을 추가하지 않습니다.
+
 현재 이슈, 의존 순서, 검증 근거와 다음 작업은 [WIP.md](WIP.md)에서 확인하세요.
 
 ## 마일스톤 0.1.0 학습 경로
@@ -34,6 +41,19 @@ enrichment, shared cache, 제한된 JSON payload, request deadline, retry 가능
 | 5 | [#6](https://github.com/bluetape4k/bluetape-py-workshop/issues/6) | 제한된 payload 처리 | #2 |
 | 6 | [#7](https://github.com/bluetape4k/bluetape-py-workshop/issues/7) | Redis Testcontainers 통합 | #2 |
 | 7 | [#8](https://github.com/bluetape4k/bluetape-py-workshop/issues/8) | 통합 주문 backend | #3, #4, #5, #6 |
+
+## 마일스톤 0.2.0 경계
+
+이슈 [#9](https://github.com/bluetape4k/bluetape-py-workshop/issues/9)는
+Direct FastAPI, Raw ASGI, 미래 `bluetape-fastapi` distribution을 비교합니다.
+Framework-specific 예제를 추가하기 전에 Architecture와 Sequence Diagram을 포함한
+다국어 결정을 읽으세요.
+
+- [English: ASGI and FastAPI Workshop Boundary](docs/research/asgi-fastapi-boundary/README.md)
+- [ASGI와 FastAPI Workshop 경계](docs/research/asgi-fastapi-boundary/README.ko.md)
+
+다음 구현은 별도 이슈로 추적해야 합니다. 현재 결정은 framework code, dependency,
+재사용 가능한 workshop adapter를 추가하지 않습니다.
 
 ## 요구 사항
 
@@ -144,8 +164,9 @@ Diagram source와 rendered asset은 구현 code가 생긴 뒤에만 만듭니다
 
 ## 현재 제한 사항
 
-마일스톤 `0.1.0`에서는 ASGI/FastAPI adapter, production Redis provider, package
-publication 또는 release automation을 추가하지 않습니다. Persistent order store와
-authentication/authorization adapter도 범위 밖입니다. Redis 예제는 production Redis
-client나 cache provider가 아닌 test infrastructure이며, 모든 Docker-backed 경로를
-순차 실행합니다.
+마일스톤 `0.1.0`은 ASGI/FastAPI adapter, production Redis provider, package
+publication 또는 release automation을 추가하지 않았습니다. Persistent order store와
+authentication/authorization adapter도 범위 밖이었습니다. 이슈 #9는 이후 web
+경계를 정의하지만 여전히 adapter를 추가하지 않습니다. Redis 예제는 production
+Redis client나 cache provider가 아닌 test infrastructure이며, 모든 Docker-backed
+경로를 순차 실행합니다.

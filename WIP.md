@@ -1,44 +1,44 @@
 # WIP
 
 Snapshot: 2026-07-16 KST
-Scope: [`0.1.0`](https://github.com/bluetape4k/bluetape-py-workshop/milestone/1)
-workshop foundation and runnable examples.
+Scope: [`0.2.0`](https://github.com/bluetape4k/bluetape-py-workshop/milestone/2)
+web and Redis expansion boundary.
 
 [English README](README.md) | [한국어 README](README.ko.md)
 
 ## Current Target
 
-Issue [#8](https://github.com/bluetape4k/bluetape-py-workshop/issues/8):
-build an Integrated framework-neutral order backend that composes validated
-order intake, bounded enrichment, one shared async catalog cache, untrusted JSON
-payloads, overall request deadlines, and retryable finite shutdown.
+Issue [#9](https://github.com/bluetape4k/bluetape-py-workshop/issues/9):
+define the source-backed boundary between application-owned ASGI/FastAPI code
+and reusable future `bluetape-py` web adapters before HTTP examples begin.
 
-Active branch: `feat/issue-8-integrated-order-backend`
+Active branch: `docs/issue-9-asgi-fastapi-boundary`
 Base branch: `develop`
-Pull request: [#18](https://github.com/bluetape4k/bluetape-py-workshop/pull/18)
-Stop boundary: verify exact-head hosted CI/review state for PR #18, then stop for
-a fresh explicit merge approval. Auto-merge is forbidden.
+Pull request: pending creation after local verification
+Stop boundary: create the approved PR to `develop`, verify exact-head hosted
+CI/review state, then stop for a fresh explicit merge approval. Auto-merge is
+forbidden.
 
 ## Resume Checkpoint
 
-- Branch/base head: `feat/issue-8-integrated-order-backend` /
-  `15bbe2efced086eb06ccf67aa03f4efb7633e7bb`
-- Last completed gate: issue #7 is present on `develop` through
-  [PR #17](https://github.com/bluetape4k/bluetape-py-workshop/pull/17); Issue #8
-  approved design, plan, risk record, and both P0=0/P1=0 reviews are committed
-- Current implementation: aggregate contracts, cache adapter, validation-first
-  service, deadline-safe application lifecycle, fixed composition root, exact
-  five-event CLI, bilingual guides, and both source-backed diagram pairs
-- Current validation: integrated example `66 passed`; dependency baseline
-  `19 passed`; full deterministic repository `287 passed, 1 skipped, 1
-  deselected`; Ruff, format, actionlint, and diff check pass
-- Diagram validation: architecture `markers=4`, `cards=11`,
-  `geometry_failures=0`; sequence `markers=5`, `connectors=18`,
-  `geometry_failures=0`, style audit PASS; both final PNGs inspected at full size
-- Review state: final six-lens review converged from four P1 findings to
-  `P0=0`, `P1=0`; the reusable composition/lifecycle lesson is recorded
-- Next action: report PR #18 merge readiness and wait for fresh explicit merge
-  approval
+- Branch/base head: `docs/issue-9-asgi-fastapi-boundary` /
+  `a6eae41ed7b946e6859d2cc3d1866a04ea539590`
+- Issue #8 completed through
+  [PR #18](https://github.com/bluetape4k/bluetape-py-workshop/pull/18), merged as
+  `a6eae41ed7b946e6859d2cc3d1866a04ea539590`; focused `66`, dependency `19`,
+  and full deterministic `287 passed, 1 skipped, 1 deselected` after merge
+- Current decision: use Direct FastAPI for the first realistic `POST /orders`
+  example; keep DTO, DI, context reset, public errors, response shaping,
+  disconnect policy, timeout mapping, lifespan, and cleanup application-owned
+- Upstream gate: adopt a future `bluetape-fastapi` only after
+  `bluetape-py` #21 is accepted, #22 ships conformance-tested behavior, and the
+  workshop pins an exact stable release tag or commit
+- Current artifacts: aligned English/Korean research guides, source-backed
+  Architecture and Sequence Diagram assets, and a `P0=0/P1=0` research review
+- Current validation: documentation `10 passed`; full deterministic
+  `290 passed, 1 skipped, 1 deselected`; Ruff, actionlint, XML/render/audits,
+  locale/link parity, and diff hygiene pass
+- Next action: create the approved PR and verify its exact hosted head
 - Runnable now: `uv run --locked python -m examples.order_intake`
 - Runnable now: `uv run --locked python -m examples.catalog_enrichment`
 - Runnable now: `uv run --locked python -m examples.cached_product_catalog`
@@ -53,15 +53,11 @@ a fresh explicit merge approval. Auto-merge is forbidden.
 - Optional runnable: after activating `.venv-fory`, `python -m examples.bounded_payload_processing.fory_demo`
 - Optional tests: after activating `.venv-fory`, `pytest examples/bounded_payload_processing/tests/test_fory_service.py -q`
 
-Current artifacts: [issue #8](https://github.com/bluetape4k/bluetape-py-workshop/issues/8),
-[written design](docs/superpowers/specs/2026-07-16-issue-8-integrated-order-backend-design.md),
-[design review](docs/superpowers/reviews/2026-07-16-issue-8-design-review.md),
-[implementation plan](docs/superpowers/plans/2026-07-16-issue-8-integrated-order-backend-plan.md),
-[risk record](docs/superpowers/risks/2026-07-16-issue-8-integrated-order-backend-risk.md),
-[plan review](docs/superpowers/reviews/2026-07-16-issue-8-plan-review.md),
-[implementation review](docs/superpowers/reviews/2026-07-16-issue-8-implementation-review.md),
-[composition/lifecycle lesson](docs/superpowers/lessons/2026-07-16-issue-8-composition-lifecycle.md),
-and the [integrated example guide](examples/integrated_order_backend/README.md).
+Current artifacts: [issue #9](https://github.com/bluetape4k/bluetape-py-workshop/issues/9),
+[implementation plan](docs/superpowers/plans/2026-07-16-issue-9-asgi-fastapi-boundary-plan.md),
+[English decision guide](docs/research/asgi-fastapi-boundary/README.md), and
+[Korean decision guide](docs/research/asgi-fastapi-boundary/README.ko.md), and
+[research review](docs/superpowers/reviews/2026-07-16-issue-9-research-review.md).
 
 ## Dependency Baseline
 
@@ -89,6 +85,11 @@ and the [integrated example guide](examples/integrated_order_backend/README.md).
 
 #3 + #4 + #5 + #6
   └─> #8 integrated order backend
+
+#8 + upstream bluetape-py #21/#22 evidence
+  └─> #9 ASGI/FastAPI workshop boundary
+
+#10 production Redis cache coordination (blocked: upstream)
 ```
 
 ## Execution Queue
@@ -101,7 +102,9 @@ and the [integrated example guide](examples/integrated_order_backend/README.md).
 | 4 | [#5](https://github.com/bluetape4k/bluetape-py-workshop/issues/5) | Cached product catalog service | #2 | Completed |
 | 5 | [#6](https://github.com/bluetape4k/bluetape-py-workshop/issues/6) | Bounded payload processing service | #2 | Completed |
 | 6 | [#7](https://github.com/bluetape4k/bluetape-py-workshop/issues/7) | Redis-backed integration-test workshop | #2 | Completed |
-| 7 | [#8](https://github.com/bluetape4k/bluetape-py-workshop/issues/8) | Integrated framework-neutral order backend | #3, #4, #5, #6 | In progress |
+| 7 | [#8](https://github.com/bluetape4k/bluetape-py-workshop/issues/8) | Integrated framework-neutral order backend | #3, #4, #5, #6 | Completed |
+| 8 | [#9](https://github.com/bluetape4k/bluetape-py-workshop/issues/9) | ASGI/FastAPI workshop boundary decision | #8, upstream #21/#22 evidence | In progress |
+| 9 | [#10](https://github.com/bluetape4k/bluetape-py-workshop/issues/10) | Production Redis cache coordination | Upstream capability | Blocked upstream |
 
 ## Example Documentation Contract
 
@@ -265,14 +268,33 @@ Issue #8 converged local exact-head checkpoint:
 - exact-head hosted CI: pass; GitHub mergeability/state: `MERGEABLE` / `CLEAN`;
 - reviews, comments, and review threads: 0; hosted README and all four diagram
   assets: present;
-- merge, local sync, and cleanup: pending fresh explicit approval.
+- rebase merge SHA: `a6eae41ed7b946e6859d2cc3d1866a04ea539590`;
+- post-merge local sync, focused/dependency/full deterministic validation, and
+  owned worktree/local branch cleanup: pass.
+
+Issue #9 local research checkpoint:
+
+- three alternatives: Direct FastAPI, Raw ASGI, and future
+  `bluetape-fastapi` compared from primary sources;
+- recommendation: workshop-owned Direct FastAPI `POST /orders` transport around
+  the existing `OrderBackendApplication`;
+- adoption gate: upstream #21 accepted, #22 shipped, and exact stable release
+  tag or commit pinned;
+- Python implementation, dependency, lockfile, Docker, release, and milestone
+  changes: N/A by research scope;
+- bilingual decision guide and both required diagram pairs: present;
+- documentation `10 passed`; full deterministic repository
+  `290 passed, 1 skipped, 1 deselected`;
+- Ruff lint/format, actionlint, XML/render/audits, locale/link parity, and
+  `git diff --check`: pass;
+- six-lens research review: `P0=0`, `P1=0`;
+- PR creation and hosted exact-head verification: pending.
 
 ## Holds and Exclusions
 
-- Issues #9 and #10 belong to milestone `0.2.0` and are outside this execution
-  train.
-- No ASGI/FastAPI adapter or production Redis cache provider is introduced in
-  `0.1.0`.
+- Issue #9 is research-only; no ASGI/FastAPI adapter or FastAPI dependency is
+  introduced.
+- Issue #10 remains blocked on upstream production Redis cache capability.
 - Tagging, package publishing, GitHub Release creation, and milestone closure
   require separate explicit authority.
 
@@ -308,3 +330,7 @@ Issue #8 converged local exact-head checkpoint:
   while one outer application owns request deadlines, terminal exception
   observation, and retryable finite shutdown; keep Redis and Fory as separate
   optional learning lanes.
+- 2026-07-16: recommend Direct FastAPI for the first realistic HTTP order
+  example while keeping transport policy workshop-owned; reject Raw ASGI as the
+  first lesson and gate a reusable adapter on upstream #21, #22, and an exact
+  stable release tag or commit.

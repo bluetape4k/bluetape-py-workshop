@@ -50,51 +50,51 @@ official ASGI/Starlette/FastAPI documentation, GitHub issue evidence.
 
 ### Task 1: Lock the documentation contract
 
-- [ ] Add tests that require reciprocal locale navigation, the three named
+- [x] Add tests that require reciprocal locale navigation, the three named
   alternatives, the seven ownership topics, upstream #21/#22 gates, the
   `POST /orders` recommendation, and all four diagram assets.
-- [ ] Require both root README locales and `WIP.md` to link the decision guide
+- [x] Require both root README locales and `WIP.md` to link the decision guide
   and identify Issue #9 as the 0.2.0 current target.
-- [ ] Run `uv run --locked pytest tests/test_documentation_contract.py -q` and
+- [x] Run `uv run --locked pytest tests/test_documentation_contract.py -q` and
   verify failure is caused only by the absent Issue #9 artifacts.
 
 ### Task 2: Write the bilingual research decision
 
-- [ ] Write the English and Korean guides with aligned headings, facts, tables,
+- [x] Write the English and Korean guides with aligned headings, facts, tables,
   links, limits, and recommendation.
-- [ ] Cite ASGI lifespan and HTTP/disconnect specifications, Starlette lifespan
+- [x] Cite ASGI lifespan and HTTP/disconnect specifications, Starlette lifespan
   and request behavior, FastAPI lifespan, dependencies, and error handling, all
   retrieved on 2026-07-16.
-- [ ] Define the adoption gate as both upstream #21 decision acceptance and #22
+- [x] Define the adoption gate as both upstream #21 decision acceptance and #22
   implementation availability through an exact stable release tag or commit.
-- [ ] State that disconnect is an input signal, not proof of automatic task
+- [x] State that disconnect is an input signal, not proof of automatic task
   cancellation, and define application-owned cancellation policy explicitly.
 
 ### Task 3: Create the architecture diagram
 
-- [ ] Draw a horizontal responsibility map for client/ASGI server, workshop
+- [x] Draw a horizontal responsibility map for client/ASGI server, workshop
   FastAPI transport, request-context boundary, existing order backend, lifespan,
   and the gated future adapter.
-- [ ] Parse, render at scale 2, run connector/geometry/endpoint/mixed-corner
+- [x] Parse, render at scale 2, run connector/geometry/endpoint/mixed-corner
   audits, inspect the full-size PNG, and record concrete counts.
 
 ### Task 4: Create the sequence diagram
 
-- [ ] Draw startup, `POST /orders`, validation, context open/reset, backend
+- [x] Draw startup, `POST /orders`, validation, context open/reset, backend
   processing, success/error/timeout/disconnect branches, and shutdown.
-- [ ] Use visible numbered messages, lifelines, activations, transparent branch
+- [x] Use visible numbered messages, lifelines, activations, transparent branch
   frames, explicit per-color markers, and the approved muted palette.
-- [ ] Parse, render at scale 2, run common plus sequence-style audits, inspect
+- [x] Parse, render at scale 2, run common plus sequence-style audits, inspect
   the full-size PNG, and record concrete counts.
 
 ### Task 5: Update roadmap and verify
 
-- [ ] Update both root README locales and `WIP.md` without changing dependency
+- [x] Update both root README locales and `WIP.md` without changing dependency
   or runtime instructions.
-- [ ] Run focused documentation tests, dependency tests, Ruff checks, the full
+- [x] Run focused documentation tests, dependency tests, Ruff checks, the full
   deterministic test suite, actionlint, XML/render/audits, asset dimensions,
   locale parity checks, and `git diff --check`.
-- [ ] Write the six-lens research review with `P0=0/P1=0` or repair every
+- [x] Write the six-lens research review with `P0=0/P1=0` or repair every
   blocking finding before continuing.
 - [ ] Mark this plan's completed steps, commit with Lore trailers, push the
   approved branch, and create the approved PR to `develop` with Issue #9's

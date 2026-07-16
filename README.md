@@ -22,6 +22,13 @@ deadlines, and retryable shutdown in one realistic two-order scenario. Each
 example provides aligned bilingual guidance, Architecture, and Sequence Diagram
 assets.
 
+Milestone `0.2.0` begins with a research-only
+[ASGI and FastAPI boundary decision](docs/research/asgi-fastapi-boundary/README.md).
+It recommends a realistic Direct FastAPI `POST /orders` example around the
+existing framework-neutral backend, while keeping reusable web adapters gated
+on upstream `bluetape-py` issues #21 and #22. No FastAPI dependency or HTTP
+implementation is introduced by that decision.
+
 Follow [WIP.md](WIP.md) for the current issue, dependency order, validation
 evidence, and next action.
 
@@ -36,6 +43,19 @@ evidence, and next action.
 | 5 | [#6](https://github.com/bluetape4k/bluetape-py-workshop/issues/6) | Bounded payload processing | #2 |
 | 6 | [#7](https://github.com/bluetape4k/bluetape-py-workshop/issues/7) | Redis Testcontainers integration | #2 |
 | 7 | [#8](https://github.com/bluetape4k/bluetape-py-workshop/issues/8) | Integrated order backend | #3, #4, #5, #6 |
+
+## Milestone 0.2.0 Boundary
+
+Issue [#9](https://github.com/bluetape4k/bluetape-py-workshop/issues/9)
+compares Direct FastAPI, Raw ASGI, and a future `bluetape-fastapi` distribution.
+Read the bilingual decision with its Architecture and Sequence Diagram before
+adding a framework-specific example:
+
+- [ASGI and FastAPI Workshop Boundary](docs/research/asgi-fastapi-boundary/README.md)
+- [한국어: ASGI와 FastAPI Workshop 경계](docs/research/asgi-fastapi-boundary/README.ko.md)
+
+The next implementation must be tracked separately. The current decision does
+not add framework code, dependencies, or a reusable workshop adapter.
 
 ## Requirements
 
@@ -149,8 +169,9 @@ source.
 
 ## Current Limits
 
-Milestone `0.1.0` does not introduce an ASGI/FastAPI adapter, a production Redis
+Milestone `0.1.0` did not introduce an ASGI/FastAPI adapter, a production Redis
 provider, persistent order store, authentication/authorization adapter, package
-publication, or release automation. The Redis example is test infrastructure,
-not a production Redis client or cache provider, and every Docker-backed path
-runs sequentially.
+publication, or release automation. Issue #9 defines the later web boundary but
+still adds no adapter. The Redis example is test infrastructure, not a
+production Redis client or cache provider, and every Docker-backed path runs
+sequentially.
