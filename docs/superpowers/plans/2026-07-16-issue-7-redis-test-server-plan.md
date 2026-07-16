@@ -798,14 +798,14 @@ Push `feat/issue-7-redis-test-server` and create a PR into `develop` titled in
 English, linking `Closes #7`, listing deterministic/Docker/diagram evidence,
 and explicitly excluding merge/release. Do not enable auto-merge.
 
-- [ ] **Step 7.8: Verify exact-head CI and current review state**
+- [x] **Step 7.8: Verify exact-head CI and current review state**
 
 Pin the PR head SHA; verify hosted CI is for that exact SHA, all required checks
 pass, the PR is mergeable, no unresolved thread or blocking review exists, and
 any required human-review artifact matches the head. If anything changes,
 rerun local proportional validation and refresh the evidence.
 
-- [ ] **Step 7.9: Stop for fresh merge approval**
+- [x] **Step 7.9: Stop for fresh merge approval**
 
 Report PR URL, exact head, commits, changed files, deterministic and Docker
 counts, container-label baseline equality, CI/review state, lesson, remaining
