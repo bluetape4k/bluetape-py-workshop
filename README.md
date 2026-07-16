@@ -11,7 +11,9 @@ The repository foundation is runnable: dependency resolution, source provenance,
 provider isolation, lint, and tests are locked and automated. Runnable domain
 scenarios now include [validated order intake](examples/order_intake/README.md),
 [bounded catalog enrichment](examples/catalog_enrichment/README.md), and the
-[cached product catalog](examples/cached_product_catalog/README.md). Each example
+[cached product catalog](examples/cached_product_catalog/README.md), plus
+[bounded payload processing](examples/bounded_payload_processing/README.md) with
+separate default JSON and optional Apache Fory trust profiles. Each example
 provides aligned bilingual guidance, Architecture, and Sequence Diagram assets.
 
 Follow [WIP.md](WIP.md) for the current issue, dependency order, validation
@@ -35,7 +37,8 @@ evidence, and next action.
 - uv 0.11.28. The project configuration rejects a different uv version.
 - Git access to the public `bluetape-py` repository.
 - Docker is not required for the deterministic foundation, order-intake,
-  catalog-enrichment, or cached-product-catalog lanes.
+  catalog-enrichment, cached-product-catalog, or bounded-payload-processing
+  lanes.
 
 ## Setup
 
@@ -68,6 +71,12 @@ The baseline includes `bluetape-core`, `bluetape-logging`, `bluetape-testing`,
 Apache Fory and native compression providers remain absent from the default
 environment. Importing the Testcontainers wrapper is tested not to contact
 Docker or start a container, process, or background thread.
+
+The bounded payload example keeps that baseline intact. Its default JSON lane
+runs in the root environment, while its trusted-internal Fory lane installs
+`pyfory==1.3.0` only in a disposable `.venv-fory` environment. See the
+[bilingual example guide](examples/bounded_payload_processing/README.md) for
+the exact run, test, and cleanup commands.
 
 ## Validation
 
