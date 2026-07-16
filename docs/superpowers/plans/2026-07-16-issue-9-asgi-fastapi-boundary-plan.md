@@ -96,7 +96,7 @@ official ASGI/Starlette/FastAPI documentation, GitHub issue evidence.
   locale parity checks, and `git diff --check`.
 - [x] Write the six-lens research review with `P0=0/P1=0` or repair every
   blocking finding before continuing.
-- [ ] Mark this plan's completed steps, commit with Lore trailers, push the
+- [x] Mark this plan's completed steps, commit with Lore trailers, push the
   approved branch, and create the approved PR to `develop` with Issue #9's
   milestone, assignee, and labels.
 - [ ] Wait for exact-head hosted CI and current review/thread state, then stop
