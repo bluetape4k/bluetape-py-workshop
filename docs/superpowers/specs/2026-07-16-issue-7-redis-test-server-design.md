@@ -151,7 +151,9 @@ or credentials.
 ### `RedisOrderStatusProbe`
 
 The constructor requires exact `RedisConnectionDetails` and a finite positive
-`command_timeout` (default 2 seconds). The implementation fixes maximum UTF-8
+`command_timeout` (default 2 seconds). An injectable socket factory is a
+deterministic-test seam only; production composition uses
+`socket.create_connection`. The implementation fixes maximum UTF-8
 command-part length at 64 bytes, response-line length at 128 bytes, and bulk
 response length at 64 bytes; callers cannot weaken these teaching-scenario
 bounds. The public `verify(order_id, status)` method:
@@ -162,6 +164,12 @@ bounds. The public `verify(order_id, status)` method:
    `OK`;
 4. reads the same key and requires the exact expected bytes; and
 5. returns `RedisProbeResult`.
+
+`read_status(order_id=...)` performs only the same fixed-key `GET` and returns a
+normalized status or `None`. It exists so a fresh-server integration test can
+prove that the prior container's state was released; it is not an arbitrary
+command or production provider surface. `verify()` uses this method for its
+read-back step.
 
 The private protocol surface accepts only command tuples selected by the
 probe, rejects blank application values and values above the 64-byte encoded
@@ -193,12 +201,12 @@ public context-manager contract.
 ## CLI Contract
 
 `python -m examples.redis_test_server` is intentionally Docker-backed.
-`main(*, server_factory=RedisServer) -> int` creates
+`main(*, server_factory=RedisServer, workshop_runner=run_workshop) -> int` creates
 `RedisServer(startup_timeout=30.0)`, runs the fixed `ORD-1001` / `accepted`
 scenario, and emits one compact JSON success event containing only the safe
 `RedisProbeResult` fields. The module entry point exits with `main()`'s status;
-the injectable factory is for deterministic tests, not a public image-selection
-surface.
+the injectable factory and runner are deterministic-test seams, not public
+image-selection or protocol-extension surfaces.
 
 If startup fails, it emits one compact JSON failure event with
 `error_code=testcontainer_start_failed` and the stable failure `kind`, then
