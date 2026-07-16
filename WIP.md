@@ -37,8 +37,8 @@ a fresh explicit merge approval. Auto-merge is forbidden.
   `geometry_failures=0`, style audit PASS; both final PNGs inspected at full size
 - Review state: final six-lens review converged from four P1 findings to
   `P0=0`, `P1=0`; the reusable composition/lifecycle lesson is recorded
-- Next action: verify PR #18 exact-head hosted CI, mergeability, reviews,
-  unresolved threads, and diagram exposure
+- Next action: report PR #18 merge readiness and wait for fresh explicit merge
+  approval
 - Runnable now: `uv run --locked python -m examples.order_intake`
 - Runnable now: `uv run --locked python -m examples.catalog_enrichment`
 - Runnable now: `uv run --locked python -m examples.cached_product_catalog`
@@ -262,7 +262,10 @@ Issue #8 converged local exact-head checkpoint:
   `P0=0/P1=0`;
 - exact-head post-commit rerun: pass;
 - PR #18 created with milestone `0.1.0`, assignee `debop`, and Issue #8 labels;
-- remote CI and PR review state: pending exact-head Task 8 verification.
+- exact-head hosted CI: pass; GitHub mergeability/state: `MERGEABLE` / `CLEAN`;
+- reviews, comments, and review threads: 0; hosted README and all four diagram
+  assets: present;
+- merge, local sync, and cleanup: pending fresh explicit approval.
 
 ## Holds and Exclusions
 
