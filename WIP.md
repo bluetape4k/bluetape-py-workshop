@@ -37,14 +37,14 @@ forbidden.
   aligned English/Korean example guides, and source-backed Architecture and
   Sequence Diagram SVG/PNG pairs
 - Current validation: default `296 passed, 5 skipped, 1 deselected`; optional
-  deterministic `34 passed, 1 deselected`; serial Docker Redis `1 passed`;
+  deterministic `36 passed, 1 deselected`; serial Docker Redis `1 passed`;
   Ruff, XML/render/audits, full-size PNG inspection, locale/link parity, and
   diff hygiene pass
 - Issue [#20](https://github.com/bluetape4k/bluetape-py-workshop/issues/20)
   keeps near-cache invalidation `blocked:upstream`; no private RESP3 API,
   Pub/Sub, or polling workaround is included in #10
-- Next action: finish root documentation, implementation review, lesson, and
-  exact-head validation; then create the approved PR
+- Next action: commit the converged implementation review and lesson, rerun the
+  exact head, then create the approved PR
 - Runnable now: `uv run --locked python -m examples.order_intake`
 - Runnable now: `uv run --locked python -m examples.catalog_enrichment`
 - Runnable now: `uv run --locked python -m examples.cached_product_catalog`
@@ -332,7 +332,7 @@ Issue #10 current local checkpoint:
 - deterministic owner/follower/local-hit behavior: one loader call, owner
   `LOADED`, follower `RESULT_REUSED`, then one Cache B local hit;
 - default repository: `296 passed, 5 skipped, 1 deselected`;
-- optional example: `34 passed, 1 deselected`;
+- optional example: `36 passed, 1 deselected`;
 - serial real Redis lane: `1 passed`;
 - Architecture PNG: `3200x2000`, `10` cards, `4` markers, no crossings or
   intrusions, geometry/endpoint/mixed-corner audits and full-size inspection pass;
@@ -340,8 +340,8 @@ Issue #10 current local checkpoint:
   style/geometry/endpoint/mixed-corner audits and full-size inspection pass;
 - example README pair: reciprocal locale navigation, exact commands, outcomes,
   security, cleanup, troubleshooting, non-goals, and both diagram pairs present;
-- root documentation, implementation review, lesson, and exact-head full gates:
-  in progress.
+- root documentation and six-perspective implementation review: pass;
+- durable Type A lesson: present; exact-head post-lesson rerun: pending.
 
 ## Holds and Exclusions
 
