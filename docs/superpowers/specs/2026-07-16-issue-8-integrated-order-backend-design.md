@@ -174,9 +174,18 @@ An immutable, slotted, keyword-only result containing:
 
 ### `ProcessedOrder`
 
-An immutable, slotted, keyword-only result containing normalized request,
-partner, and order identifiers, the occurrence-ordered processed lines,
-`total_cents`, and the bounded `EncodedPayload` artifact.
+An immutable, slotted, keyword-only result containing the validated caller
+request, partner, and order identifiers, the occurrence-ordered processed
+lines, `total_cents`, and the bounded `EncodedPayload` artifact. Header values
+preserve the existing intake contract; only SKU values are normalized by the
+enrichment boundary.
+
+The encoded JSON document is built from an explicit allowlist of header values,
+processed line fields, totals, recommendations, and warning fields. It does not
+serialize the `ProcessedOrder` object or include its `artifact` field, so the
+result cannot recursively encode itself. Provider-originated names and
+recommendations are treated as data and remain subject to the existing JSON
+serialization and transport limits.
 
 Cache statistics remain operational state exposed by the service's async
 `cache_stats()` method rather than embedded in the domain result.
@@ -213,7 +222,9 @@ The `AsyncProductCatalogService` already receives the existing
 enrichment service translates the required-provider failure through its
 existing contract. Reads within a provider batch are sequential, so the outer
 enrichment service remains the only owner of provider-job concurrency and no
-nested unbounded tasks are created.
+nested unbounded tasks are created. This deliberately favors one visible
+concurrency owner over maximum batch throughput; the README identifies it as a
+teaching trade-off rather than a production performance recommendation.
 
 The adapter does not expose arbitrary cache operations or construct its own
 cache. `AsyncTTLCache` is created and owned by the composition root.
@@ -221,7 +232,12 @@ cache. `AsyncTTLCache` is created and owned by the composition root.
 ### `OrderBackendService`
 
 The service receives existing focused services and fixed configuration through
-keyword-only construction. `process(command)` performs:
+keyword-only construction. Every owning constructor validates its own fixed
+configuration before accepting work: the service owns batch size, concurrency,
+and provider timeout; the application owns request and shutdown timeouts; and
+the existing payload service owns serialization and transport limits. The
+composition root supplies those already-valid objects and values but does not
+duplicate their invariants. `process(command)` performs:
 
 1. aggregate-shape validation;
 2. per-line mapping to `PartnerOrderCommand` with the shared header;
@@ -239,13 +255,36 @@ by delegating to the composed `AsyncProductCatalogService`.
 ## Application Lifecycle
 
 `OrderBackendApplication` owns request tasks but not provider/cache internals.
-It is bound to one event loop and provides an async `process(command)` method
-plus idempotent `aclose()` and async context-manager support.
+It binds on the first async `process()` or `aclose()` call and provides an async
+`process(command)` method plus idempotent `aclose()` and async context-manager
+support. Later use from another loop fails with a stable `RuntimeError` before
+task creation or lifecycle-state mutation.
 
 For every accepted request, it creates one named task around the service call,
-tracks it until terminal, and applies a finite overall `request_timeout`.
-Normal caller cancellation cancels that request task and re-raises
-`asyncio.CancelledError`.
+tracks it until terminal, and applies a finite overall `request_timeout`. On the
+single bound loop, the accepting-state check, task creation, and task
+registration occur in one no-`await` critical section. Shutdown flips the state
+and captures its tracked snapshot in the same kind of no-`await` section, so no
+request can register after the shutdown snapshot.
+
+The caller awaits the owned request task through `asyncio.shield()` inside the
+overall timeout. Timeout cancels the request task and raises `TimeoutError`
+without waiting indefinitely for a cancellation-resistant provider. Normal
+caller cancellation also cancels the request task and promptly re-raises
+`asyncio.CancelledError`. In either case, a non-terminal task remains in the
+tracked set and a done callback removes it only after it truly becomes
+terminal. That callback observes the terminal result or exception, records only
+a fixed outcome/error kind, and prevents un-retrieved task exceptions without
+logging raw exception text; neither path silently detaches work.
+
+Lifecycle state is explicit: `OPEN`, `CLOSING`, `CLOSE_FAILED`, or `CLOSED`.
+The first `aclose()` caller creates one named close task. Concurrent close
+callers await that same task through `asyncio.shield()`, so cancelling one close
+caller neither cancels shared shutdown nor propagates cancellation into request
+tasks. A failed close retains non-terminal request references and moves to
+`CLOSE_FAILED`; a later call creates one retry close task. A terminal successful
+close is idempotent. Close-task completion is also observed and retained in the
+lifecycle state even when every current close waiter was cancelled.
 
 `aclose()` follows this order:
 
@@ -257,21 +296,34 @@ Normal caller cancellation cancels that request task and re-raises
    pending count while retaining references.
 
 Repeated close after terminal completion is safe. A failed close can be retried
-after non-cooperative tasks become terminal. The application never reaches
-inside `AsyncTTLCache` to cancel loader tasks; terminating request waiters
-activates the cache's existing abandonment cleanup contract.
+after non-cooperative tasks become terminal. `__aexit__` raises a shutdown error
+directly when the context body succeeded. When the body already raised, it
+preserves that exception as primary, adds only a redacted cleanup note, and
+retains pending task references for a later retry instead of masking the body
+failure. The application never reaches inside `AsyncTTLCache` to cancel loader
+tasks; terminating request waiters activates the cache's existing abandonment
+cleanup contract.
 
 ## Logging and Trust Boundary
 
-The caller owns a stdlib logger configured at the composition root. The
-integrated service establishes request/partner/order context for the aggregate
-and relies on the existing intake context per line. Every token is reset in
-`finally`/context-manager paths, including validation failure, provider failure,
-timeout, and cancellation.
+The caller owns a stdlib logger configured at the composition root. Aggregate
+context is established only after every line passes intake validation; invalid
+input remains under the focused intake service's existing safe-context
+contract. The integrated layer never interpolates identifiers into an event
+name or message. Every token is reset in `finally`/context-manager paths,
+including validation failure, provider failure, timeout, and cancellation.
 
-Logs use fixed event names and low-cardinality error fields. They exclude raw
-provider exceptions, artifact data, recommendations, task names, and connection
-details.
+Logs use fixed event names and fixed error-kind fields. Identifier context is
+structured, not message text, and is documented as operational data rather than
+a metric label. Logs exclude raw provider exceptions, artifact data,
+recommendations, product names, task names, and connection details.
+
+The integrated layer emits stable lifecycle events for request start, success,
+failure, timeout, and cancellation plus shutdown start, completion, and failure.
+Failure events use a fixed `error_kind`; shutdown failure may include only the
+numeric `pending_count`. The README explains that caller identifiers are
+non-secret operational context and that a production adapter must add its own
+identifier length, privacy, authorization, and retention policy.
 
 The generated artifact always uses `JsonPayloadService` and its untrusted JSON
 metadata. Apache Fory remains an explicit trusted-internal demonstration in the
@@ -321,12 +373,24 @@ All tests are deterministic and run in the default non-Testcontainers lane.
 - request success and task removal;
 - overall request timeout with terminal cache/enrichment cleanup;
 - caller cancellation propagation;
+- admission/shutdown boundary race with no post-snapshot registration;
+- timeout and caller cancellation against a cancellation-resistant provider,
+  with prompt return and retained tracking until terminal;
+- late success/failure after caller timeout or cancellation with no un-retrieved
+  task exception or raw exception logging;
 - graceful close while work completes;
 - grace timeout followed by cancellation;
+- concurrent close callers sharing one close operation;
+- cancellation of one close caller without cancellation of shared shutdown;
+- close-task completion after every current waiter is cancelled, with no
+  un-retrieved task exception;
 - rejection after shutdown begins;
-- idempotent close; and
+- idempotent close;
 - explicit shutdown failure for a cancellation-resistant provider, followed by
-  retry after terminal completion.
+  retry after terminal completion;
+- context-manager body-error precedence over cleanup failure, plus direct
+  cleanup failure when the body succeeded; and
+- first-use event-loop binding and pre-mutation cross-loop rejection.
 
 Lifecycle tests coordinate with `asyncio.Event`; real sleeps and polling loops
 are not acceptable proof.
