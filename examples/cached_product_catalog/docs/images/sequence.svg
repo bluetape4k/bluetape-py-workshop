@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1300" viewBox="0 0 1800 1300" role="img" aria-labelledby="title desc">
+  <title id="title">Cached product catalog sequence</title>
+  <desc id="desc">Chronological cache hit, miss, expiry, loader failure recovery, async coalescing, and cancellation cleanup.</desc>
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&amp;family=Comic+Mono&amp;display=swap');
+      .title { font: 42px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #263238; }
+      .subtitle { font: 20px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #546e7a; }
+      .participant-title { font: 24px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #263238; }
+      .participant-subtitle { font: 16px 'Comic Mono', monospace; fill: #546e7a; }
+      .label { font: 17px 'Comic Mono', monospace; fill: #37474f; }
+      .frame-label { font: 18px 'Architects Daughter', cursive; }
+      .lifeline { stroke: #b0bec5; stroke-width: 3; stroke-dasharray: 10 9; }
+      .activation { fill: #dcebf4; stroke: #5f8da8; stroke-width: 2.5; }
+      .frame { stroke: #90a4ae; stroke-width: 3; }
+      .alt { fill: none; stroke: #90a4ae; stroke-width: 3; rx: 22; }
+      .divider { stroke: #90a4ae; stroke-width: 2.5; stroke-dasharray: 10 8; }
+      .call { fill: none; stroke: #5f8da8; stroke-width: 4; marker-end: url(#seq-blue); }
+      .success { fill: none; stroke: #6f9a65; stroke-width: 4; marker-end: url(#seq-green); }
+      .return { fill: none; stroke: #4f8f8b; stroke-width: 4; stroke-dasharray: 10 7; marker-end: url(#seq-teal); }
+      .error { fill: none; stroke: #c56b5d; stroke-width: 4; marker-end: url(#seq-red); }
+      .cleanup { fill: none; stroke: #b07a36; stroke-width: 4; marker-end: url(#seq-amber); }
+      .pill-blue { fill: #e7f1f6; stroke: #5f8da8; stroke-width: 2; }
+      .pill-green { fill: #e7f1e3; stroke: #6f9a65; stroke-width: 2; }
+      .pill-red { fill: #f8e5e1; stroke: #c56b5d; stroke-width: 2; }
+      .pill-amber { fill: #fff0d9; stroke: #b07a36; stroke-width: 2; }
+      .number { font: 16px 'Comic Mono', monospace; fill: #37474f; text-anchor: middle; }
+    </style>
+    <marker id="seq-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#5f8da8"/></marker>
+    <marker id="seq-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#6f9a65"/></marker>
+    <marker id="seq-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#4f8f8b"/></marker>
+    <marker id="seq-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#c56b5d"/></marker>
+    <marker id="seq-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#b07a36"/></marker>
+  </defs>
+
+  <rect width="1800" height="1300" rx="34" fill="#fbf8f1" stroke="#d7ccc8" stroke-width="4" class="frame"/>
+  <text x="70" y="65" class="title">Cached Product Catalog Sequence</text>
+  <text x="70" y="100" class="subtitle">Cache-owned loading stays visible through success, expiry, failure, and cancellation</text>
+
+  <g>
+    <rect x="70" y="140" width="250" height="105" rx="22" fill="#ffe7c7" stroke="#d69b55" stroke-width="3" class="participant"/>
+    <text x="195" y="184" text-anchor="middle" class="participant-title">Caller</text><text x="195" y="216" text-anchor="middle" class="participant-subtitle">composition root</text>
+    <rect x="410" y="140" width="280" height="105" rx="22" fill="#dcebf4" stroke="#5f8da8" stroke-width="3" class="participant"/>
+    <text x="550" y="184" text-anchor="middle" class="participant-title">Catalog Service</text><text x="550" y="216" text-anchor="middle" class="participant-subtitle">normalize + delegate</text>
+    <rect x="790" y="140" width="280" height="105" rx="22" fill="#e8def5" stroke="#8e72b5" stroke-width="3" class="participant"/>
+    <text x="930" y="184" text-anchor="middle" class="participant-title">TTL Cache</text><text x="930" y="216" text-anchor="middle" class="participant-subtitle">sync or async owner</text>
+    <rect x="1170" y="140" width="250" height="105" rx="22" fill="#e3f0df" stroke="#6f9a65" stroke-width="3" class="participant"/>
+    <text x="1295" y="184" text-anchor="middle" class="participant-title">Loader</text><text x="1295" y="216" text-anchor="middle" class="participant-subtitle">injected callable</text>
+    <rect x="1510" y="140" width="220" height="105" rx="22" fill="#f6ddd7" stroke="#c56b5d" stroke-width="3" class="participant"/>
+    <text x="1620" y="184" text-anchor="middle" class="participant-title">Clock / Task</text><text x="1620" y="216" text-anchor="middle" class="participant-subtitle">owned lifecycle</text>
+  </g>
+
+  <path d="M195 245 V1205" class="lifeline"/><path d="M550 245 V1205" class="lifeline"/><path d="M930 245 V1205" class="lifeline"/><path d="M1295 245 V1205" class="lifeline"/><path d="M1620 245 V1205" class="lifeline"/>
+  <rect x="540" y="285" width="20" height="865" rx="10" class="activation"/><rect x="920" y="345" width="20" height="805" rx="10" class="activation"/><rect x="1285" y="430" width="20" height="100" rx="10" class="activation"/><rect x="1610" y="785" width="20" height="310" rx="10" class="activation"/>
+
+  <path d="M195 315 H540" class="call"/><rect x="217" y="278" width="36" height="36" rx="18" class="pill pill-blue"/><text x="235" y="302" class="number num">1</text><text x="265" y="302" class="label">get_product(" sku-1 ")</text>
+  <path d="M560 375 H920" class="call"/><rect x="582" y="338" width="36" height="36" rx="18" class="pill pill-blue"/><text x="600" y="362" class="number num">2</text><text x="630" y="362" class="label">get_or_load("SKU-1") -&gt; miss</text>
+  <path d="M940 445 H1285" class="success"/><rect x="962" y="408" width="36" height="36" rx="18" class="pill pill-green"/><text x="980" y="432" class="number num">3</text><text x="1010" y="432" class="label">loader("SKU-1")</text>
+  <path d="M1285 510 H940" class="return"/><rect x="1217" y="473" width="36" height="36" rx="18" class="pill pill-green"/><text x="1235" y="497" class="number num">4</text><text x="990" y="497" class="label">publish ProductSummary</text>
+  <path d="M920 565 H195" class="return"/><rect x="852" y="528" width="36" height="36" rx="18" class="pill pill-green"/><text x="870" y="552" class="number num">5</text><text x="580" y="552" class="label">same immutable object</text>
+
+  <rect x="95" y="600" width="1610" height="245" rx="22" class="alt"/><text x="120" y="630" class="frame-label" fill="#6f9a65">alt hit / exact-boundary expiry</text><path d="M95 720 H1705" class="divider"/>
+  <path d="M560 670 H920" class="success"/><rect x="582" y="633" width="36" height="36" rx="18" class="pill pill-green"/><text x="600" y="657" class="number num">6</text><text x="630" y="657" class="label">before TTL -&gt; hit, no loader</text>
+  <text x="120" y="752" class="frame-label" fill="#b07a36">else clock reaches expires_at</text>
+  <path d="M1620 785 H940" class="cleanup"/><rect x="1552" y="748" width="36" height="36" rx="18" class="pill pill-amber"/><text x="1570" y="772" class="number num">7</text><text x="1220" y="772" class="label">expire entry at exact boundary</text>
+  <path d="M940 815 H1285" class="call"/><rect x="962" y="778" width="36" height="36" rx="18" class="pill pill-blue"/><text x="980" y="802" class="number num">8</text><text x="1010" y="802" class="label">reload and publish</text>
+
+  <rect x="95" y="875" width="1610" height="280" rx="22" class="alt"/><text x="120" y="905" class="frame-label" fill="#c56b5d">alt failure / async cancellation</text><path d="M95 985 H1705" class="divider"/>
+  <path d="M1295 945 H920" class="error"/><rect x="962" y="908" width="36" height="36" rx="18" class="pill pill-red"/><text x="980" y="932" class="number num">9</text><text x="1010" y="932" class="label">original loader error; not cached</text>
+  <text x="120" y="1017" class="frame-label" fill="#b07a36">else overlapping async waiters</text>
+  <path d="M195 1050 H920" class="call"/><rect x="217" y="1013" width="36" height="36" rx="18" class="pill pill-blue"/><text x="235" y="1037" class="number num">10</text><text x="265" y="1037" class="label">two callers coalesce into one loader task</text>
+  <path d="M550 1090 H920" class="error"/><rect x="582" y="1053" width="36" height="36" rx="18" class="pill pill-red"/><text x="600" y="1077" class="number num">11</text><text x="630" y="1077" class="label">last waiter cancels -&gt; abandoned</text>
+  <path d="M1620 1125 H940" class="cleanup"/><rect x="1552" y="1088" width="36" height="36" rx="18" class="pill pill-amber"/><text x="1570" y="1112" class="number num">12</text><text x="1160" y="1112" class="label">terminal cleanup -&gt; gauges zero</text>
+
+  <rect x="95" y="1220" width="1610" height="48" rx="16" fill="#f0ebe2" stroke="#d7ccc8" stroke-width="2"/>
+  <text x="120" y="1251" class="participant-subtitle">One surviving waiter keeps the shared loader alive; only terminal cleanup removes the final cache-owned task.</text>
+</svg>
