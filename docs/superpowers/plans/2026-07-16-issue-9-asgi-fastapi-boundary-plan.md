@@ -99,7 +99,7 @@ official ASGI/Starlette/FastAPI documentation, GitHub issue evidence.
 - [x] Mark this plan's completed steps, commit with Lore trailers, push the
   approved branch, and create the approved PR to `develop` with Issue #9's
   milestone, assignee, and labels.
-- [ ] Wait for exact-head hosted CI and current review/thread state, then stop
+- [x] Wait for exact-head hosted CI and current review/thread state, then stop
   for a fresh explicit merge approval.
 
 ## Self-Review

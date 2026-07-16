@@ -57,5 +57,7 @@ Reference images inspected before drawing:
 ## Remaining Gate
 
 [PR #19](https://github.com/bluetape4k/bluetape-py-workshop/pull/19) was created
-from the approved branch to `develop`. Verify the exact hosted head and current
-CI/review/thread state, then stop for fresh merge approval.
+from the approved branch to `develop`. Hosted CI passed, GitHub reports
+`MERGEABLE` / `CLEAN`, reviews/comments/threads are all zero, and both guides
+plus all four diagram assets are present at the hosted head. Stop for fresh
+merge approval.

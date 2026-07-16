@@ -38,7 +38,8 @@ forbidden.
 - Current validation: documentation `10 passed`; full deterministic
   `290 passed, 1 skipped, 1 deselected`; Ruff, actionlint, XML/render/audits,
   locale/link parity, and diff hygiene pass
-- Next action: verify PR #19 exact hosted head, CI, reviews, and threads
+- Next action: report PR #19 merge readiness and wait for fresh explicit merge
+  approval
 - Runnable now: `uv run --locked python -m examples.order_intake`
 - Runnable now: `uv run --locked python -m examples.catalog_enrichment`
 - Runnable now: `uv run --locked python -m examples.cached_product_catalog`
@@ -289,7 +290,11 @@ Issue #9 local research checkpoint:
   `git diff --check`: pass;
 - six-lens research review: `P0=0`, `P1=0`;
 - PR #19 created with milestone `0.2.0`, assignee `debop`, and Issue #9 labels;
-- hosted exact-head CI and review/thread verification: pending.
+- hosted exact-head CI: pass; GitHub mergeability/state:
+  `MERGEABLE` / `CLEAN`;
+- reviews, comments, and review threads: 0; hosted English/Korean guides and all
+  four diagram assets: present;
+- merge, local sync, and cleanup: pending fresh explicit approval.
 
 ## Holds and Exclusions
 
