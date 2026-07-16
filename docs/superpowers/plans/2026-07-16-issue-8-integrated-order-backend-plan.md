@@ -1384,7 +1384,7 @@ and checkpoint with a Lore message, then rerun the focused tests, full
 deterministic lane, Ruff, actionlint, diagram checks, and diff check at resulting
 HEAD.
 
-- [ ] **Step 8.7: Push and create the approved PR**
+- [x] **Step 8.7: Push and create the approved PR**
 
 Push `feat/issue-8-integrated-order-backend` and create an English PR into
 `develop`, assigned to `debop`, with milestone `0.1.0`, relevant labels,
