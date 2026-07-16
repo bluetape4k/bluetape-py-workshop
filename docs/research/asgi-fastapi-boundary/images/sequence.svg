@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1500" viewBox="0 0 1800 1500" role="img" aria-labelledby="title desc">
+  <title id="title">First HTTP order request sequence</title>
+  <desc id="desc">FastAPI lifespan, request context, backend delegation, success and failure branches, disconnect policy, reset, and shutdown.</desc>
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&amp;family=Comic+Mono&amp;display=swap');
+      .title { font: 44px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #263238; }
+      .subtitle { font: 21px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #546e7a; }
+      .participant { font: 24px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #263238; text-anchor: middle; }
+      .role { font: 15px 'Comic Mono', 'SFMono-Regular', monospace; fill: #546e7a; text-anchor: middle; }
+      .label { font: 15px 'Comic Mono', 'SFMono-Regular', monospace; fill: #37474f; }
+      .frame { fill: #fbf8f1; stroke: #d7ccc8; stroke-width: 3; }
+      .alt { fill: #ffffff; fill-opacity: 0.10; stroke: #90a4ae; stroke-width: 3; }
+      .branchDivider { stroke: #90a4ae; stroke-width: 2.5; stroke-dasharray: 10 8; }
+      .branchLabel { font: 17px 'Architects Daughter', 'Comic Sans MS', cursive; }
+      .note { font: 15px 'Comic Mono', 'SFMono-Regular', monospace; fill: #546e7a; }
+      .lifeline { stroke: #90a4ae; stroke-width: 2.5; stroke-dasharray: 10 9; }
+      .activation { fill: #dcebf4; stroke: #5f8da8; stroke-width: 2; }
+      .message { fill: none; stroke-width: 4; stroke-linecap: round; }
+      .blue { stroke: #5f8da8; marker-end: url(#arrow-blue); }
+      .purple { stroke: #8e72b5; marker-end: url(#arrow-purple); }
+      .green { stroke: #6f9a65; marker-end: url(#arrow-green); }
+      .amber { stroke: #b07a36; marker-end: url(#arrow-amber); }
+      .red { stroke: #c56b5d; marker-end: url(#arrow-red); }
+      .teal { stroke: #3f9a9a; stroke-dasharray: 10 8; marker-end: url(#arrow-teal); }
+      .label { fill: #fffdf8; stroke-width: 2; }
+      .num { font: 14px 'Comic Mono', 'SFMono-Regular', monospace; text-anchor: middle; dominant-baseline: middle; }
+    </style>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#5f8da8"/></marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#8e72b5"/></marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#6f9a65"/></marker>
+    <marker id="arrow-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#b07a36"/></marker>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#c56b5d"/></marker>
+    <marker id="arrow-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#3f9a9a"/></marker>
+  </defs>
+
+  <rect x="0" y="0" width="1800" height="1500" fill="#fbf8f1"/>
+  <rect x="32" y="30" width="1736" height="1438" rx="30" class="frame"/>
+  <text x="70" y="78" class="title">First HTTP Order Sequence</text>
+  <text x="70" y="112" class="subtitle">Transport policy stays visible while the existing backend owns deadlines, task observation, and shutdown</text>
+
+  <g>
+    <rect x="70" y="150" width="220" height="92" rx="20" fill="#ffe7c7" stroke="#d69b55" stroke-width="3"/>
+    <text x="180" y="186" class="participant">Client</text><text x="180" y="217" class="role">HTTP caller</text>
+    <rect x="355" y="150" width="220" height="92" rx="20" fill="#dcebf4" stroke="#5f8da8" stroke-width="3"/>
+    <text x="465" y="186" class="participant">ASGI Server</text><text x="465" y="217" class="role">lifespan + events</text>
+    <rect x="640" y="150" width="220" height="92" rx="20" fill="#dcebf4" stroke="#5f8da8" stroke-width="3"/>
+    <text x="750" y="186" class="participant">FastAPI</text><text x="750" y="217" class="role">transport adapter</text>
+    <rect x="925" y="150" width="220" height="92" rx="20" fill="#e8def5" stroke="#8e72b5" stroke-width="3"/>
+    <text x="1035" y="186" class="participant">Request Context</text><text x="1035" y="217" class="role">set + reset token</text>
+    <rect x="1210" y="150" width="220" height="92" rx="20" fill="#e3f0df" stroke="#6f9a65" stroke-width="3"/>
+    <text x="1320" y="186" class="participant">Backend App</text><text x="1320" y="217" class="role">deadline + task owner</text>
+    <rect x="1495" y="150" width="220" height="92" rx="20" fill="#f6ddd7" stroke="#c56b5d" stroke-width="3"/>
+    <text x="1605" y="186" class="participant">Order Service</text><text x="1605" y="217" class="role">domain work</text>
+  </g>
+
+  <g>
+    <path d="M180 242 V1375" class="lifeline"/><path d="M465 242 V1375" class="lifeline"/>
+    <path d="M750 242 V1375" class="lifeline"/><path d="M1035 242 V1375" class="lifeline"/>
+    <path d="M1320 242 V1375" class="lifeline"/><path d="M1605 242 V1375" class="lifeline"/>
+    <rect x="741" y="300" width="18" height="1010" rx="8" class="activation"/>
+    <rect x="1026" y="505" width="18" height="660" rx="8" class="activation"/>
+    <rect x="1311" y="330" width="18" height="1010" rx="8" class="activation"/>
+    <rect x="1596" y="620" width="18" height="180" rx="8" class="activation"/>
+  </g>
+
+  <g>
+    <path d="M465 292 H750" class="message green"/><g transform="translate(500 254)"><rect x="0" y="0" width="222" height="31" rx="15" class="label" stroke="#6f9a65"/><circle cx="18" cy="15.5" r="12" fill="#edf5ed" stroke="#6f9a65"/><text x="18" y="16" class="num" fill="#6f9a65">1</text><text x="38" y="21" class="detail">lifespan startup</text></g>
+    <path d="M750 337 H1320" class="message green"/><g transform="translate(865 299)"><rect x="0" y="0" width="285" height="31" rx="15" class="label" stroke="#6f9a65"/><circle cx="18" cy="15.5" r="12" fill="#edf5ed" stroke="#6f9a65"/><text x="18" y="16" class="num" fill="#6f9a65">2</text><text x="38" y="21" class="detail">build one backend</text></g>
+    <path d="M180 430 H465" class="message blue"/><g transform="translate(215 392)"><rect x="0" y="0" width="225" height="31" rx="15" class="label" stroke="#5f8da8"/><circle cx="18" cy="15.5" r="12" fill="#eef3f6" stroke="#5f8da8"/><text x="18" y="16" class="num" fill="#5f8da8">3</text><text x="38" y="21" class="detail">POST /orders</text></g>
+    <path d="M465 475 H750" class="message blue"/><g transform="translate(500 437)"><rect x="0" y="0" width="230" height="31" rx="15" class="label" stroke="#5f8da8"/><circle cx="18" cy="15.5" r="12" fill="#eef3f6" stroke="#5f8da8"/><text x="18" y="16" class="num" fill="#5f8da8">4</text><text x="38" y="21" class="detail">HTTP request events</text></g>
+    <path d="M750 520 H1035" class="message purple"/><g transform="translate(785 482)"><rect x="0" y="0" width="225" height="31" rx="15" class="label" stroke="#8e72b5"/><circle cx="18" cy="15.5" r="12" fill="#f1ebf8" stroke="#8e72b5"/><text x="18" y="16" class="num" fill="#8e72b5">5</text><text x="38" y="21" class="detail">set request context</text></g>
+    <path d="M750 575 H1320" class="message purple"/><g transform="translate(870 537)"><rect x="0" y="0" width="275" height="31" rx="15" class="label" stroke="#8e72b5"/><circle cx="18" cy="15.5" r="12" fill="#f1ebf8" stroke="#8e72b5"/><text x="18" y="16" class="num" fill="#8e72b5">6</text><text x="38" y="21" class="detail">process(command)</text></g>
+  </g>
+
+  <rect x="82" y="610" width="1635" height="525" rx="22" class="alt"/>
+  <text x="105" y="642" class="branchLabel" fill="#6f9a65">alt success</text>
+  <path d="M1320 665 H1605" class="message green"/><g transform="translate(1355 627)"><rect x="0" y="0" width="225" height="31" rx="15" class="label" stroke="#6f9a65"/><circle cx="18" cy="15.5" r="12" fill="#edf5ed" stroke="#6f9a65"/><text x="18" y="16" class="num" fill="#6f9a65">7</text><text x="38" y="21" class="detail">validate + process</text></g>
+  <path d="M1605 725 H1320" class="message teal"/><g transform="translate(1355 687)"><rect x="0" y="0" width="225" height="31" rx="15" class="label" stroke="#3f9a9a"/><circle cx="18" cy="15.5" r="12" fill="#e5f3f2" stroke="#3f9a9a"/><text x="18" y="16" class="num" fill="#3f9a9a">8</text><text x="38" y="21" class="detail">ProcessedOrder</text></g>
+  <path d="M1320 785 H750" class="message teal"/><g transform="translate(925 747)"><rect x="0" y="0" width="225" height="31" rx="15" class="label" stroke="#3f9a9a"/><circle cx="18" cy="15.5" r="12" fill="#e5f3f2" stroke="#3f9a9a"/><text x="18" y="16" class="num" fill="#3f9a9a">9</text><text x="38" y="21" class="detail">safe domain result</text></g>
+  <path d="M750 840 H180" class="message teal"/><g transform="translate(360 802)"><rect x="0" y="0" width="225" height="31" rx="15" class="label" stroke="#3f9a9a"/><circle cx="18" cy="15.5" r="12" fill="#e5f3f2" stroke="#3f9a9a"/><text x="18" y="16" class="num" fill="#3f9a9a">10</text><text x="38" y="21" class="detail">public response</text></g>
+
+  <path d="M82 875 H1717" class="branchDivider"/>
+  <text x="105" y="907" class="branchLabel" fill="#c56b5d">else validation, domain error, or timeout</text>
+  <path d="M1320 950 H750" class="message red"/><g transform="translate(910 912)"><rect x="0" y="0" width="260" height="31" rx="15" class="label" stroke="#c56b5d"/><circle cx="18" cy="15.5" r="12" fill="#f8e8e4" stroke="#c56b5d"/><text x="18" y="16" class="num" fill="#c56b5d">11</text><text x="38" y="21" class="detail">typed failure / TimeoutError</text></g>
+  <path d="M750 1005 H180" class="message red"/><g transform="translate(345 967)"><rect x="0" y="0" width="260" height="31" rx="15" class="label" stroke="#c56b5d"/><circle cx="18" cy="15.5" r="12" fill="#f8e8e4" stroke="#c56b5d"/><text x="18" y="16" class="num" fill="#c56b5d">12</text><text x="38" y="21" class="detail">redacted public problem</text></g>
+
+  <path d="M82 1035 H1717" class="branchDivider"/>
+  <text x="105" y="1067" class="branchLabel" fill="#b07a36">else client disconnect</text>
+  <path d="M465 1100 H750" class="message amber"/><g transform="translate(500 1062)"><rect x="0" y="0" width="230" height="31" rx="15" class="label" stroke="#b07a36"/><circle cx="18" cy="15.5" r="12" fill="#fbf0df" stroke="#b07a36"/><text x="18" y="16" class="num" fill="#b07a36">13</text><text x="38" y="21" class="detail">http.disconnect signal</text></g>
+  <path d="M750 1120 H1320" class="message amber"/><g transform="translate(870 1082)"><rect x="0" y="0" width="275" height="31" rx="15" class="label" stroke="#b07a36"/><circle cx="18" cy="15.5" r="12" fill="#fbf0df" stroke="#b07a36"/><text x="18" y="16" class="num" fill="#b07a36">14</text><text x="38" y="21" class="detail">apply explicit cancel policy</text></g>
+
+  <path d="M750 1185 H1035" class="message purple"/><g transform="translate(785 1147)"><rect x="0" y="0" width="225" height="31" rx="15" class="label" stroke="#8e72b5"/><circle cx="18" cy="15.5" r="12" fill="#f1ebf8" stroke="#8e72b5"/><text x="18" y="16" class="num" fill="#8e72b5">15</text><text x="38" y="21" class="detail">reset token in finally</text></g>
+  <path d="M465 1280 H750" class="message green"/><g transform="translate(500 1242)"><rect x="0" y="0" width="225" height="31" rx="15" class="label" stroke="#6f9a65"/><circle cx="18" cy="15.5" r="12" fill="#edf5ed" stroke="#6f9a65"/><text x="18" y="16" class="num" fill="#6f9a65">16</text><text x="38" y="21" class="detail">lifespan shutdown</text></g>
+  <path d="M750 1335 H1320" class="message green"/><g transform="translate(870 1297)"><rect x="0" y="0" width="275" height="31" rx="15" class="label" stroke="#6f9a65"/><circle cx="18" cy="15.5" r="12" fill="#edf5ed" stroke="#6f9a65"/><text x="18" y="16" class="num" fill="#6f9a65">17</text><text x="38" y="21" class="detail">await backend.aclose()</text></g>
+
+  <rect x="75" y="1400" width="1650" height="42" rx="16" fill="#f0ebe2" stroke="#d7ccc8" stroke-width="2"/>
+  <text x="95" y="1427" class="note">Disconnect is an input signal, not automatic task cancellation; context reset and backend close remain explicit.</text>
+</svg>

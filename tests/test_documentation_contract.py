@@ -4,6 +4,7 @@ ENGLISH = Path("README.md").read_text(encoding="utf-8")
 KOREAN = Path("README.ko.md").read_text(encoding="utf-8")
 WIP = Path("WIP.md").read_text(encoding="utf-8")
 AGENTS = Path("AGENTS.md").read_text(encoding="utf-8")
+WEB_RESEARCH = Path("docs/research/asgi-fastapi-boundary")
 
 COMMON_FACTS = (
     "Python 3.13.14",
@@ -37,10 +38,11 @@ def test_wip_keeps_the_dependency_order_and_current_issue() -> None:
         WIP.index(f"| {order} | [#{issue}]") for order, issue in enumerate(range(2, 9), start=1)
     ]
     assert positions == sorted(positions)
-    assert "Issue [#8]" in WIP
-    assert "Integrated framework-neutral order backend" in WIP
-    assert "feat/issue-8-integrated-order-backend" in WIP
-    assert "Pull request: [#18](https://github.com/bluetape4k/bluetape-py-workshop/pull/18)" in WIP
+    assert "Issue [#9]" in WIP
+    assert "ASGI/FastAPI workshop boundary decision" in WIP
+    assert "docs/issue-9-asgi-fastapi-boundary" in WIP
+    assert "PR #18" in WIP
+    assert "a6eae41ed7b946e6859d2cc3d1866a04ea539590" in WIP
     assert "uv run --locked python -m examples.integrated_order_backend" in WIP
     assert 'pytest -m "not testcontainers"' in WIP
     assert (
@@ -102,3 +104,67 @@ def test_every_runnable_example_embeds_required_diagrams_in_both_locales() -> No
             link = f"docs/images/{name}"
             assert link in english, f"{example}/README.md must link {link}"
             assert link in korean, f"{example}/README.ko.md must link {link}"
+
+
+def test_asgi_fastapi_boundary_research_is_bilingual_and_source_backed() -> None:
+    english = (WEB_RESEARCH / "README.md").read_text(encoding="utf-8")
+    korean = (WEB_RESEARCH / "README.ko.md").read_text(encoding="utf-8")
+
+    assert "English | [한국어](README.ko.md)" in english
+    assert "[English](README.md) | 한국어" in korean
+
+    shared_facts = (
+        "Direct FastAPI",
+        "Raw ASGI",
+        "Future `bluetape-fastapi`",
+        "POST /orders",
+        "request parsing",
+        "dependency injection",
+        "request-context reset",
+        "public exception mapping",
+        "client disconnect",
+        "timeout",
+        "lifespan",
+        "bluetape-py/issues/21",
+        "bluetape-py/issues/22",
+        "exact stable release tag or commit",
+        "2026-07-16",
+    )
+    for fact in shared_facts:
+        assert fact in english
+        assert fact in korean
+
+    official_sources = (
+        "asgi.readthedocs.io/en/latest/specs/lifespan.html",
+        "asgi.readthedocs.io/en/latest/specs/www.html",
+        "starlette.io/lifespan/",
+        "starlette.io/requests/",
+        "fastapi.tiangolo.com/advanced/events/",
+        "fastapi.tiangolo.com/tutorial/dependencies/",
+        "fastapi.tiangolo.com/tutorial/handling-errors/",
+    )
+    for source in official_sources:
+        assert source in english
+        assert source in korean
+
+
+def test_asgi_fastapi_boundary_research_embeds_required_diagrams() -> None:
+    english = (WEB_RESEARCH / "README.md").read_text(encoding="utf-8")
+    korean = (WEB_RESEARCH / "README.ko.md").read_text(encoding="utf-8")
+
+    for name in ("architecture.png", "architecture.svg", "sequence.png", "sequence.svg"):
+        asset = WEB_RESEARCH / "images" / name
+        assert asset.is_file(), f"missing research diagram asset: {asset}"
+        link = f"images/{name}"
+        assert link in english
+        assert link in korean
+
+
+def test_root_roadmap_exposes_issue_9_boundary_decision() -> None:
+    assert "docs/research/asgi-fastapi-boundary/README.md" in ENGLISH
+    assert "docs/research/asgi-fastapi-boundary/README.ko.md" in KOREAN
+    assert "Issue [#9]" in WIP
+    assert "docs/issue-9-asgi-fastapi-boundary" in WIP
+    assert "0.2.0" in WIP
+    assert "Issue #8 completed" in WIP
+    assert "Issue #10" in WIP and "blocked" in WIP.lower()
