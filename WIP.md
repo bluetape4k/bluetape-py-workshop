@@ -341,7 +341,8 @@ Issue #10 current local checkpoint:
 - example README pair: reciprocal locale navigation, exact commands, outcomes,
   security, cleanup, troubleshooting, non-goals, and both diagram pairs present;
 - root documentation and six-perspective implementation review: pass;
-- durable Type A lesson: present; exact-head post-lesson rerun: pending.
+- durable Type A lesson: present; post-lesson default/optional/Docker/CLI,
+  Ruff, actionlint, and diff validation: pass.
 
 ## Holds and Exclusions
 
