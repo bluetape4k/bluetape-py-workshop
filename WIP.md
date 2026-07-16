@@ -28,11 +28,11 @@ explicit approval and auto-merge is forbidden.
 - Baseline validation: dependency boundary `19 passed`; repository
   `165 passed, 1 skipped`; Docker server `28.4.0` reachable; no labeled
   Bluetape Redis test container present
-- Current gate: implementation, bilingual example documentation, and
-  source-backed Architecture/Sequence diagrams are complete; full repository
-  validation and implementation review are in progress
-- Next action: finish deterministic and serial Docker verification, record the
-  six-lens implementation review and lesson, then open the approved PR
+- Current gate: local Type A verification and six-lens implementation review
+  pass with P0=0/P1=0; PR creation and exact-head hosted CI/review verification
+  remain
+- Next action: create the approved PR, verify its exact head, CI, reviews,
+  threads, and mergeability, then stop for fresh merge approval
 - Runnable now: `uv run --locked python -m examples.order_intake`
 - Runnable now: `uv run --locked python -m examples.catalog_enrichment`
 - Runnable now: `uv run --locked python -m examples.cached_product_catalog`
@@ -51,7 +51,10 @@ Current artifacts: [issue #7](https://github.com/bluetape4k/bluetape-py-workshop
 [implementation plan](docs/superpowers/plans/2026-07-16-issue-7-redis-test-server-plan.md),
 [risk record](docs/superpowers/risks/2026-07-16-issue-7-redis-test-server-risk.md),
 [plan review](docs/superpowers/reviews/2026-07-16-issue-7-plan-review.md), and
-[Redis example guide](examples/redis_test_server/README.md), alongside
+[Redis example guide](examples/redis_test_server/README.md), plus the
+[implementation review](docs/superpowers/reviews/2026-07-16-issue-7-implementation-review.md)
+and the reusable
+[test-infrastructure ownership lesson](docs/superpowers/lessons/2026-07-16-issue-7-test-infrastructure-ownership.md), alongside
 the milestone dependency map below. Issues #2, #3, and #4 closed through
 [PR #12](https://github.com/bluetape4k/bluetape-py-workshop/pull/12),
 [PR #13](https://github.com/bluetape4k/bluetape-py-workshop/pull/13), and
@@ -214,6 +217,17 @@ The application owns one `RedisServer` context and uses only wrapper-provided
 connection details. The bounded RESP teaching probe has fixed operations and
 input/response limits. Integration tests prove success, application-body
 failure cleanup, and fresh state without leaving labeled containers behind.
+
+Local verification on Python 3.13.14, uv 0.11.28, and Docker server 28.4.0:
+
+- dependency boundary: `19 passed`;
+- Redis deterministic lane: `55 passed, 1 deselected`;
+- full deterministic repository lane: `221 passed, 1 skipped, 1 deselected`;
+- focused serial Docker lane: `1 passed`;
+- real CLI: documented compact success JSON;
+- labeled Redis containers: empty before and after the focused test and CLI;
+- Ruff format/lint, actionlint, `git diff --check`, and unchanged `uv.lock`: pass;
+- Architecture and Sequence XML/render/audits/full-size inspection: pass.
 
 ## Holds and Exclusions
 

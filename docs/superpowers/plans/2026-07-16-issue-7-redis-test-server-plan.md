@@ -93,7 +93,7 @@ RESP2 subset, pytest 8.4.2, Ruff 0.12.12, Docker server 28.4.0, SVG/CairoSVG.
 - Modify: `.github/workflows/ci.yml`
 - Test: `tests/test_dependency_baseline.py`
 
-- [ ] **Step 1.1: Write failing marker-configuration assertions**
+- [x] **Step 1.1: Write failing marker-configuration assertions**
 
 Extend `test_project_declares_the_approved_root_contract()` with:
 
@@ -105,7 +105,7 @@ assert pytest_config["markers"] == [
 assert pytest_config["addopts"] == '-ra -m "not testcontainers"'
 ```
 
-- [ ] **Step 1.2: Observe RED**
+- [x] **Step 1.2: Observe RED**
 
 Run:
 
@@ -115,7 +115,7 @@ uv run --locked pytest tests/test_dependency_baseline.py::test_project_declares_
 
 Expected: FAIL because marker registration and default exclusion do not exist.
 
-- [ ] **Step 1.3: Register the marker and default exclusion**
+- [x] **Step 1.3: Register the marker and default exclusion**
 
 Set this exact pytest configuration in `pyproject.toml`:
 
@@ -137,7 +137,7 @@ Change the CI test step to make the same boundary visible:
   run: uv run --locked pytest -m "not testcontainers"
 ```
 
-- [ ] **Step 1.4: Observe GREEN and verify selection**
+- [x] **Step 1.4: Observe GREEN and verify selection**
 
 Run:
 
@@ -151,7 +151,7 @@ Expected: dependency tests pass; default collection contains no selected Docker
 test after Task 4 exists; explicit selection contains only the integration test.
 At this early task, the explicit selection may report no tests collected.
 
-- [ ] **Step 1.5: Validate workflow syntax and commit**
+- [x] **Step 1.5: Validate workflow syntax and commit**
 
 Run actionlint and `git diff --check`, then commit with a Lore message whose
 intent is that default verification must remain Docker-independent. Expected:
@@ -166,7 +166,7 @@ both commands pass and no dependency or lockfile change exists.
 - Create: `examples/redis_test_server/tests/__init__.py`
 - Create: `examples/redis_test_server/tests/test_probe.py`
 
-- [ ] **Step 2.1: Write failing public-shape and success tests**
+- [x] **Step 2.1: Write failing public-shape and success tests**
 
 Create an empty test package and scripted socket doubles that implement
 `__enter__`, `__exit__`, `settimeout`, `sendall`, and `recv`. The first tests
@@ -202,7 +202,7 @@ Assert the exact RESP requests are:
 *2\r\n$3\r\nGET\r\n$23\r\nworkshop:order:ORD-1001\r\n
 ```
 
-- [ ] **Step 2.2: Observe RED**
+- [x] **Step 2.2: Observe RED**
 
 Run:
 
@@ -212,7 +212,7 @@ uv run --locked pytest examples/redis_test_server/tests/test_probe.py -q
 
 Expected: collection fails because the package and probe contracts do not exist.
 
-- [ ] **Step 2.3: Implement the minimal immutable result and fixed probe**
+- [x] **Step 2.3: Implement the minimal immutable result and fixed probe**
 
 Implement `probe.py` with this exact bounded surface and private protocol flow:
 
@@ -414,11 +414,11 @@ __all__ = [
 `run_workshop` is added to this export in Task 3; use a temporary probe-only
 export until then.
 
-- [ ] **Step 2.4: Observe GREEN**
+- [x] **Step 2.4: Observe GREEN**
 
 Run the Step 2.2 command. Expected: public-shape and success tests pass.
 
-- [ ] **Step 2.5: Add one RED/GREEN test at a time for failure boundaries**
+- [x] **Step 2.5: Add one RED/GREEN test at a time for failure boundaries**
 
 Cover and observe RED before each minimal repair:
 
@@ -436,7 +436,7 @@ Cover and observe RED before each minimal repair:
 
 After each behavior, run the focused test node then the entire `test_probe.py`.
 
-- [ ] **Step 2.6: Refactor and commit**
+- [x] **Step 2.6: Refactor and commit**
 
 Run Ruff on the package, inspect that no arbitrary public command method exists,
 and commit with a Lore message whose directive preserves the fixed bounded RESP
@@ -451,7 +451,7 @@ surface. Expected: focused tests and Ruff pass.
 - Modify: `examples/redis_test_server/__init__.py`
 - Create: `examples/redis_test_server/tests/test_application.py`
 
-- [ ] **Step 3.1: Write failing lifecycle orchestration tests**
+- [x] **Step 3.1: Write failing lifecycle orchestration tests**
 
 Use a fake single-use context server that records `enter`, `details`, and
 `exit:<exception-name>`. Inject a recording probe factory. Prove this order on
@@ -471,7 +471,7 @@ Then make `verify()` raise `ExpectedBodyFailure` and assert the same context
 exits with `exit:ExpectedBodyFailure`, the exact body exception is preserved,
 and no second details read occurs.
 
-- [ ] **Step 3.2: Observe RED**
+- [x] **Step 3.2: Observe RED**
 
 Run:
 
@@ -481,7 +481,7 @@ uv run --locked pytest examples/redis_test_server/tests/test_application.py -q
 
 Expected: collection fails because `run_workshop` and the CLI do not exist.
 
-- [ ] **Step 3.3: Implement minimal context ownership**
+- [x] **Step 3.3: Implement minimal context ownership**
 
 Implement:
 
@@ -498,7 +498,7 @@ def run_workshop(
 
 Do not catch body exceptions and do not access wrapper private fields.
 
-- [ ] **Step 3.4: Add failing CLI event tests**
+- [x] **Step 3.4: Add failing CLI event tests**
 
 Call `main()` directly with injected factories/runners and capture output.
 Assert exact success JSON, stable startup failure JSON containing only
@@ -506,7 +506,7 @@ Assert exact success JSON, stable startup failure JSON containing only
 `error_code` and `event`, return statuses 0/1, and empty stderr. Construct the
 startup error with public `TestcontainerStartError` and `StartFailureKind`.
 
-- [ ] **Step 3.5: Implement the minimal CLI and observe GREEN**
+- [x] **Step 3.5: Implement the minimal CLI and observe GREEN**
 
 Implement keyword-only test seams:
 
@@ -531,7 +531,7 @@ def main(
 Use sorted compact JSON and `raise SystemExit(main())` at module entry. Run the
 Step 3.2 command and expect all tests to pass.
 
-- [ ] **Step 3.6: Verify deterministic wrapper boundaries and commit**
+- [x] **Step 3.6: Verify deterministic wrapper boundaries and commit**
 
 Add public tests proving `RedisServer()` is initially not running, unstarted
 details raise, close-before-start is safe/terminal, invalid untagged/latest
@@ -545,7 +545,7 @@ and commit with a Lore message preserving context-manager ownership.
 - Create: `examples/redis_test_server/tests/test_redis_integration.py`
 - Create: `docs/superpowers/risks/2026-07-16-issue-7-redis-test-server-risk.md`
 
-- [ ] **Step 4.1: Record risk gates before Docker mutation**
+- [x] **Step 4.1: Record risk gates before Docker mutation**
 
 The risk table must name signals, mitigations, and rerun/rollback points for:
 untrusted image selection, Docker unavailability, bounded image/readiness time,
@@ -553,7 +553,7 @@ stale labeled containers, application-body cleanup, cleanup failure, parallel
 launch, RESP allocation/protocol drift, and accidental default-lane Docker
 contact.
 
-- [ ] **Step 4.2: Write the focused marked integration test**
+- [x] **Step 4.2: Write the focused marked integration test**
 
 Mark the module with `pytestmark = pytest.mark.testcontainers`. In one serial
 test:
@@ -572,7 +572,7 @@ test:
 Do not import Docker SDK internals, `GenericContainer`, wrapper private names,
 or redis-py.
 
-- [ ] **Step 4.3: Observe pre-run label baseline**
+- [x] **Step 4.3: Observe pre-run label baseline**
 
 Run:
 
@@ -584,7 +584,7 @@ docker ps -a --filter label=com.bluetape.testcontainers.redis=true \
 Expected: empty. If not empty, inspect each entry and remove only a confirmed
 stale workshop container before restarting this step.
 
-- [ ] **Step 4.4: Verify collection and deterministic fresh-state behavior**
+- [x] **Step 4.4: Verify collection and deterministic fresh-state behavior**
 
 Run collection only:
 
@@ -599,7 +599,7 @@ Expected: exactly one marked integration test collects. Rerun the deterministic
 real backend proof. The application behavior was already introduced RED-first
 in Task 2; this step adds backend-capability evidence rather than new behavior.
 
-- [ ] **Step 4.5: Run the Docker test once, serially**
+- [x] **Step 4.5: Run the Docker test once, serially**
 
 Run exactly:
 
@@ -611,7 +611,7 @@ uv run --locked pytest -m testcontainers \
 Expected: PASS with real Redis 8 readiness, round trips, success/body-failure
 cleanup, and fresh state. Do not start another heavy command concurrently.
 
-- [ ] **Step 4.6: Prove no new labeled residue and run the real CLI**
+- [x] **Step 4.6: Prove no new labeled residue and run the real CLI**
 
 Repeat Step 4.3 and require the exact pre-run container set. Then run:
 
@@ -622,7 +622,7 @@ uv run --locked python -m examples.redis_test_server
 Expected: exit 0 and one compact `redis_workshop_succeeded` JSON line. Repeat
 the label check and require the baseline again.
 
-- [ ] **Step 4.7: Run the performance/stability scan and commit**
+- [x] **Step 4.7: Run the performance/stability scan and commit**
 
 Inspect the exact diff for repeated startup, unbounded reads, timeout loss,
 container references, and tests that could pass without cleanup. Fix P0/P1,
@@ -641,12 +641,12 @@ with a Lore message recording Docker server/image evidence.
 - Create: `examples/redis_test_server/docs/images/sequence.svg`
 - Create: `examples/redis_test_server/docs/images/sequence.png`
 
-- [ ] **Step 5.1: Load `bluetape-writer` and `bluetape-diagram` before edits**
+- [x] **Step 5.1: Load `bluetape-writer` and `bluetape-diagram` before edits**
 
 Follow their README parity, source-backed asset, rendering, audit, and visual
 inspection contracts. Diagram labels are English and shared by both locales.
 
-- [ ] **Step 5.2: Write failing documentation tests**
+- [x] **Step 5.2: Write failing documentation tests**
 
 Require exact reciprocal locale navigation and equivalent tokens for scenario,
 non-goals, Architecture, Sequence Diagram, `RedisServer`,
@@ -656,7 +656,7 @@ marker pytest, CLI, label inspection, confirmed removal, `redis:8`,
 four asset names. Require source references to `probe.py`, `application.py`,
 `__main__.py`, and the integration test.
 
-- [ ] **Step 5.3: Observe RED, then write both README files together**
+- [x] **Step 5.3: Observe RED, then write both README files together**
 
 Run the documentation test and expect missing files. Add meaning-equivalent
 English/Korean reader paths with exact prerequisites, working directory,
@@ -664,25 +664,25 @@ commands, expected safe JSON, startup kinds, failure/cleanup behavior, trusted
 image warning, deterministic/Docker separation, troubleshooting, and explicit
 production non-goals.
 
-- [ ] **Step 5.4: Create Architecture SVG from implemented source**
+- [x] **Step 5.4: Create Architecture SVG from implemented source**
 
 Show reader/CLI, `run_workshop`, `RedisServer`, Docker Redis 8,
 `RedisConnectionDetails`, and `RedisOrderStatusProbe`, with lifecycle ownership
 and data direction. Link the SVG and embed its PNG in both READMEs.
 
-- [ ] **Step 5.5: Create Sequence SVG from implemented source**
+- [x] **Step 5.5: Create Sequence SVG from implemented source**
 
 Show constructor-without-Docker, bounded start/readiness, details delivery,
 three bounded commands, success cleanup, and an alternate application-failure
 cleanup branch. Link the SVG and embed its PNG in both READMEs.
 
-- [ ] **Step 5.6: Render, audit, inspect, and observe GREEN**
+- [x] **Step 5.6: Render, audit, inspect, and observe GREEN**
 
 Render both SVGs at readable full-size PNG resolution using the diagram skill.
 Validate XML, dimensions, source-label correspondence, and README references;
 inspect both PNGs visually. Run documentation tests and require PASS.
 
-- [ ] **Step 5.7: Commit the aligned docs and assets**
+- [x] **Step 5.7: Commit the aligned docs and assets**
 
 Run Ruff, focused tests, and `git diff --check`; commit with a Lore message
 whose directive requires diagrams to follow the implemented lifecycle.
@@ -696,26 +696,26 @@ whose directive requires diagrams to follow the implemented lifecycle.
 - Modify: `tests/test_documentation_contract.py`
 - Modify: `WIP.md`
 
-- [ ] **Step 6.1: Write failing root discovery/navigation assertions**
+- [x] **Step 6.1: Write failing root discovery/navigation assertions**
 
 Require both root locales to link `examples/redis_test_server`, name the
 deterministic and explicit Docker commands, and preserve the existing four
 examples. Extend automatic example discovery so the new README pair and four
 assets are mandatory.
 
-- [ ] **Step 6.2: Observe RED and update both root README files together**
+- [x] **Step 6.2: Observe RED and update both root README files together**
 
 Run `tests/test_documentation_contract.py` and expect missing navigation.
 Add the Redis workshop with a concise ownership description and separate
 deterministic/Docker/CLI commands in both locales.
 
-- [ ] **Step 6.3: Update WIP to the implementation-validation gate**
+- [x] **Step 6.3: Update WIP to the implementation-validation gate**
 
 Record exact branch/base, committed artifacts, deterministic counts, Docker
 server/image, label-baseline equality, focused CLI/test commands, exclusions,
 and the next gate. Do not claim PR/CI evidence before it exists.
 
-- [ ] **Step 6.4: Observe GREEN and commit**
+- [x] **Step 6.4: Observe GREEN and commit**
 
 Run root and example documentation tests plus diff check. Commit with a Lore
 message preserving bilingual discovery and explicit Docker opt-in.
@@ -728,7 +728,7 @@ message preserving bilingual discovery and explicit Docker opt-in.
 - Create: `docs/superpowers/lessons/2026-07-16-issue-7-test-infrastructure-ownership.md`
 - Modify: `WIP.md`
 
-- [ ] **Step 7.1: Run deterministic validation first**
+- [x] **Step 7.1: Run deterministic validation first**
 
 Sequentially run:
 
@@ -749,13 +749,13 @@ Expected: exact toolchain, all deterministic tests pass, the existing optional
 Fory test remains skipped, Ruff/actionlint/diff checks pass, and neither Docker
 nor a labeled container is contacted/created by this ladder.
 
-- [ ] **Step 7.2: Run Docker validation serially and audit cleanup**
+- [x] **Step 7.2: Run Docker validation serially and audit cleanup**
 
 Record the label set, run the focused marker test, run the CLI, and record the
 label set after each command. Expected: both commands pass and every post-run
 set equals the original baseline.
 
-- [ ] **Step 7.3: Prove dependency and scope invariants**
+- [x] **Step 7.3: Prove dependency and scope invariants**
 
 Run:
 
@@ -769,7 +769,7 @@ rg -n "GenericContainer|redis[_-]?py|create_task|ThreadPool|latest" \
 Expected: lockfile unchanged; only planned files differ; no forbidden provider,
 container construction, concurrency, or latest-image path is introduced.
 
-- [ ] **Step 7.4: Run final six-perspective implementation review**
+- [x] **Step 7.4: Run final six-perspective implementation review**
 
 Review exact changed source, tests, workflows, docs, and assets independently
 for performance, stability, security, operator/Ops, developer/API, and
@@ -777,14 +777,14 @@ user/caller lenses. Reclaim delayed children immediately. Integrate findings in
 the review artifact; fix and rerun affected lanes until P0=0/P1=0. Resolve every
 P2/P3 or file a linked follow-up with rationale.
 
-- [ ] **Step 7.5: Verify spec, plan, hazards, and diagrams**
+- [x] **Step 7.5: Verify spec, plan, hazards, and diagrams**
 
 Load `verification-before-completion` and the Type A verifier checklist. Map
 every acceptance row to fresh output, inspect both PNGs at full size, validate
 SVG XML, and require verifier PASS. Update plan checkboxes and WIP only from
 actual evidence.
 
-- [ ] **Step 7.6: Capture the required reusable lesson and final local commit**
+- [x] **Step 7.6: Capture the required reusable lesson and final local commit**
 
 Record why test infrastructure owns image/readiness/details/cleanup while the
 application owns only the fixed probe and context scope. Include stale-container
