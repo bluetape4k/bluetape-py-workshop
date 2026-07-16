@@ -109,12 +109,16 @@ exact non-blank ASCII SKU with a 64-character limit before cache or Redis I/O.
 events. It exposes an immutable snapshot and never stores raw keys, namespace,
 tokens, endpoints, values, or exception text.
 
-`run_scenario(redis_url, loader=...)` owns two factory-created providers with
+`run_scenario(redis_url, loader=..., provider_factory=...)` owns two
+factory-created providers with
 finite connect/socket timeouts and zero retries, two separate local caches,
 two recorders, and two `RedisCatalogInstance` values sharing one versioned
 namespace. It closes both providers on success, failure, and cancellation. The
 default loader uses event-controlled orchestration so instance B starts only
 after instance A owns the load, then both complete without timing guesses.
+The default factory is `AsyncRedisProvider.from_url`; an injected test factory
+must still return exact provider subclasses and exists only to prove lifecycle
+closure without exposing production clients.
 
 ## Request Sequence
 
