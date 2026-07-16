@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1050" viewBox="0 0 1800 1050" role="img" aria-labelledby="title desc">
+  <title id="title">Integrated order backend architecture</title>
+  <desc id="desc">Static ownership boundaries between the caller, the integrated application, and the focused bluetape-py workshop examples.</desc>
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&amp;family=Comic+Mono&amp;display=swap');
+      .title { font: 44px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #263238; }
+      .subtitle { font: 22px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #546e7a; }
+      .lane-title { font: 27px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #37474f; }
+      .card-title { font: 23px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #263238; }
+      .body { font: 17px 'Comic Mono', 'SFMono-Regular', monospace; fill: #455a64; }
+      .small { font: 15px 'Comic Mono', 'SFMono-Regular', monospace; fill: #546e7a; }
+      .lane { stroke: #cfd8dc; stroke-width: 2.5; stroke-dasharray: 10 8; }
+      .card { stroke-width: 3; }
+      .flow { fill: none; stroke: #5f8da8; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow-blue); }
+      .dependency { fill: none; stroke: #8e72b5; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow-purple); }
+      .optional { fill: none; stroke: #b07a36; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow-amber); }
+      .result { fill: none; stroke: #6f9a65; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow-green); }
+      .label-box { fill: #fffdf8; stroke: #cfd8dc; stroke-width: 1.5; }
+    </style>
+    <marker id="arrow-blue" viewBox="0 0 14 14" refX="12" refY="7" markerWidth="14" markerHeight="14" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L13 7 L1 13 Z" fill="#5f8da8"/></marker>
+    <marker id="arrow-purple" viewBox="0 0 14 14" refX="12" refY="7" markerWidth="14" markerHeight="14" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L13 7 L1 13 Z" fill="#8e72b5"/></marker>
+    <marker id="arrow-amber" viewBox="0 0 14 14" refX="12" refY="7" markerWidth="14" markerHeight="14" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L13 7 L1 13 Z" fill="#b07a36"/></marker>
+    <marker id="arrow-green" viewBox="0 0 14 14" refX="12" refY="7" markerWidth="14" markerHeight="14" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L13 7 L1 13 Z" fill="#6f9a65"/></marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#455a64" flood-opacity="0.13"/></filter>
+  </defs>
+
+  <rect width="1800" height="1050" fill="#fbf8f1"/>
+  <path d="M70 118 H1730" stroke="#d7ccc8" stroke-width="3" stroke-linecap="round"/>
+  <text x="70" y="70" class="title">Integrated Order Backend</text>
+  <text x="70" y="104" class="subtitle">One application lifetime composes validation, enrichment, shared caching, bounded payloads, and shutdown</text>
+
+  <rect x="60" y="155" width="300" height="750" rx="26" fill="#f7eee7" class="lane"/>
+  <rect x="395" y="155" width="675" height="750" rx="26" fill="#eef3f6" class="lane"/>
+  <rect x="1105" y="155" width="625" height="750" rx="26" fill="#edf5ed" class="lane"/>
+  <text x="88" y="198" class="lane-title">Caller boundary</text>
+  <text x="423" y="198" class="lane-title">Integrated example ownership</text>
+  <text x="1133" y="198" class="lane-title">Reused focused examples</text>
+
+  <g filter="url(#shadow)">
+    <rect x="95" y="285" width="230" height="150" rx="20" fill="#ffe7c7" stroke="#d69b55" class="card"/>
+    <text x="120" y="327" class="body">OrderBackendCommand</text>
+    <text x="120" y="365" class="body">1-100 line occurrences</text>
+    <text x="120" y="397" class="small">duplicates + order retained</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="95" y="650" width="230" height="160" rx="20" fill="#e3f0df" stroke="#6f9a65" class="card"/>
+    <text x="120" y="692" class="card-title">ProcessedOrder</text>
+    <text x="120" y="730" class="body">totals + safe warnings</text>
+    <text x="120" y="762" class="small">untrusted encoded artifact</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="435" y="255" width="275" height="195" rx="20" fill="#dcebf4" stroke="#5f8da8" class="card"/>
+    <text x="460" y="297" class="card-title">OrderBackendApplication</text>
+    <text x="460" y="335" class="body">one task per request</text>
+    <text x="460" y="367" class="body">overall deadline</text>
+    <text x="460" y="399" class="small">shared finite close + retry</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="760" y="255" width="270" height="195" rx="20" fill="#e8def5" stroke="#8e72b5" class="card"/>
+    <text x="785" y="297" class="card-title">OrderBackendService</text>
+    <text x="785" y="335" class="body">validate every line first</text>
+    <text x="785" y="367" class="body">assemble totals + result</text>
+    <text x="785" y="399" class="small">explicit JSON allowlist</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="540" y="620" width="350" height="170" rx="20" fill="#f0ebe2" stroke="#8d8178" class="card"/>
+    <text x="565" y="662" class="card-title">build_application()</text>
+    <text x="565" y="700" class="body">one cache + service graph</text>
+    <text x="565" y="732" class="body">fixed safety limits</text>
+    <text x="565" y="764" class="small">no global application state</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="1145" y="235" width="250" height="135" rx="20" fill="#f6ddd7" stroke="#c56b5d" class="card"/>
+    <text x="1170" y="276" class="card-title">OrderIntakeService</text>
+    <text x="1170" y="312" class="body">normalize + validate</text>
+    <text x="1170" y="342" class="small">safe log context</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="1145" y="420" width="250" height="145" rx="20" fill="#dcebf4" stroke="#5f8da8" class="card"/>
+    <text x="1170" y="461" class="card-title">CatalogEnrichment</text>
+    <text x="1170" y="497" class="body">bounded provider jobs</text>
+    <text x="1170" y="529" class="small">required vs optional policy</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="1145" y="650" width="250" height="145" rx="20" fill="#e3f0df" stroke="#6f9a65" class="card"/>
+    <text x="1170" y="691" class="card-title">JsonPayloadService</text>
+    <text x="1170" y="727" class="body">JSON + gzip + base64url</text>
+    <text x="1170" y="759" class="small">size + nesting limits</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="1450" y="360" width="240" height="155" rx="20" fill="#e8def5" stroke="#8e72b5" class="card"/>
+    <text x="1475" y="401" class="card-title">Async Catalog</text>
+    <text x="1475" y="437" class="body">AsyncTTLCache</text>
+    <text x="1475" y="469" class="small">read-through + coalescing</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="1450" y="570" width="240" height="145" rx="20" fill="#ffe7c7" stroke="#d69b55" class="card"/>
+    <text x="1475" y="611" class="card-title">Recommendations</text>
+    <text x="1475" y="647" class="body">optional provider</text>
+    <text x="1475" y="679" class="small">failure becomes warning</text>
+  </g>
+
+  <path d="M325 360 H435" class="flow"/>
+  <path d="M710 352 H760" class="flow"/>
+  <path d="M1030 300 H1145" class="dependency"/>
+  <path d="M1030 352 H1082 Q1094 352 1094 364 V480 Q1094 492 1106 492 H1145" class="dependency"/>
+  <path d="M1030 405 H1060 Q1072 405 1072 417 V710 Q1072 722 1084 722 H1145" class="dependency"/>
+  <path d="M1395 472 H1450" class="dependency"/>
+  <path d="M1395 520 H1420 Q1432 520 1432 532 V630 Q1432 642 1444 642 H1450" class="optional"/>
+  <path d="M715 620 V560 Q715 548 727 548 H883 Q895 548 895 536 V450" class="dependency"/>
+  <path d="M760 430 V505 Q760 517 748 517 H425 Q413 517 413 529 V730 Q413 742 401 742 H325" class="result"/>
+
+  <g>
+    <rect x="340" y="322" width="78" height="29" rx="14" class="label-box"/><text x="355" y="343" class="small">admit</text>
+    <rect x="1060" y="264" width="72" height="29" rx="14" class="label-box"/><text x="1074" y="285" class="small">reuse</text>
+    <rect x="1398" y="432" width="72" height="29" rx="14" class="label-box"/><text x="1412" y="453" class="small">cache</text>
+    <rect x="1402" y="548" width="88" height="29" rx="14" class="label-box"/><text x="1416" y="569" class="small">optional</text>
+  </g>
+
+  <rect x="60" y="945" width="1670" height="62" rx="18" fill="#f0ebe2" stroke="#d7ccc8" stroke-width="2"/>
+  <circle cx="98" cy="976" r="9" fill="#5f8da8"/><text x="118" y="983" class="small">Application owns deadlines, request tasks, and shutdown</text>
+  <circle cx="660" cy="976" r="9" fill="#8e72b5"/><text x="680" y="983" class="small">Service composes focused examples without duplicating their policies</text>
+  <circle cx="1370" cy="976" r="9" fill="#6f9a65"/><text x="1390" y="983" class="small">One cache lives for both orders</text>
+</svg>
