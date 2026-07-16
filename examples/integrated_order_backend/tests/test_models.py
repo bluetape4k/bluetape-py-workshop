@@ -120,4 +120,5 @@ def test_public_export_surface_is_deliberate() -> None:
         "OrderLineCommand",
         "ProcessedOrder",
         "ProcessedOrderLine",
+        "build_application",
     }

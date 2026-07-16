@@ -1,5 +1,5 @@
 from .application import OrderBackendApplication
-from .composition import CachedCatalogProvider
+from .composition import CachedCatalogProvider, build_application
 from .errors import (
     InvalidOrderBackendCommand,
     InvalidOrderLine,
@@ -26,4 +26,5 @@ __all__ = [
     "OrderLineCommand",
     "ProcessedOrder",
     "ProcessedOrderLine",
+    "build_application",
 ]
