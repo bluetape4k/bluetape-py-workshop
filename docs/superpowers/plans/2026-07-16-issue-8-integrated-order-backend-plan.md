@@ -1391,14 +1391,14 @@ Push `feat/issue-8-integrated-order-backend` and create an English PR into
 `Closes #8`, validation/diagram evidence, production non-goals, and final
 `## DoD Status`. Do not enable auto-merge.
 
-- [ ] **Step 8.8: Verify exact-head CI and current review state**
+- [x] **Step 8.8: Verify exact-head CI and current review state**
 
 Pin the live PR head SHA; verify remote SHA equality, required CI success,
 mergeability, current reviews, unresolved threads, and human-inspection evidence
 for both PNGs. Any head change invalidates prior hosted evidence and requires
 proportional local revalidation plus refreshed PR DoD.
 
-- [ ] **Step 8.9: Stop for fresh merge approval**
+- [x] **Step 8.9: Stop for fresh merge approval**
 
 Report PR URL, exact head, commits, changed files, test counts, diagram audit and
 inspection, CI/review state, lesson, residual risks, and P0=0/P1=0. Leave merge,
