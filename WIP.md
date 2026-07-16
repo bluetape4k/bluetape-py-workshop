@@ -15,11 +15,9 @@ payloads, overall request deadlines, and retryable finite shutdown.
 
 Active branch: `feat/issue-8-integrated-order-backend`
 Base branch: `develop`
-Pull request: Not created; local exact-head proof is complete and publication is
-the next external gate
-Stop boundary: finish exact-head local verification, create the already-approved
-PR from this branch to `develop`, verify hosted CI/review state, then stop for a
-fresh explicit merge approval. Auto-merge is forbidden.
+Pull request: [#18](https://github.com/bluetape4k/bluetape-py-workshop/pull/18)
+Stop boundary: verify exact-head hosted CI/review state for PR #18, then stop for
+a fresh explicit merge approval. Auto-merge is forbidden.
 
 ## Resume Checkpoint
 
@@ -39,8 +37,8 @@ fresh explicit merge approval. Auto-merge is forbidden.
   `geometry_failures=0`, style audit PASS; both final PNGs inspected at full size
 - Review state: final six-lens review converged from four P1 findings to
   `P0=0`, `P1=0`; the reusable composition/lifecycle lesson is recorded
-- Next action: push the approved exact head, create the PR, and verify hosted
-  CI/review state
+- Next action: verify PR #18 exact-head hosted CI, mergeability, reviews,
+  unresolved threads, and diagram exposure
 - Runnable now: `uv run --locked python -m examples.order_intake`
 - Runnable now: `uv run --locked python -m examples.catalog_enrichment`
 - Runnable now: `uv run --locked python -m examples.cached_product_catalog`
@@ -263,7 +261,8 @@ Issue #8 converged local exact-head checkpoint:
 - six-lens implementation review: four P1 findings repaired, final
   `P0=0/P1=0`;
 - exact-head post-commit rerun: pass;
-- remote CI and PR review state: pending Task 8 publication.
+- PR #18 created with milestone `0.1.0`, assignee `debop`, and Issue #8 labels;
+- remote CI and PR review state: pending exact-head Task 8 verification.
 
 ## Holds and Exclusions
 
