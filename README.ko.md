@@ -15,8 +15,11 @@ scenario는 [검증된 주문 접수](examples/order_intake/README.ko.md),
 default JSON과 optional Apache Fory 신뢰 프로필을 분리한
 [제한 기반 payload 처리](examples/bounded_payload_processing/README.ko.md), 명시적인
 container lifecycle ownership을 보여 주는
-[Redis test server workshop](examples/redis_test_server/README.ko.md)입니다. 각 예제는
-서로 맞춘 다국어 안내, Architecture, Sequence Diagram을 제공합니다.
+[Redis test server workshop](examples/redis_test_server/README.ko.md), 주문 접수,
+enrichment, shared cache, 제한된 JSON payload, request deadline, retry 가능한 shutdown을
+현실적인 두 주문 흐름으로 조합한
+[통합 주문 backend](examples/integrated_order_backend/README.ko.md)입니다. 각 예제는 서로
+맞춘 다국어 안내, Architecture, Sequence Diagram을 제공합니다.
 
 현재 이슈, 의존 순서, 검증 근거와 다음 작업은 [WIP.md](WIP.md)에서 확인하세요.
 
@@ -38,8 +41,9 @@ container lifecycle ownership을 보여 주는
 - uv 0.11.28. 프로젝트 설정이 다른 uv 버전을 거부합니다.
 - 공개 `bluetape-py` 저장소에 접근할 수 있는 Git 환경.
 - 결정적인 foundation, 주문 접수, catalog enrichment, cached product catalog
-  및 bounded payload processing 경로에는 Docker가 필요하지 않습니다. 명시적으로
-  선택한 Redis integration 및 실행 가능한 CLI 경로에서만 Docker가 필요합니다.
+  및 bounded payload processing, 통합 주문 backend 경로에는 Docker가 필요하지
+  않습니다. 명시적으로 선택한 Redis integration과 Redis CLI 경로에서만 Docker가
+  필요합니다.
 
 ## 설치
 
@@ -85,6 +89,12 @@ connection details를 사용하며, application body 성공과 실패 뒤의 cle
 검증합니다. 자세한 내용은
 [다국어 예제 안내](examples/redis_test_server/README.ko.md)를 참고하세요.
 
+통합 주문 backend도 같은 기준선을 유지하고 Redis와 Fory를 별도 optional 예제로
+남겨 둡니다. Fixed composition root는 in-memory 주문 두 개가 cache 하나를 공유하게
+하고, 안전한 public cache stats를 노출하며, 외부 artifact를 untrusted JSON으로
+고정하고, request/close task를 application lifecycle 하나에서 소유합니다. 자세한
+내용은 [다국어 예제 안내](examples/integrated_order_backend/README.ko.md)를 참고하세요.
+
 ## 검증
 
 CI와 같은 locked gate를 실행합니다.
@@ -108,6 +118,13 @@ uv run --locked pytest -m testcontainers examples/redis_test_server/tests/test_r
 uv run --locked python -m examples.redis_test_server
 ```
 
+결정적인 통합 시나리오와 focused test를 실행합니다.
+
+```bash
+uv run --locked python -m examples.integrated_order_backend
+uv run --locked pytest examples/integrated_order_backend/tests -q
+```
+
 ## 예제 문서 계약
 
 이슈 #3부터 모든 실행 가능한 예제는 서로 일치하는 `README.md`와 `README.ko.md`에
@@ -128,6 +145,7 @@ Diagram source와 rendered asset은 구현 code가 생긴 뒤에만 만듭니다
 ## 현재 제한 사항
 
 마일스톤 `0.1.0`에서는 ASGI/FastAPI adapter, production Redis provider, package
-publication 또는 release automation을 추가하지 않습니다. Redis 예제는 production
-Redis client나 cache provider가 아닌 test infrastructure이며, 모든 Docker-backed
-경로를 순차 실행합니다.
+publication 또는 release automation을 추가하지 않습니다. Persistent order store와
+authentication/authorization adapter도 범위 밖입니다. Redis 예제는 production Redis
+client나 cache provider가 아닌 test infrastructure이며, 모든 Docker-backed 경로를
+순차 실행합니다.
