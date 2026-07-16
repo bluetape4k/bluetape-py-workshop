@@ -45,6 +45,10 @@ def cache_tasks() -> list[asyncio.Task[object]]:
     ]
 
 
+async def wait_for_event(event: asyncio.Event) -> None:
+    await asyncio.wait_for(event.wait(), timeout=1)
+
+
 def test_product_summary_is_keyword_only_frozen_and_slotted() -> None:
     value = product("SKU-1")
     assert value.product_id == "SKU-1"
@@ -253,7 +257,7 @@ async def test_async_same_key_callers_share_success() -> None:
         cache=AsyncTTLCache(default_ttl=10, max_size=2), loader=loader
     )
     first, second = await start_shared_calls(service)
-    await started.wait()
+    await wait_for_event(started)
     await asyncio.sleep(0)
     release.set()
     one, two = await asyncio.gather(first, second)
@@ -282,11 +286,12 @@ async def test_async_shared_failure_is_not_cached() -> None:
         cache=AsyncTTLCache(default_ttl=10, max_size=2), loader=loader
     )
     first, second = await start_shared_calls(service)
-    await started.wait()
+    await wait_for_event(started)
     await asyncio.sleep(0)
     release.set()
     outcomes = await asyncio.gather(first, second, return_exceptions=True)
-    assert outcomes == [failure, failure]
+    assert outcomes[0] is failure
+    assert outcomes[1] is failure
     fail = False
     assert (await service.get_product("SKU-1")).product_id == "SKU-1"
     assert calls == 2
@@ -312,7 +317,7 @@ async def test_async_cancelling_one_waiter_keeps_loader_and_survivor() -> None:
         cache=AsyncTTLCache(default_ttl=10, max_size=2), loader=loader
     )
     first, second = await start_shared_calls(service)
-    await started.wait()
+    await wait_for_event(started)
     await asyncio.sleep(0)
     first.cancel()
     with pytest.raises(asyncio.CancelledError):
@@ -342,11 +347,11 @@ async def test_async_last_waiter_cancellation_exposes_then_cleans_abandoned_load
         cache=AsyncTTLCache(default_ttl=10, max_size=2), loader=loader
     )
     caller = asyncio.create_task(service.get_product("SKU-1"), name="catalog-last-waiter")
-    await started.wait()
+    await wait_for_event(started)
     caller.cancel()
     with pytest.raises(asyncio.CancelledError):
         await caller
-    await cancellation_seen.wait()
+    await wait_for_event(cancellation_seen)
     assert_stats(await service.stats(), inflight_loads=1, abandoned_loads=1)
     release_cleanup.set()
 
