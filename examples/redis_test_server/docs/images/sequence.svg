@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1450" viewBox="0 0 1800 1450" role="img" aria-labelledby="title desc">
+  <title id="title">Redis test server workshop sequence</title>
+  <desc id="desc">The composition root enters one RedisServer context, waits for bounded Redis readiness, passes wrapper connection details to a fixed order-status probe, and cleans up after both success and application failure.</desc>
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&amp;family=Comic+Mono&amp;display=swap');
+      .title { font: 42px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #263238; }
+      .subtitle { font: 20px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #546e7a; }
+      .participant-title { font: 23px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #263238; }
+      .participant-subtitle { font: 15px 'Comic Mono', monospace; fill: #546e7a; }
+      .label { font: 16px 'Comic Mono', monospace; fill: #37474f; }
+      .frame-label { font: 18px 'Architects Daughter', cursive; }
+      .lifeline { stroke: #b0bec5; stroke-width: 3; stroke-dasharray: 10 9; }
+      .activation { fill: #dcebf4; stroke: #5f8da8; stroke-width: 2.5; }
+      .frame { stroke: #90a4ae; stroke-width: 3; }
+      .alt { fill: none; stroke: #90a4ae; stroke-width: 3; rx: 22; }
+      .divider { stroke: #90a4ae; stroke-width: 2.5; stroke-dasharray: 10 8; }
+      .call { fill: none; stroke: #5f8da8; stroke-width: 4; marker-end: url(#seq-blue); }
+      .success { fill: none; stroke: #6f9a65; stroke-width: 4; marker-end: url(#seq-green); }
+      .return { fill: none; stroke: #4f8f8b; stroke-width: 4; stroke-dasharray: 10 7; marker-end: url(#seq-teal); }
+      .cleanup { fill: none; stroke: #b07832; stroke-width: 4; marker-end: url(#seq-amber); }
+      .error { fill: none; stroke: #c56b5d; stroke-width: 4; marker-end: url(#seq-red); }
+      .pill-blue { fill: #e7f1f6; stroke: #5f8da8; stroke-width: 2; }
+      .pill-green { fill: #e7f1e3; stroke: #6f9a65; stroke-width: 2; }
+      .pill-teal { fill: #e3f1ef; stroke: #4f8f8b; stroke-width: 2; }
+      .pill-amber { fill: #f8ecd9; stroke: #b07832; stroke-width: 2; }
+      .pill-red { fill: #f8e5e1; stroke: #c56b5d; stroke-width: 2; }
+      .number { font: 15px 'Comic Mono', monospace; fill: #37474f; text-anchor: middle; }
+    </style>
+    <marker id="seq-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#5f8da8"/></marker>
+    <marker id="seq-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#6f9a65"/></marker>
+    <marker id="seq-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#4f8f8b"/></marker>
+    <marker id="seq-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#b07832"/></marker>
+    <marker id="seq-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#c56b5d"/></marker>
+  </defs>
+
+  <rect width="1800" height="1450" rx="34" fill="#fbf8f1" stroke="#d7ccc8" stroke-width="4" class="frame"/>
+  <text x="70" y="65" class="title">Redis Test Server Workshop Sequence</text>
+  <text x="70" y="100" class="subtitle">Bound readiness, use wrapper details, then release the container on every body outcome</text>
+
+  <g>
+    <rect x="50" y="140" width="270" height="105" rx="22" fill="#ffe7c7" stroke="#d69b55" stroke-width="3"/>
+    <text x="185" y="184" text-anchor="middle" class="participant-title">CLI / Test</text><text x="185" y="216" text-anchor="middle" class="participant-subtitle">owns one server instance</text>
+    <rect x="390" y="140" width="270" height="105" rx="22" fill="#dcebf4" stroke="#5f8da8" stroke-width="3"/>
+    <text x="525" y="184" text-anchor="middle" class="participant-title">run_workshop</text><text x="525" y="216" text-anchor="middle" class="participant-subtitle">context composition root</text>
+    <rect x="730" y="140" width="270" height="105" rx="22" fill="#dcebf4" stroke="#5f8da8" stroke-width="3"/>
+    <text x="865" y="184" text-anchor="middle" class="participant-title">RedisServer</text><text x="865" y="216" text-anchor="middle" class="participant-subtitle">image + readiness + cleanup</text>
+    <rect x="1070" y="140" width="270" height="105" rx="22" fill="#e8def5" stroke="#8e72b5" stroke-width="3"/>
+    <text x="1205" y="184" text-anchor="middle" class="participant-title">Order Status Probe</text><text x="1205" y="216" text-anchor="middle" class="participant-subtitle">fixed bounded RESP</text>
+    <rect x="1410" y="140" width="270" height="105" rx="22" fill="#e3f0df" stroke="#6f9a65" stroke-width="3"/>
+    <text x="1545" y="184" text-anchor="middle" class="participant-title">Docker Redis 8</text><text x="1545" y="216" text-anchor="middle" class="participant-subtitle">dynamic mapped port</text>
+  </g>
+
+  <path d="M185 245 V1350" class="lifeline"/><path d="M525 245 V1350" class="lifeline"/><path d="M865 245 V1350" class="lifeline"/><path d="M1205 245 V1350" class="lifeline"/><path d="M1545 245 V1350" class="lifeline"/>
+  <rect x="515" y="290" width="20" height="1000" rx="10" class="activation"/>
+  <rect x="855" y="355" width="20" height="900" rx="10" class="activation"/>
+  <rect x="1195" y="630" width="20" height="590" rx="10" class="activation"/>
+  <rect x="1535" y="420" width="20" height="835" rx="10" class="activation"/>
+
+  <path d="M185 320 H515" class="call"/><rect x="210" y="283" width="36" height="36" rx="18" class="pill pill-blue"/><text x="228" y="307" class="number num">1</text><text x="260" y="307" class="label">run_workshop(server)</text>
+  <path d="M535 385 H855" class="call"/><rect x="560" y="348" width="36" height="36" rx="18" class="pill pill-blue"/><text x="578" y="372" class="number num">2</text><text x="610" y="372" class="label">__enter__ -> start()</text>
+  <path d="M875 450 H1535" class="cleanup"/><rect x="900" y="413" width="36" height="36" rx="18" class="pill pill-amber"/><text x="918" y="437" class="number num">3</text><text x="950" y="437" class="label">redis:8 start + redis-cli ping</text>
+  <path d="M1535 515 H875" class="return"/><rect x="900" y="478" width="36" height="36" rx="18" class="pill pill-teal"/><text x="918" y="502" class="number num">4</text><text x="950" y="502" class="label">ready + dynamic mapped port</text>
+  <path d="M855 580 H535" class="return"/><rect x="560" y="543" width="36" height="36" rx="18" class="pill pill-teal"/><text x="578" y="567" class="number num">5</text><text x="610" y="567" class="label">immutable RedisConnectionDetails</text>
+  <path d="M535 645 H1195" class="call"/><rect x="560" y="608" width="36" height="36" rx="18" class="pill pill-blue"/><text x="578" y="632" class="number num">6</text><text x="610" y="632" class="label">construct probe(details)</text>
+  <path d="M1215 710 H1535" class="success"/><rect x="1240" y="673" width="36" height="36" rx="18" class="pill pill-green"/><text x="1258" y="697" class="number num">7</text><text x="1290" y="697" class="label">PING -> SET -> GET (2s each)</text>
+  <path d="M1535 775 H1215" class="return"/><rect x="1240" y="738" width="36" height="36" rx="18" class="pill pill-teal"/><text x="1258" y="762" class="number num">8</text><text x="1290" y="762" class="label">PONG -> OK -> accepted</text>
+
+  <rect x="75" y="805" width="1650" height="525" rx="22" class="alt"/>
+  <text x="100" y="837" class="frame-label" fill="#6f9a65">alt probe succeeds</text>
+  <path d="M1195 875 H535" class="return"/><rect x="560" y="838" width="36" height="36" rx="18" class="pill pill-teal"/><text x="578" y="862" class="number num">9</text><text x="610" y="862" class="label">RedisProbeResult</text>
+  <path d="M535 935 H855" class="call"/><rect x="560" y="898" width="36" height="36" rx="18" class="pill pill-blue"/><text x="578" y="922" class="number num">10</text><text x="610" y="922" class="label">__exit__(None) -> close()</text>
+  <path d="M875 995 H1535" class="cleanup"/><rect x="900" y="958" width="36" height="36" rx="18" class="pill pill-amber"/><text x="918" y="982" class="number num">11</text><text x="950" y="982" class="label">stop + remove labeled container</text>
+  <path d="M515 1055 H185" class="return"/><rect x="210" y="1018" width="36" height="36" rx="18" class="pill pill-teal"/><text x="228" y="1042" class="number num">12</text><text x="260" y="1042" class="label">safe result</text>
+
+  <path d="M75 1080 H1725" class="divider"/>
+  <text x="100" y="1115" class="frame-label" fill="#c56b5d">else application probe raises</text>
+  <path d="M1195 1160 H535" class="error"/><rect x="560" y="1123" width="36" height="36" rx="18" class="pill pill-red"/><text x="578" y="1147" class="number num">13</text><text x="610" y="1147" class="label">RedisProbeError / body failure</text>
+  <path d="M535 1215 H855" class="error"/><rect x="560" y="1178" width="36" height="36" rx="18" class="pill pill-red"/><text x="578" y="1202" class="number num">14</text><text x="610" y="1202" class="label">__exit__(error) preserves primary failure</text>
+  <path d="M875 1270 H1535" class="cleanup"/><rect x="900" y="1233" width="36" height="36" rx="18" class="pill pill-amber"/><text x="918" y="1257" class="number num">15</text><text x="950" y="1257" class="label">stop + remove labeled container</text>
+  <path d="M515 1310 H185" class="error"/><rect x="210" y="1273" width="36" height="36" rx="18" class="pill pill-red"/><text x="228" y="1297" class="number num">16</text><text x="260" y="1297" class="label">same application failure</text>
+
+  <rect x="75" y="1360" width="1650" height="55" rx="18" fill="#f0ebe2" stroke="#d7ccc8" stroke-width="2"/>
+  <text x="100" y="1395" class="participant-subtitle">Construction is Docker-free; only explicit start enters the bounded container lifecycle.</text>
+</svg>
