@@ -112,6 +112,7 @@ def test_public_export_surface_is_deliberate() -> None:
         "CachedCatalogProvider",
         "InvalidOrderBackendCommand",
         "InvalidOrderLine",
+        "OrderBackendApplication",
         "OrderBackendClosedError",
         "OrderBackendCommand",
         "OrderBackendShutdownError",
