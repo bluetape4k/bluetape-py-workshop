@@ -28,10 +28,9 @@ explicit approval and auto-merge is forbidden.
 - Baseline validation: dependency boundary `19 passed`; repository
   `165 passed, 1 skipped`; Docker server `28.4.0` reachable; no labeled
   Bluetape Redis test container present
-- Current gate: written design reviewed at P0=0/P1=0; explicit spec approval is
-  required before the implementation plan or source changes
-- Next action: user review of the written design, then an executable TDD plan
-  and six-perspective plan review
+- Current gate: executable TDD plan reviewed at P0=0/P1=0; explicit plan
+  approval is required before implementation
+- Next action: begin Task 1 marker-selection RED/GREEN work after approval
 - Runnable now: `uv run --locked python -m examples.order_intake`
 - Runnable now: `uv run --locked python -m examples.catalog_enrichment`
 - Runnable now: `uv run --locked python -m examples.cached_product_catalog`
@@ -43,7 +42,10 @@ explicit approval and auto-merge is forbidden.
 
 Current artifacts: [issue #7](https://github.com/bluetape4k/bluetape-py-workshop/issues/7),
 [written design](docs/superpowers/specs/2026-07-16-issue-7-redis-test-server-design.md),
-[design review](docs/superpowers/reviews/2026-07-16-issue-7-design-review.md), and
+[design review](docs/superpowers/reviews/2026-07-16-issue-7-design-review.md),
+[implementation plan](docs/superpowers/plans/2026-07-16-issue-7-redis-test-server-plan.md),
+[risk record](docs/superpowers/risks/2026-07-16-issue-7-redis-test-server-risk.md),
+[plan review](docs/superpowers/reviews/2026-07-16-issue-7-plan-review.md), and
 the milestone dependency map below. Issues #2, #3, and #4 closed through
 [PR #12](https://github.com/bluetape4k/bluetape-py-workshop/pull/12),
 [PR #13](https://github.com/bluetape4k/bluetape-py-workshop/pull/13), and
