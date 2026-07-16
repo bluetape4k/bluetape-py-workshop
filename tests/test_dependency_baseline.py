@@ -40,12 +40,17 @@ def test_project_declares_the_approved_root_contract() -> None:
     project = _load_toml("pyproject.toml")
     metadata = project["project"]
     uv = project["tool"]["uv"]
+    pytest_config = project["tool"]["pytest"]["ini_options"]
 
     assert metadata["requires-python"] == ">=3.13"
     assert set(metadata["dependencies"]) == {f"{name}==0.1.0" for name in PACKAGES}
     assert uv["package"] is False
     assert uv["required-version"] == "==0.11.28"
     assert uv["build-constraint-dependencies"] == ["uv-build==0.11.28"]
+    assert pytest_config["markers"] == [
+        "testcontainers: requires a reachable Docker runtime and runs serially",
+    ]
+    assert pytest_config["addopts"] == '-ra -m "not testcontainers"'
 
 
 def test_project_declares_fory_as_an_optional_provider() -> None:

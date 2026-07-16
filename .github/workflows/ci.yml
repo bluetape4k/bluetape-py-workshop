@@ -58,5 +58,5 @@ jobs:
       - name: Check Ruff formatting
         run: uv run --locked ruff format --check .
 
-      - name: Run tests
-        run: uv run --locked pytest
+      - name: Run deterministic tests without Docker
+        run: uv run --locked pytest -m "not testcontainers"
