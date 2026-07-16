@@ -115,6 +115,7 @@ def test_public_export_surface_is_deliberate() -> None:
         "OrderBackendClosedError",
         "OrderBackendCommand",
         "OrderBackendShutdownError",
+        "OrderBackendService",
         "OrderLineCommand",
         "ProcessedOrder",
         "ProcessedOrderLine",

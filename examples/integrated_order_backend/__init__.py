@@ -11,6 +11,7 @@ from .models import (
     ProcessedOrder,
     ProcessedOrderLine,
 )
+from .service import OrderBackendService
 
 __all__ = [
     "CachedCatalogProvider",
@@ -18,6 +19,7 @@ __all__ = [
     "InvalidOrderLine",
     "OrderBackendClosedError",
     "OrderBackendCommand",
+    "OrderBackendService",
     "OrderBackendShutdownError",
     "OrderLineCommand",
     "ProcessedOrder",
