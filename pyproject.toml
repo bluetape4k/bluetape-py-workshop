@@ -47,8 +47,11 @@ bluetape-testing = { git = "https://github.com/bluetape4k/bluetape-py.git", rev 
 [tool.pytest.ini_options]
 testpaths = ["tests", "examples"]
 pythonpath = ["."]
-addopts = "-ra"
+addopts = "-ra -m \"not testcontainers\""
 asyncio_mode = "auto"
+markers = [
+    "testcontainers: requires a reachable Docker runtime and runs serially",
+]
 
 [tool.ruff]
 target-version = "py313"
