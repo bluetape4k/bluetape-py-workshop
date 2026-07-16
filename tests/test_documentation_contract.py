@@ -37,11 +37,14 @@ def test_wip_keeps_the_dependency_order_and_current_issue() -> None:
         WIP.index(f"| {order} | [#{issue}]") for order, issue in enumerate(range(2, 9), start=1)
     ]
     assert positions == sorted(positions)
-    assert "Issue [#6]" in WIP
-    assert "Bounded payload processing service" in WIP
-    assert "Issue #7" in WIP
-    assert "uv run --locked python -m examples.bounded_payload_processing" in WIP
-    assert "pytest examples/bounded_payload_processing/tests/test_fory_service.py -q" in WIP
+    assert "Issue [#7]" in WIP
+    assert "Redis-backed integration-test workshop" in WIP
+    assert "uv run --locked python -m examples.redis_test_server" in WIP
+    assert 'pytest -m "not testcontainers"' in WIP
+    assert (
+        "pytest -m testcontainers examples/redis_test_server/tests/test_redis_integration.py -q"
+        in WIP
+    )
 
 
 def test_readme_pair_links_every_runnable_example() -> None:
@@ -53,6 +56,21 @@ def test_readme_pair_links_every_runnable_example() -> None:
     assert "examples/cached_product_catalog/README.ko.md" in KOREAN
     assert "examples/bounded_payload_processing/README.md" in ENGLISH
     assert "examples/bounded_payload_processing/README.ko.md" in KOREAN
+    assert "examples/redis_test_server/README.md" in ENGLISH
+    assert "examples/redis_test_server/README.ko.md" in KOREAN
+
+
+def test_readme_pair_documents_deterministic_and_docker_redis_lanes() -> None:
+    commands = (
+        'uv run --locked pytest -m "not testcontainers"',
+        "uv run --locked pytest -m testcontainers "
+        "examples/redis_test_server/tests/test_redis_integration.py -q",
+        "uv run --locked python -m examples.redis_test_server",
+    )
+
+    for command in commands:
+        assert command in ENGLISH
+        assert command in KOREAN
 
 
 def test_agents_keeps_authoritative_commands_and_rules() -> None:

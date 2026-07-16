@@ -28,13 +28,18 @@ explicit approval and auto-merge is forbidden.
 - Baseline validation: dependency boundary `19 passed`; repository
   `165 passed, 1 skipped`; Docker server `28.4.0` reachable; no labeled
   Bluetape Redis test container present
-- Current gate: executable TDD plan reviewed at P0=0/P1=0; explicit plan
-  approval is required before implementation
-- Next action: begin Task 1 marker-selection RED/GREEN work after approval
+- Current gate: implementation, bilingual example documentation, and
+  source-backed Architecture/Sequence diagrams are complete; full repository
+  validation and implementation review are in progress
+- Next action: finish deterministic and serial Docker verification, record the
+  six-lens implementation review and lesson, then open the approved PR
 - Runnable now: `uv run --locked python -m examples.order_intake`
 - Runnable now: `uv run --locked python -m examples.catalog_enrichment`
 - Runnable now: `uv run --locked python -m examples.cached_product_catalog`
 - Runnable now: `uv run --locked python -m examples.bounded_payload_processing`
+- Runnable now: `uv run --locked python -m examples.redis_test_server`
+- Deterministic Redis tests: `uv run --locked pytest -m "not testcontainers" examples/redis_test_server/tests -q`
+- Serial Docker test: `uv run --locked pytest -m testcontainers examples/redis_test_server/tests/test_redis_integration.py -q`
 - Focused default tests: `uv run --locked pytest examples/bounded_payload_processing/tests -q --ignore=examples/bounded_payload_processing/tests/test_fory_service.py`
 - Optional setup: `UV_PROJECT_ENVIRONMENT=.venv-fory uv sync --locked --extra fory --python 3.13.14`
 - Optional runnable: after activating `.venv-fory`, `python -m examples.bounded_payload_processing.fory_demo`
@@ -46,6 +51,7 @@ Current artifacts: [issue #7](https://github.com/bluetape4k/bluetape-py-workshop
 [implementation plan](docs/superpowers/plans/2026-07-16-issue-7-redis-test-server-plan.md),
 [risk record](docs/superpowers/risks/2026-07-16-issue-7-redis-test-server-risk.md),
 [plan review](docs/superpowers/reviews/2026-07-16-issue-7-plan-review.md), and
+[Redis example guide](examples/redis_test_server/README.md), alongside
 the milestone dependency map below. Issues #2, #3, and #4 closed through
 [PR #12](https://github.com/bluetape4k/bluetape-py-workshop/pull/12),
 [PR #13](https://github.com/bluetape4k/bluetape-py-workshop/pull/13), and
@@ -195,6 +201,20 @@ The JSON lane is untrusted and default-install safe. The Fory lane is
 trusted-internal only, uses a fixed registered root type, and never participates
 in default imports or automatic format selection.
 
+Issue #7 adds a deterministic default lane and an explicitly selected serial
+Docker lane:
+
+```bash
+uv run --locked pytest -m "not testcontainers"
+uv run --locked pytest -m testcontainers examples/redis_test_server/tests/test_redis_integration.py -q
+uv run --locked python -m examples.redis_test_server
+```
+
+The application owns one `RedisServer` context and uses only wrapper-provided
+connection details. The bounded RESP teaching probe has fixed operations and
+input/response limits. Integration tests prove success, application-body
+failure cleanup, and fresh state without leaving labeled containers behind.
+
 ## Holds and Exclusions
 
 - Issues #9 and #10 belong to milestone `0.2.0` and are outside this execution
@@ -229,3 +249,6 @@ in default imports or automatic format selection.
 - 2026-07-16: implement issue #6 as separate JSON and Apache Fory services;
   accept small pipeline duplication so the untrusted/default and
   trusted-internal/optional boundaries remain obvious to readers.
+- 2026-07-16: implement issue #7 with one application-owned `RedisServer`
+  context and a bounded RESP teaching probe; exclude Docker tests by default
+  and require explicit serial selection for real-container evidence.
