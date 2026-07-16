@@ -19,6 +19,7 @@ dependencies = [
 
 [project.optional-dependencies]
 fory = ["bluetape-serde[fory]==0.1.0"]
+redis-coordination = ["bluetape-cache-redis==0.1.0"]
 
 [dependency-groups]
 dev = [
@@ -35,6 +36,7 @@ build-constraint-dependencies = ["uv-build==0.11.28"]
 [tool.uv.sources]
 bluetape-async = { git = "https://github.com/bluetape4k/bluetape-py.git", rev = "4b7458f22cea0a9e757b5fbf7f5ff4bc8c23cb9a", subdirectory = "packages/bluetape-async" }
 bluetape-cache = { git = "https://github.com/bluetape4k/bluetape-py.git", rev = "4b7458f22cea0a9e757b5fbf7f5ff4bc8c23cb9a", subdirectory = "packages/bluetape-cache" }
+bluetape-cache-redis = { git = "https://github.com/bluetape4k/bluetape-py.git", rev = "4b7458f22cea0a9e757b5fbf7f5ff4bc8c23cb9a", subdirectory = "packages/bluetape-cache-redis" }
 bluetape-codec = { git = "https://github.com/bluetape4k/bluetape-py.git", rev = "4b7458f22cea0a9e757b5fbf7f5ff4bc8c23cb9a", subdirectory = "packages/bluetape-codec" }
 bluetape-collections = { git = "https://github.com/bluetape4k/bluetape-py.git", rev = "4b7458f22cea0a9e757b5fbf7f5ff4bc8c23cb9a", subdirectory = "packages/bluetape-collections" }
 bluetape-compression = { git = "https://github.com/bluetape4k/bluetape-py.git", rev = "4b7458f22cea0a9e757b5fbf7f5ff4bc8c23cb9a", subdirectory = "packages/bluetape-compression" }
