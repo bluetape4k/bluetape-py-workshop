@@ -7,6 +7,11 @@ from bluetape.cache.redis import (
     AsyncRedisProvider,
     RedisCommandPolicy,
     RedisCoordinationSnapshot,
+    RedisEvent,
+    RedisMode,
+    RedisObserver,
+    RedisOperation,
+    RedisOutcome,
     RedisProviderError,
 )
 
@@ -18,8 +23,14 @@ class SharedRedisBackend:
 
 
 class FakeAsyncRedisProvider(AsyncRedisProvider):
-    def __init__(self, backend: SharedRedisBackend) -> None:
+    def __init__(
+        self,
+        backend: SharedRedisBackend,
+        *,
+        observer: RedisObserver | None = None,
+    ) -> None:
         self.backend = backend
+        self.observer = observer
         self.policy = RedisCommandPolicy(connect_timeout=0.01, socket_timeout=0.01)
         self.calls: list[str] = []
         self.snapshot_called = asyncio.Event()
@@ -27,6 +38,28 @@ class FakeAsyncRedisProvider(AsyncRedisProvider):
         self.failure: RedisProviderError | None = None
         self.publish_result = True
         self.cleanup_error: BaseException | None = None
+        self.closed = False
+
+    async def __aenter__(self) -> FakeAsyncRedisProvider:
+        if self.closed:
+            raise RuntimeError("fake provider is closed")
+        return self
+
+    async def __aexit__(self, *args: object) -> None:
+        del args
+        self.closed = True
+
+    def _emit(self, operation: RedisOperation) -> None:
+        if self.observer is not None:
+            self.observer.on_event(
+                RedisEvent(
+                    mode=RedisMode.ASYNC,
+                    operation=operation,
+                    outcome=RedisOutcome.SUCCESS,
+                    error_code=None,
+                    elapsed_ns=0,
+                )
+            )
 
     @property
     def command_policy(self) -> RedisCommandPolicy:
@@ -42,8 +75,10 @@ class FakeAsyncRedisProvider(AsyncRedisProvider):
         self._raise_failure()
         async with self.backend.lock:
             if key in self.backend.values:
+                self._emit(RedisOperation.SET_IF_ABSENT)
                 return False
             self.backend.values[key] = value
+            self._emit(RedisOperation.SET_IF_ABSENT)
             return True
 
     async def coordination_snapshot(
