@@ -22,28 +22,38 @@ explicit approval and auto-merge is forbidden.
 
 - Branch/base head: `feat/issue-6-bounded-payload-processing` /
   `51d7e457384ea4f84b7f18afd00a13e939218ef1`
-- Last validated content head: baseline `51d7e45`; implementation is not yet
-  committed
+- Last reviewed content head: `9abb6b2`; final review/lesson/WIP evidence is
+  committed and revalidated before publication
 - Pull request: not created; approved target is this branch into `develop`
 - Workflow run: `20260716T065828Z-3fe71fd5`
 - Last completed gate: issue #5 merged through
   [PR #15](https://github.com/bluetape4k/bluetape-py-workshop/pull/15), local
   `develop` synced, and its worktree/local branch removed
-- Last completed gate: Type A classification, approved separate-service design,
-  isolated worktree, locked environment, and `123 passed` baseline
-- Current gate: review the written design at P0=0/P1=0, write and review the
-  executable implementation plan, then begin RED tests
+- Last completed gate: separate JSON/Fory services, real-provider tests,
+  bilingual README pair, mandatory Architecture/Sequence assets, and final
+  six-lens review at P0=0/P1=0
+- Validation: default dependency baseline `19 passed`; example `41 passed`;
+  repository `165 passed, 1 skipped` with Fory absent; isolated
+  `pyfory==1.3.0` suite `17 passed`; Ruff, actionlint, diagram audits, and diff
+  check passed
+- Current gate: commit the Type A lesson/evidence, rerun the exact-head default
+  and optional validation ladders, then publish the authorized PR
 - Next action after issue #6 merge: start dependency-ready Issue #7,
   [Redis Testcontainers workshop](https://github.com/bluetape4k/bluetape-py-workshop/issues/7)
 - Runnable now: `uv run --locked python -m examples.order_intake`
 - Runnable now: `uv run --locked python -m examples.catalog_enrichment`
 - Runnable now: `uv run --locked python -m examples.cached_product_catalog`
-- Focused tests: `uv run --locked pytest examples/cached_product_catalog/tests -q`
-- Planned default command: `uv run --locked python -m examples.bounded_payload_processing`
-- Planned optional command: `UV_PROJECT_ENVIRONMENT=.venv-fory uv run --locked --extra fory python -m examples.bounded_payload_processing.fory_demo`
+- Runnable now: `uv run --locked python -m examples.bounded_payload_processing`
+- Focused default tests: `uv run --locked pytest examples/bounded_payload_processing/tests -q --ignore=examples/bounded_payload_processing/tests/test_fory_service.py`
+- Optional setup: `UV_PROJECT_ENVIRONMENT=.venv-fory uv sync --locked --extra fory --python 3.13.14`
+- Optional runnable: after activating `.venv-fory`, `python -m examples.bounded_payload_processing.fory_demo`
+- Optional tests: after activating `.venv-fory`, `pytest examples/bounded_payload_processing/tests/test_fory_service.py -q`
 
 Current artifacts: [issue #6](https://github.com/bluetape4k/bluetape-py-workshop/issues/6),
-[written design](docs/superpowers/specs/2026-07-16-issue-6-bounded-payload-processing-design.md), and
+[written design](docs/superpowers/specs/2026-07-16-issue-6-bounded-payload-processing-design.md),
+[implementation plan](docs/superpowers/plans/2026-07-16-issue-6-bounded-payload-processing-plan.md),
+[final review](docs/superpowers/reviews/2026-07-16-issue-6-implementation-review.md),
+[lesson](docs/superpowers/lessons/2026-07-16-issue-6-payload-trust-boundaries.md), and
 the milestone dependency map below. Issues #2, #3, and #4 closed through
 [PR #12](https://github.com/bluetape4k/bluetape-py-workshop/pull/12),
 [PR #13](https://github.com/bluetape4k/bluetape-py-workshop/pull/13), and
