@@ -15,7 +15,7 @@ payloads, overall request deadlines, and retryable finite shutdown.
 
 Active branch: `feat/issue-8-integrated-order-backend`
 Base branch: `develop`
-Pull request: Not created
+Pull request: Not created; exact-head publication is the next external gate
 Stop boundary: finish exact-head local verification, create the already-approved
 PR from this branch to `develop`, verify hosted CI/review state, then stop for a
 fresh explicit merge approval. Auto-merge is forbidden.
@@ -30,13 +30,16 @@ fresh explicit merge approval. Auto-merge is forbidden.
 - Current implementation: aggregate contracts, cache adapter, validation-first
   service, deadline-safe application lifecycle, fixed composition root, exact
   five-event CLI, bilingual guides, and both source-backed diagram pairs
-- Current validation: integrated example `59 passed`; Ruff and format pass;
-  architecture `markers=4`, `cards=10`, `geometry_failures=0`; sequence
-  `markers=5`, `connectors=16`, `geometry_failures=0`, style audit PASS; both
-  final PNGs inspected at full size
-- Full repository validation at the current head: pending Task 8 exact-head gate
-- Next action: register root discovery, then run full deterministic verification,
-  six-lens implementation review, lesson capture, exact-head push, and PR creation
+- Current validation: integrated example `66 passed`; dependency baseline
+  `19 passed`; full deterministic repository `287 passed, 1 skipped, 1
+  deselected`; Ruff, format, actionlint, and diff check pass
+- Diagram validation: architecture `markers=4`, `cards=11`,
+  `geometry_failures=0`; sequence `markers=5`, `connectors=18`,
+  `geometry_failures=0`, style audit PASS; both final PNGs inspected at full size
+- Review state: final six-lens review converged from four P1 findings to
+  `P0=0`, `P1=0`; the reusable composition/lifecycle lesson is recorded
+- Next action: commit the converged local evidence, rerun exact-head validation,
+  push the approved branch, create the PR, and verify hosted CI/review state
 - Runnable now: `uv run --locked python -m examples.order_intake`
 - Runnable now: `uv run --locked python -m examples.catalog_enrichment`
 - Runnable now: `uv run --locked python -m examples.cached_product_catalog`
@@ -56,10 +59,10 @@ Current artifacts: [issue #8](https://github.com/bluetape4k/bluetape-py-workshop
 [design review](docs/superpowers/reviews/2026-07-16-issue-8-design-review.md),
 [implementation plan](docs/superpowers/plans/2026-07-16-issue-8-integrated-order-backend-plan.md),
 [risk record](docs/superpowers/risks/2026-07-16-issue-8-integrated-order-backend-risk.md),
-[plan review](docs/superpowers/reviews/2026-07-16-issue-8-plan-review.md), and the
-[integrated example guide](examples/integrated_order_backend/README.md). The
-implementation review and reusable composition/lifecycle lesson are pending the
-final exact-head verification gate.
+[plan review](docs/superpowers/reviews/2026-07-16-issue-8-plan-review.md),
+[implementation review](docs/superpowers/reviews/2026-07-16-issue-8-implementation-review.md),
+[composition/lifecycle lesson](docs/superpowers/lessons/2026-07-16-issue-8-composition-lifecycle.md),
+and the [integrated example guide](examples/integrated_order_backend/README.md).
 
 ## Dependency Baseline
 
@@ -244,18 +247,21 @@ server 28.4.0:
 - Ruff format/lint, actionlint, `git diff --check`, and unchanged `uv.lock`: pass;
 - Architecture and Sequence XML/render/audits/full-size inspection: pass.
 
-Issue #8 implementation checkpoint before final exact-head verification:
+Issue #8 converged local checkpoint before the final exact-head commit:
 
-- integrated example: `59 passed`;
+- integrated example: `66 passed`;
+- dependency baseline: `19 passed`;
+- full deterministic repository: `287 passed, 1 skipped, 1 deselected`;
 - deterministic CLI: exact five safe events, cache `hits=1`, `misses=3`,
   `loads=3`, with zero inflight/abandoned loads;
-- Ruff lint/format and `git diff --check`: pass for the implemented example;
+- Ruff lint/format, actionlint, authority-file, and `git diff --check`: pass;
 - Architecture PNG: `3600x2100`, marker/card/geometry/endpoint/corner audits
   pass, full-size inspection pass;
-- Sequence PNG: `3600x2560`, `16` visible numbered messages, sequence style,
+- Sequence PNG: `3600x3000`, `18` visible numbered messages, sequence style,
   marker, geometry, endpoint, and corner audits pass, full-size inspection pass;
-- full repository deterministic lane, actionlint, six-lens implementation
-  review, lesson, remote CI, and PR review state: pending Task 8.
+- six-lens implementation review: four P1 findings repaired, final
+  `P0=0/P1=0`;
+- exact-head post-commit rerun, remote CI, and PR review state: pending Task 8.
 
 ## Holds and Exclusions
 

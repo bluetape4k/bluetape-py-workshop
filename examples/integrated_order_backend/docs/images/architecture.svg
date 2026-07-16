@@ -91,16 +91,22 @@
     <text x="1170" y="759" class="small">size + nesting limits</text>
   </g>
   <g filter="url(#shadow)">
-    <rect x="1450" y="360" width="240" height="155" rx="20" fill="#e8def5" stroke="#8e72b5" class="card"/>
-    <text x="1475" y="401" class="card-title">Async Catalog</text>
-    <text x="1475" y="437" class="body">AsyncTTLCache</text>
-    <text x="1475" y="469" class="small">read-through + coalescing</text>
+    <rect x="1450" y="325" width="240" height="125" rx="20" fill="#e8def5" stroke="#8e72b5" class="card"/>
+    <text x="1475" y="366" class="body">CachedCatalogProvider</text>
+    <text x="1475" y="402" class="small">sequential cache adapter</text>
+    <text x="1475" y="430" class="small">no task ownership</text>
   </g>
   <g filter="url(#shadow)">
-    <rect x="1450" y="570" width="240" height="145" rx="20" fill="#ffe7c7" stroke="#d69b55" class="card"/>
-    <text x="1475" y="611" class="card-title">Recommendations</text>
-    <text x="1475" y="647" class="body">optional provider</text>
-    <text x="1475" y="679" class="small">failure becomes warning</text>
+    <rect x="1450" y="500" width="240" height="150" rx="20" fill="#e8def5" stroke="#8e72b5" class="card"/>
+    <text x="1475" y="541" class="small">AsyncProductCatalogService</text>
+    <text x="1475" y="577" class="body">caller-owned AsyncTTLCache</text>
+    <text x="1475" y="609" class="small">required loader + coalescing</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="1450" y="700" width="240" height="140" rx="20" fill="#ffe7c7" stroke="#d69b55" class="card"/>
+    <text x="1475" y="741" class="card-title">Recommendations</text>
+    <text x="1475" y="777" class="body">optional provider</text>
+    <text x="1475" y="809" class="small">failure becomes warning</text>
   </g>
 
   <path d="M325 360 H435" class="flow"/>
@@ -108,16 +114,17 @@
   <path d="M1030 300 H1145" class="dependency"/>
   <path d="M1030 352 H1082 Q1094 352 1094 364 V480 Q1094 492 1106 492 H1145" class="dependency"/>
   <path d="M1030 405 H1060 Q1072 405 1072 417 V710 Q1072 722 1084 722 H1145" class="dependency"/>
-  <path d="M1395 472 H1450" class="dependency"/>
-  <path d="M1395 520 H1420 Q1432 520 1432 532 V630 Q1432 642 1444 642 H1450" class="optional"/>
+  <path d="M1395 472 H1415 Q1427 472 1427 460 V400 Q1427 388 1439 388 H1450" class="dependency"/>
+  <path d="M1570 450 V500" class="dependency"/>
+  <path d="M1395 520 H1415 Q1427 520 1427 532 V758 Q1427 770 1439 770 H1450" class="optional"/>
   <path d="M715 620 V560 Q715 548 727 548 H883 Q895 548 895 536 V450" class="dependency"/>
   <path d="M760 430 V505 Q760 517 748 517 H425 Q413 517 413 529 V730 Q413 742 401 742 H325" class="result"/>
 
   <g>
     <rect x="340" y="322" width="78" height="29" rx="14" class="label-box"/><text x="355" y="343" class="small">admit</text>
     <rect x="1060" y="264" width="72" height="29" rx="14" class="label-box"/><text x="1074" y="285" class="small">reuse</text>
-    <rect x="1398" y="432" width="72" height="29" rx="14" class="label-box"/><text x="1412" y="453" class="small">cache</text>
-    <rect x="1402" y="548" width="88" height="29" rx="14" class="label-box"/><text x="1416" y="569" class="small">optional</text>
+    <rect x="1398" y="426" width="82" height="29" rx="14" class="label-box"/><text x="1412" y="447" class="small">adapter</text>
+    <rect x="1402" y="668" width="88" height="29" rx="14" class="label-box"/><text x="1416" y="689" class="small">optional</text>
   </g>
 
   <rect x="60" y="945" width="1670" height="62" rx="18" fill="#f0ebe2" stroke="#d7ccc8" stroke-width="2"/>

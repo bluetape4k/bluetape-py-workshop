@@ -67,7 +67,7 @@ The integrated example reuses these `bluetape-py` APIs through the existing
 focused examples:
 
 - `bluetape-core`: exact-type and string validation for order input;
-- `bluetape-logging`: `log_context` and `ContextLogFilter`;
+- `bluetape-logging`: aggregate `log_context` ownership;
 - `bluetape-collections`: distinct SKU and stable batch construction;
 - `bluetape-async`: bounded provider concurrency and cleanup;
 - `bluetape-cache`: `AsyncTTLCache`, read-through loading, and `CacheStats`;

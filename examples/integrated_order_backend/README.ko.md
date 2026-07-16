@@ -64,7 +64,7 @@ Application은 owned request task를 `asyncio.shield()`로 기다리고 바깥
 통합 예제는 다음 `bluetape-py` API를 기존 focused example을 통해 재사용합니다.
 
 - `bluetape-core`: 주문 입력의 exact type·문자열 validation;
-- `bluetape-logging`: `log_context`, `ContextLogFilter`;
+- `bluetape-logging`: aggregate `log_context` ownership;
 - `bluetape-collections`: distinct SKU와 안정적인 batch 구성;
 - `bluetape-async`: provider task의 bounded concurrency와 cleanup;
 - `bluetape-cache`: `AsyncTTLCache`, read-through load, `CacheStats`;

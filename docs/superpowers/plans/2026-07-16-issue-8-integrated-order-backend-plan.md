@@ -108,7 +108,7 @@ package models/errors/exports and model tests.
 - Create: `examples/integrated_order_backend/tests/__init__.py`
 - Create: `examples/integrated_order_backend/tests/test_models.py`
 
-- [ ] **Step 1.1: Write failing exact public-shape tests**
+- [x] **Step 1.1: Write failing exact public-shape tests**
 
 Require imports, keyword-only construction, slots, frozen mutation failure,
 exact tuple preservation, and exact error metadata:
@@ -137,7 +137,7 @@ assert str(error) == "lines[3].sku: must not be blank"
 assert OrderBackendShutdownError(2).pending_count == 2
 ```
 
-- [ ] **Step 1.2: Observe RED**
+- [x] **Step 1.2: Observe RED**
 
 Run:
 
@@ -147,7 +147,7 @@ uv run --locked pytest examples/integrated_order_backend/tests/test_models.py -q
 
 Expected: collection fails because the new package contracts do not exist.
 
-- [ ] **Step 1.3: Implement the exact immutable contracts**
+- [x] **Step 1.3: Implement the exact immutable contracts**
 
 Use these complete model fields:
 
@@ -227,7 +227,7 @@ Export only the planned public models, errors, services, adapter, application,
 and `build_application`; temporarily export the Task 1 symbols and extend the
 same explicit `__all__` as later tasks land.
 
-- [ ] **Step 1.4: Observe GREEN and commit**
+- [x] **Step 1.4: Observe GREEN and commit**
 
 Run the Step 1.2 command, Ruff on the new files, and `git diff --check`.
 Expected: all pass. Commit with a Lore message whose directive preserves exact
@@ -244,7 +244,7 @@ and adapter tests only. **Pattern:** `bluetape-py-patterns`, async TDD.
 - Create: `examples/integrated_order_backend/tests/test_composition.py`
 - Modify: `examples/integrated_order_backend/__init__.py`
 
-- [ ] **Step 2.1: Write failing adapter success/failure tests**
+- [x] **Step 2.1: Write failing adapter success/failure tests**
 
 Construct a real `AsyncTTLCache` and existing catalog service around an
 event-aware loader. Assert sequential normalized calls, exact mapping, public
@@ -279,12 +279,12 @@ stats = await catalog.stats()
 assert (stats.misses, stats.loads, stats.load_failures) == (4, 4, 1)
 ```
 
-- [ ] **Step 2.2: Observe RED**
+- [x] **Step 2.2: Observe RED**
 
 Run the focused composition test. Expected: import fails for
 `CachedCatalogProvider`.
 
-- [ ] **Step 2.3: Implement the minimal sequential adapter**
+- [x] **Step 2.3: Implement the minimal sequential adapter**
 
 ```python
 class CachedCatalogProvider:
@@ -309,7 +309,7 @@ Do not catch loader exceptions, create tasks, expose cache mutation, or add a
 new provider abstraction. The outer enrichment service remains the only
 provider-job concurrency owner.
 
-- [ ] **Step 2.4: Observe GREEN, verify no nested tasks, and commit**
+- [x] **Step 2.4: Observe GREEN, verify no nested tasks, and commit**
 
 Run focused tests and assert no new task name appears during adapter calls.
 Expected: success/failure/recovery pass and `uv.lock` is unchanged. Commit with
@@ -326,7 +326,7 @@ service tests. **Pattern:** `bluetape-py-patterns`, TDD, existing service reuse.
 - Create: `examples/integrated_order_backend/tests/test_service.py`
 - Modify: `examples/integrated_order_backend/__init__.py`
 
-- [ ] **Step 3.1: Write failing constructor and aggregate-boundary tests**
+- [x] **Step 3.1: Write failing constructor and aggregate-boundary tests**
 
 Create spies for intake, enrichment, catalog stats, and payload encoding. Assert
 constructor rejection of invalid `batch_size`, `concurrency_limit`, and
@@ -341,7 +341,7 @@ assert enrichment.calls == []
 assert payloads.calls == []
 ```
 
-- [ ] **Step 3.2: Observe RED, then implement constructor-owned validation**
+- [x] **Step 3.2: Observe RED, then implement constructor-owned validation**
 
 Run the focused service tests and expect import failure. Implement exact-int
 batch/concurrency checks, `1 <= batch_size <= 100`, and finite positive numeric
@@ -431,7 +431,7 @@ def _validated_command(command: object) -> OrderBackendCommand:
     return command
 ```
 
-- [ ] **Step 3.3: Write failing delegated line-validation tests**
+- [x] **Step 3.3: Write failing delegated line-validation tests**
 
 Use a real `OrderIntakeService` with a capture logger. Parameterize invalid
 header, SKU, and quantity values at indices 0 and 2. Require exact wrapping and
@@ -447,7 +447,7 @@ assert enrichment.calls == []
 assert payloads.calls == []
 ```
 
-- [ ] **Step 3.4: Implement the complete validation-before-I/O phase**
+- [x] **Step 3.4: Implement the complete validation-before-I/O phase**
 
 Map every occurrence to `PartnerOrderCommand` with the shared aggregate header,
 call `intake.accept()` in order, and store all `AcceptedOrder` values before the
@@ -456,7 +456,7 @@ first enrichment call. Wrap only `InvalidOrderCommand` as
 `raise mapped from error`; do not catch
 `BaseException`, `CancelledError`, or logging-handler failures.
 
-- [ ] **Step 3.5: Write failing success, duplicate, failure, and cache tests**
+- [x] **Step 3.5: Write failing success, duplicate, failure, and cache tests**
 
 Use real focused services and the Task 2 adapter. Assert:
 
@@ -485,7 +485,7 @@ Add exact required `CatalogEnrichmentFailed` propagation, optional
 loader failure not cached and later recovery, and caller input identity/equality
 assertions.
 
-- [ ] **Step 3.6: Implement enrichment, totals, and explicit document allowlist**
+- [x] **Step 3.6: Implement enrichment, totals, and explicit document allowlist**
 
 After all intake calls pass, enter aggregate `log_context`, call existing
 enrichment with fixed settings, zip accepted/enriched occurrences exactly, and
@@ -597,7 +597,7 @@ async def cache_stats(self) -> CacheStats:
     return await self._catalog.stats()
 ```
 
-- [ ] **Step 3.7: Prove payload limits and logging cleanup**
+- [x] **Step 3.7: Prove payload limits and logging cleanup**
 
 With the real `JsonPayloadService`, assert decoded equality, fixed untrusted
 JSON metadata, serialized/compressed/encoded/nesting failures, and no artifact
@@ -606,7 +606,7 @@ and cancellation context reset with `get_log_context() == {}`. Assert log
 records never contain recommendation, product-name, artifact, or provider-cause
 text.
 
-- [ ] **Step 3.8: Observe GREEN, run the triggered performance/stability scan, and commit**
+- [x] **Step 3.8: Observe GREEN, run the triggered performance/stability scan, and commit**
 
 Run all Task 3 tests, Ruff, and diff check. Inspect 100-line allocation,
 duplicate-provider calls, nested tasks, exception catches, and payload creation.
@@ -625,7 +625,7 @@ lifecycle tests. **Pattern:** asyncio structured ownership and event-driven TDD.
 - Create: `examples/integrated_order_backend/tests/test_application.py`
 - Modify: `examples/integrated_order_backend/__init__.py`
 
-- [ ] **Step 4.1: Write failing constructor, success, and closed-state tests**
+- [x] **Step 4.1: Write failing constructor, success, and closed-state tests**
 
 Use an event-driven fake processor with `async process(command)`. Require exact
 finite positive `request_timeout`, `shutdown_grace_timeout`, and
@@ -679,7 +679,7 @@ Runtime-check only callable `process` and `cache_stats` methods so event-driven
 application test doubles remain possible; this is a private testing seam, not a
 new exported protocol.
 
-- [ ] **Step 4.2: Observe RED, then implement loop binding and no-await admission**
+- [x] **Step 4.2: Observe RED, then implement loop binding and no-await admission**
 
 Bind on first `process()`, `aclose()`, or `__aenter__` with
 `asyncio.get_running_loop()`. Reject a different loop with stable `RuntimeError`
@@ -687,7 +687,7 @@ before state mutation. In one section containing no `await`: require `OPEN`,
 create a named request task, register it, and attach a done callback that removes
 only terminal tasks and calls `task.exception()` for non-cancelled completion.
 
-- [ ] **Step 4.3: Write failing timeout and caller-cancellation tests**
+- [x] **Step 4.3: Write failing timeout and caller-cancellation tests**
 
 Use this cancellation-resistant processor shape without sleeps:
 
@@ -717,7 +717,7 @@ after overall timeout, its `finally` event must fire, cache stats must report
 `inflight_loads == abandoned_loads == 0`, and no `bluetape-cache-` task may
 remain.
 
-- [ ] **Step 4.4: Implement shielded request waiting**
+- [x] **Step 4.4: Implement shielded request waiting**
 
 Await the owned task through `asyncio.shield()` inside `asyncio.timeout()`.
 On `TimeoutError`, cancel and re-raise without awaiting an unbounded terminal
@@ -749,7 +749,7 @@ def _emit(
 This containment applies only to application lifecycle telemetry. Existing
 intake logging behavior remains unchanged inside the owned request task.
 
-- [ ] **Step 4.5: Write failing shutdown race, shared-close, and retry tests**
+- [x] **Step 4.5: Write failing shutdown race, shared-close, and retry tests**
 
 Cover:
 
@@ -769,7 +769,7 @@ Cover:
 10. unexpected close-task failure/cancellation moves to `CLOSE_FAILED` and a
     later call can retry.
 
-- [ ] **Step 4.6: Implement the one-owner close state machine**
+- [x] **Step 4.6: Implement the one-owner close state machine**
 
 Use private states `OPEN`, `CLOSING`, `CLOSE_FAILED`, and `CLOSED`. The first
 close caller flips state and snapshots admission in a no-`await` section,
@@ -930,7 +930,7 @@ async def __aexit__(self, exc_type, exc, traceback) -> bool:
     return False
 ```
 
-- [ ] **Step 4.7: Observe GREEN, scan lifecycle stability, and commit**
+- [x] **Step 4.7: Observe GREEN, scan lifecycle stability, and commit**
 
 Run the lifecycle tests repeatedly in one pytest process, then the whole new
 example test directory. Expected: no polling loop, real sleep, leaked request,
@@ -950,7 +950,7 @@ root, CLI, and their tests.
 - Create: `examples/integrated_order_backend/tests/test_cli.py`
 - Modify: `examples/integrated_order_backend/__init__.py`
 
-- [ ] **Step 5.1: Write failing composition-ownership tests**
+- [x] **Step 5.1: Write failing composition-ownership tests**
 
 Require `build_application` with keyword-only `logger`, `catalog_loader`, and
 `recommendation_provider` to create one `AsyncTTLCache`, one existing async
@@ -1005,7 +1005,7 @@ Do not expose configuration overrides or inspect cache private fields; each
 owning constructor validates the root's fixed values. Prove sharing by processing
 two commands and observing `await application.cache_stats()`.
 
-- [ ] **Step 5.2: Implement the exact fixed root**
+- [x] **Step 5.2: Implement the exact fixed root**
 
 Use `AsyncTTLCache(default_ttl=60, max_size=128)`, aggregate batch size `50`,
 provider concurrency `4`, provider timeout `1.0`, request timeout `2.0`, grace
@@ -1014,7 +1014,7 @@ timeout `1.0`, cancellation timeout `1.0`, and
 `64 * 1024`, serialized `64 * 1024`, and nesting depth `16`. Keep overrides
 keyword-only and test-only where injection is required. No global cache or app.
 
-- [ ] **Step 5.3: Write failing exact CLI event tests**
+- [x] **Step 5.3: Write failing exact CLI event tests**
 
 Capture stdout and require exactly five compact, sorted JSON lines in this
 order:
@@ -1056,7 +1056,7 @@ assert events[3] == {
 assert all("data" not in event and "recommendation" not in event for event in events)
 ```
 
-- [ ] **Step 5.4: Implement the realistic two-order scenario**
+- [x] **Step 5.4: Implement the realistic two-order scenario**
 
 The first order has `SKU-1 x2`, `SKU-2 x1`, and duplicate `SKU-1 x1`; the
 second has cached `SKU-2 x2` and new `SKU-3 x1`. Use fixed in-memory product and
@@ -1177,7 +1177,7 @@ if __name__ == "__main__":
     main()
 ```
 
-- [ ] **Step 5.5: Observe GREEN, run the CLI, and commit**
+- [x] **Step 5.5: Observe GREEN, run the CLI, and commit**
 
 Run:
 
@@ -1206,14 +1206,14 @@ Tasks 1-5. **Write scope:** example README pair, assets, and doc tests.
 - Create: `examples/integrated_order_backend/docs/images/sequence.svg`
 - Create: `examples/integrated_order_backend/docs/images/sequence.png`
 
-- [ ] **Step 6.1: Load `bluetape-writer` and `bluetape-diagram` before edits**
+- [x] **Step 6.1: Load `bluetape-writer` and `bluetape-diagram` before edits**
 
 Follow reciprocal locale navigation, meaning parity, source-backed labels,
 scale-2 rendering, geometry audits, and full-size visual inspection. Create
 assets only from the implemented source; both locales share English-label
 assets.
 
-- [ ] **Step 6.2: Write failing documentation tests**
+- [x] **Step 6.2: Write failing documentation tests**
 
 Require exact locale headers, Scenario, Architecture, Sequence Diagram,
 aggregate invariants, existing service links, cache ownership, duplicate order,
@@ -1223,7 +1223,7 @@ separate trusted-internal example, exact run/test commands, troubleshooting,
 production non-goals, best-effort application lifecycle telemetry, source
 paths, direct PNG embeds, SVG links, and all four asset files.
 
-- [ ] **Step 6.3: Observe RED and write both README files together**
+- [x] **Step 6.3: Observe RED and write both README files together**
 
 Run the focused documentation test and expect missing files. Add equivalent
 English/Korean sections with exact setup, working directory, CLI output schema,
@@ -1231,7 +1231,7 @@ targeted tests, no cleanup requirement, provider/cache/payload ownership,
 deadline and close behavior, unsupported HTTP/auth/persistence/retry/telemetry,
 and production adapter obligations for identifier bounds/privacy/authorization.
 
-- [ ] **Step 6.4: Create Architecture SVG from implemented ownership**
+- [x] **Step 6.4: Create Architecture SVG from implemented ownership**
 
 Show CLI/caller, `OrderBackendApplication`, `OrderBackendService`,
 `OrderIntakeService`, `CatalogEnrichmentService`, `CachedCatalogProvider`,
@@ -1239,21 +1239,21 @@ Show CLI/caller, `OrderBackendApplication`, `OrderBackendService`,
 providers, and `JsonPayloadService`. Distinguish ownership from call/data arrows
 and label the untrusted JSON boundary.
 
-- [ ] **Step 6.5: Create Sequence SVG from implemented behavior**
+- [x] **Step 6.5: Create Sequence SVG from implemented behavior**
 
 Show one multi-line success with validation-before-I/O, distinct-SKU cache
 loads, occurrence restoration, warnings, totals, and encoding. Include clearly
 separated alternate branches for invalid input, optional provider warning,
 overall timeout/caller cancellation, and stop/grace/cancel/shutdown failure.
 
-- [ ] **Step 6.6: Render, audit, inspect, and observe GREEN**
+- [x] **Step 6.6: Render, audit, inspect, and observe GREEN**
 
 For each SVG run `xmllint --noout`, CairoSVG scale-2 rendering, connector,
 geometry, endpoint, mixed-corner, and sequence-style audits from the installed
 diagram skill. Inspect both full-size PNGs for clipping, overlap, unreadable
 labels, and branch ambiguity. Run documentation tests and require PASS.
 
-- [ ] **Step 6.7: Commit aligned docs and visuals**
+- [x] **Step 6.7: Commit aligned docs and visuals**
 
 Run focused docs tests, Ruff, and `git diff --check`; commit with a Lore
 directive that every example README locale must continue to embed both diagrams
@@ -1271,13 +1271,13 @@ README pair, discovery test, and WIP.
 - Modify: `tests/test_documentation_contract.py`
 - Modify: `WIP.md`
 
-- [ ] **Step 7.1: Write failing root discovery assertions**
+- [x] **Step 7.1: Write failing root discovery assertions**
 
 Require both root locales to link `examples/integrated_order_backend`, preserve
 the existing five examples, name the integrated CLI and targeted test commands,
 and automatically require the new README pair plus four diagram assets.
 
-- [ ] **Step 7.2: Observe RED and update both root README files together**
+- [x] **Step 7.2: Observe RED and update both root README files together**
 
 Add Issue #8 as the composed milestone outcome, explain that Redis/Fory remain
 separate optional examples, and include:
@@ -1287,14 +1287,14 @@ uv run --locked python -m examples.integrated_order_backend
 uv run --locked pytest examples/integrated_order_backend/tests -q
 ```
 
-- [ ] **Step 7.3: Update WIP to the Issue #8 implementation gate**
+- [x] **Step 7.3: Update WIP to the Issue #8 implementation gate**
 
 Replace stale Issue #7 status with exact Issue #8 branch/base, approved spec,
 design review, plan/risk/review paths, focused commands, current validation
 counts, exclusions, and next gate. Record PR as `Not created` until live and do
 not claim CI/merge evidence early.
 
-- [ ] **Step 7.4: Observe GREEN and commit**
+- [x] **Step 7.4: Observe GREEN and commit**
 
 Run root/example documentation tests and diff check. Expected: bilingual root
 discovery and mandatory diagram contract pass. Commit with a Lore message
@@ -1312,7 +1312,7 @@ scope:** review, lesson, final WIP/plan checkboxes, PR metadata only.
 - Modify: `docs/superpowers/plans/2026-07-16-issue-8-integrated-order-backend-plan.md`
 - Modify: `WIP.md`
 
-- [ ] **Step 8.1: Run focused then full deterministic validation**
+- [x] **Step 8.1: Run focused then full deterministic validation**
 
 Run sequentially:
 
@@ -1333,7 +1333,7 @@ Expected: uv 0.11.28, Python 3.13.14 environment, focused/full tests pass with
 only the existing optional Fory skip/deselection behavior, Ruff/actionlint/diff
 pass, and no Docker contact.
 
-- [ ] **Step 8.2: Prove dependency, scope, task, and payload invariants**
+- [x] **Step 8.2: Prove dependency, scope, task, and payload invariants**
 
 Run:
 
@@ -1349,7 +1349,7 @@ Expected: authority files unchanged; only planned files differ; task creation is
 confined to request/close ownership; no `BaseException` catch or real sleep;
 five safe CLI events with cache `hits=1`, `misses=3`, `loads=3`.
 
-- [ ] **Step 8.3: Run diagram and performance/stability verification**
+- [x] **Step 8.3: Run diagram and performance/stability verification**
 
 Repeat XML/render/audit/full-size inspection on both final source-backed assets.
 Read the Type A performance/stability checklist and verify 100-line bounds,
@@ -1360,7 +1360,7 @@ evidence: the example makes no throughput/latency claim, caps each order at 100
 lines, and deliberately documents sequential cache-backed reads rather than
 optimizing them.
 
-- [ ] **Step 8.4: Run final six-perspective implementation review**
+- [x] **Step 8.4: Run final six-perspective implementation review**
 
 Review the exact branch diff independently for performance, stability,
 security, operator/Ops, developer/API, and user/caller. Reclaim delayed agents
@@ -1368,7 +1368,7 @@ immediately and complete missing lenses in the main session. Integrate findings
 in the review artifact; fix and rerun affected proof until P0=0/P1=0. Resolve or
 file every P2/P3.
 
-- [ ] **Step 8.5: Verify exact spec/plan coverage and capture the lesson**
+- [x] **Step 8.5: Verify exact spec/plan coverage and capture the lesson**
 
 Load `verification-before-completion` and the Type A verifier checklist. Map
 every acceptance row to fresh output and require PASS. Record the reusable
