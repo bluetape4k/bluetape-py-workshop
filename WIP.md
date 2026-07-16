@@ -22,8 +22,8 @@ explicit approval and auto-merge is forbidden.
 
 - Branch/base head: `feat/issue-5-cached-product-catalog` /
   `762c20fc2e7ccf4e5a5c5afdb8b7ac1d70ebcc06`
-- Current content head: `ed1c604`; root registration and final integration
-  evidence remain before exact-head publication
+- Last validated content head: `d640071`; the final WIP checkpoint commit must
+  be verified again as the exact head before publication
 - Pull request: not created; approved target is this branch into `develop`
 - Workflow run: `20260715T153541Z-f1ea2b68`
 - Last completed gate: issue #4 merged through
@@ -44,8 +44,16 @@ explicit approval and auto-merge is forbidden.
   Architecture/Sequence SVG/PNG pairs passed XML, connector, geometry,
   endpoint, mixed-corner, sequence-style, and full-size PNG inspection gates;
   documentation committed as `ed1c604`
-- Current gate: register root navigation, run the full validation/review ladder,
-  commit the Type A lesson, then publish the authorized PR into `develop`
+- Last completed gate: root navigation and the WIP board were aligned in
+  `665ccf4`; the documentation contract passed `8 tests`
+- Last completed gate: `31` focused cache tests, `18` dependency tests, `123`
+  repository tests, Ruff, actionlint 1.7.12, diff check, and dependency SHA
+  parity passed
+- Last completed gate: six-lens implementation review converged at P0=0/P1=0;
+  bounded event guards, explicit shared-failure identity, and the required Type
+  A lesson were committed as `d640071`
+- Current gate: commit this final WIP checkpoint, rerun the full ladder on that
+  exact head, then push and create the authorized PR into `develop`
 - Next action after issue #5 merge: start dependency-ready Issue #6,
   [bounded payload processing](https://github.com/bluetape4k/bluetape-py-workshop/issues/6)
 - Runnable now: `uv run --locked python -m examples.order_intake`
