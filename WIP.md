@@ -1,6 +1,6 @@
 # WIP
 
-Snapshot: 2026-07-16 KST
+Snapshot: 2026-07-17 KST
 Scope: [`0.2.0`](https://github.com/bluetape4k/bluetape-py-workshop/milestone/2)
 web and Redis expansion boundary.
 
@@ -8,44 +8,50 @@ web and Redis expansion boundary.
 
 ## Current Target
 
-Issue [#9](https://github.com/bluetape4k/bluetape-py-workshop/issues/9):
-define the source-backed boundary between application-owned ASGI/FastAPI code
-and reusable future `bluetape-py` web adapters before HTTP examples begin.
+Issue [#10](https://github.com/bluetape4k/bluetape-py-workshop/issues/10):
+provide a realistic Redis load coordination example in which two application
+instances keep separate local caches but reuse one owner-bound result through
+the upstream public coordinator.
 
-Active branch: `docs/issue-9-asgi-fastapi-boundary`
+Active branch: `feat/issue-10-redis-load-coordination`
 Base branch: `develop`
-Pull request: [#19](https://github.com/bluetape4k/bluetape-py-workshop/pull/19)
+Pull request: pending creation after local Type A verification
 Stop boundary: create the approved PR to `develop`, verify exact-head hosted
 CI/review state, then stop for a fresh explicit merge approval. Auto-merge is
 forbidden.
 
 ## Resume Checkpoint
 
-- Branch/base head: `docs/issue-9-asgi-fastapi-boundary` /
-  `a6eae41ed7b946e6859d2cc3d1866a04ea539590`
-- Issue #8 completed through
-  [PR #18](https://github.com/bluetape4k/bluetape-py-workshop/pull/18), merged as
-  `a6eae41ed7b946e6859d2cc3d1866a04ea539590`; focused `66`, dependency `19`,
-  and full deterministic `287 passed, 1 skipped, 1 deselected` after merge
-- Current decision: use Direct FastAPI for the first realistic `POST /orders`
-  example; keep DTO, DI, context reset, public errors, response shaping,
-  disconnect policy, timeout mapping, lifespan, and cleanup application-owned
-- Upstream gate: adopt a future `bluetape-fastapi` only after
-  `bluetape-py` #21 is accepted, #22 ships conformance-tested behavior, and the
-  workshop pins an exact stable release tag or commit
-- Current artifacts: aligned English/Korean research guides, source-backed
-  Architecture and Sequence Diagram assets, and a `P0=0/P1=0` research review
-- Current validation: documentation `10 passed`; full deterministic
-  `290 passed, 1 skipped, 1 deselected`; Ruff, actionlint, XML/render/audits,
-  locale/link parity, and diff hygiene pass
-- Next action: report PR #19 merge readiness and wait for fresh explicit merge
-  approval
+- Branch/base head: `feat/issue-10-redis-load-coordination` /
+  `836ff2090eb6a998b7247e9bf89ea3d77065c29d`
+- Issue #9 completed through
+  [PR #19](https://github.com/bluetape4k/bluetape-py-workshop/pull/19), merged as
+  `836ff2090eb6a998b7247e9bf89ea3d77065c29d`
+- Current topology: two caller-owned `AsyncRedisProvider` clients, two separate
+  `AsyncTTLCache` instances, one versioned Redis coordination namespace, one
+  strict `ProductSummaryCodec`, and one authoritative loader call
+- Optional dependency boundary: default sync remains free of
+  `bluetape-cache-redis` and `redis`; `.venv-redis` installs the
+  `redis-coordination` extra from the exact pinned upstream commit
+- Current artifacts: approved Type A spec/plan/risk records, implementation,
+  aligned English/Korean example guides, and source-backed Architecture and
+  Sequence Diagram SVG/PNG pairs
+- Current validation: default `296 passed, 5 skipped, 1 deselected`; optional
+  deterministic `34 passed, 1 deselected`; serial Docker Redis `1 passed`;
+  Ruff, XML/render/audits, full-size PNG inspection, locale/link parity, and
+  diff hygiene pass
+- Issue [#20](https://github.com/bluetape4k/bluetape-py-workshop/issues/20)
+  keeps near-cache invalidation `blocked:upstream`; no private RESP3 API,
+  Pub/Sub, or polling workaround is included in #10
+- Next action: finish root documentation, implementation review, lesson, and
+  exact-head validation; then create the approved PR
 - Runnable now: `uv run --locked python -m examples.order_intake`
 - Runnable now: `uv run --locked python -m examples.catalog_enrichment`
 - Runnable now: `uv run --locked python -m examples.cached_product_catalog`
 - Runnable now: `uv run --locked python -m examples.bounded_payload_processing`
 - Runnable now: `uv run --locked python -m examples.redis_test_server`
 - Runnable now: `uv run --locked python -m examples.integrated_order_backend`
+- Optional runnable: `UV_PROJECT_ENVIRONMENT=.venv-redis uv run --locked --extra redis-coordination python -m examples.redis_load_coordination`
 - Integrated tests: `uv run --locked pytest examples/integrated_order_backend/tests -q`
 - Deterministic Redis tests: `uv run --locked pytest -m "not testcontainers" examples/redis_test_server/tests -q`
 - Serial Docker test: `uv run --locked pytest -m testcontainers examples/redis_test_server/tests/test_redis_integration.py -q`
@@ -53,12 +59,15 @@ forbidden.
 - Optional setup: `UV_PROJECT_ENVIRONMENT=.venv-fory uv sync --locked --extra fory --python 3.13.14`
 - Optional runnable: after activating `.venv-fory`, `python -m examples.bounded_payload_processing.fory_demo`
 - Optional tests: after activating `.venv-fory`, `pytest examples/bounded_payload_processing/tests/test_fory_service.py -q`
+- Redis optional setup: `UV_PROJECT_ENVIRONMENT=.venv-redis uv sync --locked --extra redis-coordination --python 3.13.14`
+- Redis optional tests: `UV_PROJECT_ENVIRONMENT=.venv-redis uv run --locked --extra redis-coordination pytest -m "not testcontainers" examples/redis_load_coordination/tests -q`
+- Redis serial Docker test: `UV_PROJECT_ENVIRONMENT=.venv-redis uv run --locked --extra redis-coordination pytest -m testcontainers examples/redis_load_coordination/tests/test_redis_integration.py -q`
 
-Current artifacts: [issue #9](https://github.com/bluetape4k/bluetape-py-workshop/issues/9),
-[implementation plan](docs/superpowers/plans/2026-07-16-issue-9-asgi-fastapi-boundary-plan.md),
-[English decision guide](docs/research/asgi-fastapi-boundary/README.md), and
-[Korean decision guide](docs/research/asgi-fastapi-boundary/README.ko.md), and
-[research review](docs/superpowers/reviews/2026-07-16-issue-9-research-review.md).
+Current artifacts: [issue #10](https://github.com/bluetape4k/bluetape-py-workshop/issues/10),
+[implementation plan](docs/superpowers/plans/2026-07-17-issue-10-redis-load-coordination-plan.md),
+[English example guide](examples/redis_load_coordination/README.md),
+[Korean example guide](examples/redis_load_coordination/README.ko.md), and
+[blocked invalidation follow-up #20](https://github.com/bluetape4k/bluetape-py-workshop/issues/20).
 
 ## Dependency Baseline
 
@@ -90,7 +99,11 @@ Current artifacts: [issue #9](https://github.com/bluetape4k/bluetape-py-workshop
 #8 + upstream bluetape-py #21/#22 evidence
   └─> #9 ASGI/FastAPI workshop boundary
 
-#10 production Redis cache coordination (blocked: upstream)
+#5 + upstream bluetape-py #54/#55
+  └─> #10 Redis load coordination
+
+#10 + upstream bluetape-py #56 + public redis-py RESP3 push
+  └─> #20 Redis near-cache invalidation (blocked:upstream)
 ```
 
 ## Execution Queue
@@ -104,8 +117,9 @@ Current artifacts: [issue #9](https://github.com/bluetape4k/bluetape-py-workshop
 | 5 | [#6](https://github.com/bluetape4k/bluetape-py-workshop/issues/6) | Bounded payload processing service | #2 | Completed |
 | 6 | [#7](https://github.com/bluetape4k/bluetape-py-workshop/issues/7) | Redis-backed integration-test workshop | #2 | Completed |
 | 7 | [#8](https://github.com/bluetape4k/bluetape-py-workshop/issues/8) | Integrated framework-neutral order backend | #3, #4, #5, #6 | Completed |
-| 8 | [#9](https://github.com/bluetape4k/bluetape-py-workshop/issues/9) | ASGI/FastAPI workshop boundary decision | #8, upstream #21/#22 evidence | In progress |
-| 9 | [#10](https://github.com/bluetape4k/bluetape-py-workshop/issues/10) | Production Redis cache coordination | Upstream capability | Blocked upstream |
+| 8 | [#9](https://github.com/bluetape4k/bluetape-py-workshop/issues/9) | ASGI/FastAPI workshop boundary decision | #8, upstream #21/#22 evidence | Completed |
+| 9 | [#10](https://github.com/bluetape4k/bluetape-py-workshop/issues/10) | Redis load coordination | #5, upstream #54/#55 | In progress |
+| 10 | [#20](https://github.com/bluetape4k/bluetape-py-workshop/issues/20) | Redis near-cache invalidation | #10, upstream #56, public RESP3 push | blocked:upstream |
 
 ## Example Documentation Contract
 
@@ -238,6 +252,19 @@ the external payload boundary to untrusted JSON, observes late task failures,
 and uses shielded finite request/close waits. Redis and trusted-internal Fory
 remain separate optional examples.
 
+Issue #10 adds an isolated optional Redis coordination lane:
+
+```bash
+UV_PROJECT_ENVIRONMENT=.venv-redis uv sync --locked --extra redis-coordination --python 3.13.14
+UV_PROJECT_ENVIRONMENT=.venv-redis uv run --locked --extra redis-coordination python -m examples.redis_load_coordination
+UV_PROJECT_ENVIRONMENT=.venv-redis uv run --locked --extra redis-coordination pytest -m "not testcontainers" examples/redis_load_coordination/tests -q
+UV_PROJECT_ENVIRONMENT=.venv-redis uv run --locked --extra redis-coordination pytest -m testcontainers examples/redis_load_coordination/tests/test_redis_integration.py -q
+```
+
+The default environment remains free of `bluetape-cache-redis` and `redis`.
+The optional example uses public upstream APIs only, runs deterministic tests
+before its serial Docker lane, and never falls back to an uncoordinated load.
+
 Issue #7 exact-head verification on Python 3.13.14, uv 0.11.28, and Docker
 server 28.4.0:
 
@@ -294,13 +321,34 @@ Issue #9 local research checkpoint:
   `MERGEABLE` / `CLEAN`;
 - reviews, comments, and review threads: 0; hosted English/Korean guides and all
   four diagram assets: present;
-- merge, local sync, and cleanup: pending fresh explicit approval.
+- rebase merge SHA: `836ff2090eb6a998b7247e9bf89ea3d77065c29d`;
+- post-merge local sync and owned worktree/branch cleanup: pass.
+
+Issue #10 current local checkpoint:
+
+- exact upstream source: `bluetape-cache-redis==0.1.0` at
+  `4b7458f22cea0a9e757b5fbf7f5ff4bc8c23cb9a`;
+- default dependency boundary remains Redis-provider-free;
+- deterministic owner/follower/local-hit behavior: one loader call, owner
+  `LOADED`, follower `RESULT_REUSED`, then one Cache B local hit;
+- default repository: `296 passed, 5 skipped, 1 deselected`;
+- optional example: `34 passed, 1 deselected`;
+- serial real Redis lane: `1 passed`;
+- Architecture PNG: `3200x2000`, `10` cards, `4` markers, no crossings or
+  intrusions, geometry/endpoint/mixed-corner audits and full-size inspection pass;
+- Sequence PNG: `3600x3000`, `18` numbered messages, `5` markers, sequence
+  style/geometry/endpoint/mixed-corner audits and full-size inspection pass;
+- example README pair: reciprocal locale navigation, exact commands, outcomes,
+  security, cleanup, troubleshooting, non-goals, and both diagram pairs present;
+- root documentation, implementation review, lesson, and exact-head full gates:
+  in progress.
 
 ## Holds and Exclusions
 
 - Issue #9 is research-only; no ASGI/FastAPI adapter or FastAPI dependency is
   introduced.
-- Issue #10 remains blocked on upstream production Redis cache capability.
+- Issue #20 remains `blocked:upstream` on public near-cache invalidation and
+  RESP3 push consumption; #10 contains no private API or workaround.
 - Tagging, package publishing, GitHub Release creation, and milestone closure
   require separate explicit authority.
 
@@ -340,3 +388,6 @@ Issue #9 local research checkpoint:
   example while keeping transport policy workshop-owned; reject Raw ASGI as the
   first lesson and gate a reusable adapter on upstream #21, #22, and an exact
   stable release tag or commit.
+- 2026-07-17: split ready load coordination from blocked near-cache
+  invalidation; implement #10 with separate local caches/providers and the
+  public upstream coordinator, while retaining invalidation as blocked #20.

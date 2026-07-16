@@ -18,9 +18,11 @@ separate default JSON and optional Apache Fory trust profiles, and a
 container lifecycle ownership. The
 [integrated order backend](examples/integrated_order_backend/README.md) combines
 order intake, enrichment, shared caching, bounded JSON payloads, request
-deadlines, and retryable shutdown in one realistic two-order scenario. Each
-example provides aligned bilingual guidance, Architecture, and Sequence Diagram
-assets.
+deadlines, and retryable shutdown in one realistic two-order scenario. The
+[Redis load coordination example](examples/redis_load_coordination/README.md)
+then shows two instances with separate local caches reusing one owner-bound
+result through Redis without an uncoordinated fallback. Each example provides
+aligned bilingual guidance, Architecture, and Sequence Diagram assets.
 
 Milestone `0.2.0` begins with a research-only
 [ASGI and FastAPI boundary decision](docs/research/asgi-fastapi-boundary/README.md).
@@ -28,6 +30,12 @@ It recommends a realistic Direct FastAPI `POST /orders` example around the
 existing framework-neutral backend, while keeping reusable web adapters gated
 on upstream `bluetape-py` issues #21 and #22. No FastAPI dependency or HTTP
 implementation is introduced by that decision.
+
+Issue [#10](https://github.com/bluetape4k/bluetape-py-workshop/issues/10)
+adds the independently runnable Redis load-coordination lesson. Near-cache
+invalidation remains separate and blocked in
+[#20](https://github.com/bluetape4k/bluetape-py-workshop/issues/20) until the
+public RESP3 push boundary is available upstream.
 
 Follow [WIP.md](WIP.md) for the current issue, dependency order, validation
 evidence, and next action.
@@ -119,6 +127,14 @@ external artifact boundary to untrusted JSON, and owns request/close tasks in
 one application lifecycle. See its
 [bilingual example guide](examples/integrated_order_backend/README.md).
 
+The Redis load-coordination lesson also preserves the default baseline. Its
+`redis-coordination` extra adds commit-pinned `bluetape-cache-redis==0.1.0` and
+`redis==8.0.1` only to `.venv-redis`. It composes two caller-owned providers,
+two separate `AsyncTTLCache` instances, the upstream
+`AsyncRedisLoadCoordinator`, a strict result codec, and one disposable
+`RedisServer`. See the
+[bilingual example guide](examples/redis_load_coordination/README.md).
+
 ## Validation
 
 Run the same locked gates used by CI:
@@ -149,6 +165,16 @@ uv run --locked python -m examples.integrated_order_backend
 uv run --locked pytest examples/integrated_order_backend/tests -q
 ```
 
+Install, run, and test the optional Redis coordination lesson in its isolated
+environment:
+
+```bash
+UV_PROJECT_ENVIRONMENT=.venv-redis uv sync --locked --extra redis-coordination --python 3.13.14
+UV_PROJECT_ENVIRONMENT=.venv-redis uv run --locked --extra redis-coordination python -m examples.redis_load_coordination
+UV_PROJECT_ENVIRONMENT=.venv-redis uv run --locked --extra redis-coordination pytest -m "not testcontainers" examples/redis_load_coordination/tests -q
+UV_PROJECT_ENVIRONMENT=.venv-redis uv run --locked --extra redis-coordination pytest -m testcontainers examples/redis_load_coordination/tests/test_redis_integration.py -q
+```
+
 ## Example Documentation Contract
 
 Every runnable example from issue #3 onward provides aligned `README.md` and
@@ -169,9 +195,10 @@ source.
 
 ## Current Limits
 
-Milestone `0.1.0` did not introduce an ASGI/FastAPI adapter, a production Redis
-provider, persistent order store, authentication/authorization adapter, package
-publication, or release automation. Issue #9 defines the later web boundary but
-still adds no adapter. The Redis example is test infrastructure, not a
-production Redis client or cache provider, and every Docker-backed path runs
-sequentially.
+Milestone `0.1.0` did not introduce an ASGI/FastAPI adapter, persistent order
+store, authentication/authorization adapter, package publication, or release
+automation. Issue #9 defines the later web boundary but still adds no adapter.
+The Redis examples teach test infrastructure and load coordination, not a
+production deployment recipe: production TLS, ACLs, monitoring, and rollback
+remain operator responsibilities. Near-cache invalidation remains blocked in
+issue #20, and every Docker-backed path runs sequentially.

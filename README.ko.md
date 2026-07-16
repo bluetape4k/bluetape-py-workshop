@@ -18,8 +18,11 @@ container lifecycle ownership을 보여 주는
 [Redis test server workshop](examples/redis_test_server/README.ko.md), 주문 접수,
 enrichment, shared cache, 제한된 JSON payload, request deadline, retry 가능한 shutdown을
 현실적인 두 주문 흐름으로 조합한
-[통합 주문 backend](examples/integrated_order_backend/README.ko.md)입니다. 각 예제는 서로
-맞춘 다국어 안내, Architecture, Sequence Diagram을 제공합니다.
+[통합 주문 backend](examples/integrated_order_backend/README.ko.md), 별도 local cache를
+가진 두 instance가 Redis를 통해 owner-bound result 하나를 재사용하고 조정되지 않은
+fallback을 사용하지 않는
+[Redis load coordination 예제](examples/redis_load_coordination/README.ko.md)입니다.
+각 예제는 서로 맞춘 다국어 안내, Architecture, Sequence Diagram을 제공합니다.
 
 마일스톤 `0.2.0`은 research-only
 [ASGI와 FastAPI 경계 결정](docs/research/asgi-fastapi-boundary/README.ko.md)으로
@@ -27,6 +30,11 @@ enrichment, shared cache, 제한된 JSON payload, request deadline, retry 가능
 `POST /orders` 예제를 권장하되, 재사용 가능한 web adapter는 upstream
 `bluetape-py` 이슈 #21과 #22 뒤로 제한합니다. 이 결정에서는 FastAPI dependency나
 HTTP 구현을 추가하지 않습니다.
+
+이슈 [#10](https://github.com/bluetape4k/bluetape-py-workshop/issues/10)은 독립적으로
+실행 가능한 Redis load-coordination 학습 예제를 추가합니다. Near-cache invalidation은
+분리했으며 public RESP3 push 경계가 upstream에 제공될 때까지
+[#20](https://github.com/bluetape4k/bluetape-py-workshop/issues/20)에서 blocked 상태입니다.
 
 현재 이슈, 의존 순서, 검증 근거와 다음 작업은 [WIP.md](WIP.md)에서 확인하세요.
 
@@ -115,6 +123,13 @@ connection details를 사용하며, application body 성공과 실패 뒤의 cle
 고정하고, request/close task를 application lifecycle 하나에서 소유합니다. 자세한
 내용은 [다국어 예제 안내](examples/integrated_order_backend/README.ko.md)를 참고하세요.
 
+Redis load-coordination 학습 예제도 default baseline을 보존합니다.
+`redis-coordination` extra는 commit-pinned `bluetape-cache-redis==0.1.0`과
+`redis==8.0.1`을 `.venv-redis`에만 추가합니다. Caller-owned provider 두 개,
+서로 분리된 `AsyncTTLCache` 두 개, upstream `AsyncRedisLoadCoordinator`, strict result
+codec, disposable `RedisServer` 하나를 조합합니다. 자세한 내용은
+[다국어 예제 안내](examples/redis_load_coordination/README.ko.md)를 참고하세요.
+
 ## 검증
 
 CI와 같은 locked gate를 실행합니다.
@@ -145,6 +160,15 @@ uv run --locked python -m examples.integrated_order_backend
 uv run --locked pytest examples/integrated_order_backend/tests -q
 ```
 
+격리된 환경에 optional Redis coordination 학습 예제를 설치하고 실행하고 테스트합니다.
+
+```bash
+UV_PROJECT_ENVIRONMENT=.venv-redis uv sync --locked --extra redis-coordination --python 3.13.14
+UV_PROJECT_ENVIRONMENT=.venv-redis uv run --locked --extra redis-coordination python -m examples.redis_load_coordination
+UV_PROJECT_ENVIRONMENT=.venv-redis uv run --locked --extra redis-coordination pytest -m "not testcontainers" examples/redis_load_coordination/tests -q
+UV_PROJECT_ENVIRONMENT=.venv-redis uv run --locked --extra redis-coordination pytest -m testcontainers examples/redis_load_coordination/tests/test_redis_integration.py -q
+```
+
 ## 예제 문서 계약
 
 이슈 #3부터 모든 실행 가능한 예제는 서로 일치하는 `README.md`와 `README.ko.md`에
@@ -164,9 +188,10 @@ Diagram source와 rendered asset은 구현 code가 생긴 뒤에만 만듭니다
 
 ## 현재 제한 사항
 
-마일스톤 `0.1.0`은 ASGI/FastAPI adapter, production Redis provider, package
-publication 또는 release automation을 추가하지 않았습니다. Persistent order store와
-authentication/authorization adapter도 범위 밖이었습니다. 이슈 #9는 이후 web
-경계를 정의하지만 여전히 adapter를 추가하지 않습니다. Redis 예제는 production
-Redis client나 cache provider가 아닌 test infrastructure이며, 모든 Docker-backed
-경로를 순차 실행합니다.
+마일스톤 `0.1.0`은 ASGI/FastAPI adapter, persistent order store,
+authentication/authorization adapter, package publication, release automation을
+추가하지 않았습니다. 이슈 #9는 이후 web 경계를 정의하지만 여전히 adapter를
+추가하지 않습니다. Redis 예제는 test infrastructure와 load coordination을 가르치며
+production deployment recipe가 아닙니다. Production TLS, ACL, monitoring, rollback은
+operator 책임으로 남습니다. Near-cache invalidation은 이슈 #20에서 blocked 상태이며,
+모든 Docker-backed 경로를 순차 실행합니다.
