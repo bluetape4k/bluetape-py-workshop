@@ -56,5 +56,6 @@ Reference images inspected before drawing:
 
 ## Remaining Gate
 
-Create the approved PR from this branch to `develop`, verify the exact hosted
-head and current CI/review/thread state, then stop for fresh merge approval.
+[PR #19](https://github.com/bluetape4k/bluetape-py-workshop/pull/19) was created
+from the approved branch to `develop`. Verify the exact hosted head and current
+CI/review/thread state, then stop for fresh merge approval.
