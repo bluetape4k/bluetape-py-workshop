@@ -22,9 +22,10 @@ explicit approval and auto-merge is forbidden.
 
 - Branch/base head: `feat/issue-6-bounded-payload-processing` /
   `51d7e457384ea4f84b7f18afd00a13e939218ef1`
-- Last reviewed content head: `9abb6b2`; final review/lesson/WIP evidence is
-  committed and revalidated before publication
-- Pull request: not created; approved target is this branch into `develop`
+- Last reviewed content head: `f7f0fc6`; local default/optional ladders and
+  hosted CI passed before this delivery-checkpoint update
+- Pull request: [#16](https://github.com/bluetape4k/bluetape-py-workshop/pull/16),
+  `feat/issue-6-bounded-payload-processing` into `develop`
 - Workflow run: `20260716T065828Z-3fe71fd5`
 - Last completed gate: issue #5 merged through
   [PR #15](https://github.com/bluetape4k/bluetape-py-workshop/pull/15), local
@@ -36,8 +37,8 @@ explicit approval and auto-merge is forbidden.
   repository `165 passed, 1 skipped` with Fory absent; isolated
   `pyfory==1.3.0` suite `17 passed`; Ruff, actionlint, diagram audits, and diff
   check passed
-- Current gate: commit the Type A lesson/evidence, rerun the exact-head default
-  and optional validation ladders, then publish the authorized PR
+- Current gate: publish this final WIP checkpoint, rerun exact-head CI and live
+  review/thread checks, then stop for fresh merge approval
 - Next action after issue #6 merge: start dependency-ready Issue #7,
   [Redis Testcontainers workshop](https://github.com/bluetape4k/bluetape-py-workshop/issues/7)
 - Runnable now: `uv run --locked python -m examples.order_intake`
