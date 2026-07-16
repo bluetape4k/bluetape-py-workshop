@@ -1377,7 +1377,7 @@ while one outer lifecycle owns deadlines, task observation, and shutdown. Includ
 the admission race and cancellation-resistant cleanup surprise plus its future
 guard.
 
-- [ ] **Step 8.6: Commit the final local evidence and rerun at exact head**
+- [x] **Step 8.6: Commit the final local evidence and rerun at exact head**
 
 Update checkboxes and WIP only from observed evidence. Commit review, lesson,
 and checkpoint with a Lore message, then rerun the focused tests, full
