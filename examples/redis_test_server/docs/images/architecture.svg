@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Redis test server workshop architecture</title>
+  <desc id="desc">Static ownership map showing the CLI and application context, the ecosystem RedisServer wrapper, immutable connection details, the bounded order-status probe, and Docker Redis 8.</desc>
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&amp;family=Comic+Mono&amp;display=swap');
+      .title { font: 42px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #263238; }
+      .subtitle { font: 21px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #546e7a; }
+      .lane-title { font: 26px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #37474f; }
+      .card-title { font: 23px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #263238; }
+      .body { font: 17px 'Comic Mono', 'SFMono-Regular', monospace; fill: #455a64; }
+      .small { font: 15px 'Comic Mono', 'SFMono-Regular', monospace; fill: #546e7a; }
+      .lane { stroke: #cfd8dc; stroke-width: 2.5; stroke-dasharray: 10 8; }
+      .card { stroke-width: 3; }
+      .flow { fill: none; stroke: #5f8da8; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow-blue); }
+      .state { fill: none; stroke: #6f9a65; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow-green); }
+      .external { fill: none; stroke: #b07832; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrow-amber); }
+    </style>
+    <marker id="arrow-blue" viewBox="0 0 14 14" refX="12" refY="7" markerWidth="14" markerHeight="14" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L13 7 L1 13 Z" fill="#5f8da8"/></marker>
+    <marker id="arrow-green" viewBox="0 0 14 14" refX="12" refY="7" markerWidth="14" markerHeight="14" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L13 7 L1 13 Z" fill="#6f9a65"/></marker>
+    <marker id="arrow-amber" viewBox="0 0 14 14" refX="12" refY="7" markerWidth="14" markerHeight="14" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L13 7 L1 13 Z" fill="#b07832"/></marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#455a64" flood-opacity="0.13"/></filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="#fbf8f1"/>
+  <path d="M70 115 H1530" stroke="#d7ccc8" stroke-width="3" stroke-linecap="round"/>
+  <text x="70" y="68" class="title">Redis Test Server Workshop</text>
+  <text x="70" y="101" class="subtitle">Test infrastructure owns Docker; application code owns one bounded probe</text>
+
+  <rect x="70" y="150" width="330" height="610" rx="26" fill="#f7eee7" class="lane"/>
+  <rect x="440" y="150" width="420" height="610" rx="26" fill="#eef3f6" class="lane"/>
+  <rect x="900" y="150" width="630" height="610" rx="26" fill="#edf5ed" class="lane"/>
+  <text x="95" y="190" class="lane-title">Reader / composition root</text>
+  <text x="465" y="190" class="lane-title">Application-owned example</text>
+  <text x="925" y="190" class="lane-title">bluetape-testcontainers + Docker</text>
+
+  <g filter="url(#shadow)">
+    <rect x="105" y="285" width="260" height="185" rx="20" fill="#ffe7c7" stroke="#d69b55" class="card"/>
+    <text x="130" y="330" class="card-title">CLI / Test</text>
+    <text x="130" y="370" class="body">chooses startup_timeout</text>
+    <text x="130" y="402" class="body">owns one RedisServer</text>
+    <text x="130" y="434" class="small">emits redacted JSON</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="480" y="235" width="340" height="175" rx="20" fill="#dcebf4" stroke="#5f8da8" class="card"/>
+    <text x="505" y="280" class="card-title">run_workshop</text>
+    <text x="505" y="320" class="body">enter -> details -> probe</text>
+    <text x="505" y="352" class="body">exit on success or error</text>
+    <text x="505" y="384" class="small">one context owner</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="480" y="510" width="340" height="175" rx="20" fill="#e8def5" stroke="#8e72b5" class="card"/>
+    <text x="505" y="555" class="card-title">RedisOrderStatusProbe</text>
+    <text x="505" y="595" class="body">PING -> SET -> GET</text>
+    <text x="505" y="627" class="body">2s socket timeout</text>
+    <text x="505" y="659" class="small">fixed RESP and byte bounds</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="1040" y="225" width="350" height="175" rx="20" fill="#dcebf4" stroke="#5f8da8" class="card"/>
+    <text x="1065" y="270" class="card-title">RedisServer</text>
+    <text x="1065" y="310" class="body">image + start + readiness</text>
+    <text x="1065" y="342" class="body">cleanup + stable failure kind</text>
+    <text x="1065" y="374" class="small">single-use synchronous owner</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="940" y="510" width="250" height="175" rx="20" fill="#e3f0df" stroke="#6f9a65" class="card"/>
+    <text x="965" y="555" class="card-title">Connection Details</text>
+    <text x="965" y="595" class="body">host + dynamic port</text>
+    <text x="965" y="627" class="body">immutable Redis URL</text>
+    <text x="965" y="659" class="small">running state only</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="1240" y="510" width="250" height="175" rx="20" fill="#ffe7c7" stroke="#d69b55" class="card"/>
+    <text x="1265" y="555" class="card-title">Docker Redis 8</text>
+    <text x="1265" y="595" class="body">redis-cli ping ready</text>
+    <text x="1265" y="627" class="body">dynamic mapped port</text>
+    <text x="1265" y="659" class="small">Bluetape ownership label</text>
+  </g>
+
+  <path d="M365 375 H480" class="flow"/>
+  <path d="M820 300 H1040" class="flow"/>
+  <path d="M1215 400 V455 Q1215 470 1200 470 H1080 Q1065 470 1065 485 V510" class="state"/>
+  <path d="M940 560 H820" class="state"/>
+  <path d="M650 685 V700 Q650 715 665 715 H1350 Q1365 715 1365 700 V685" class="external"/>
+  <path d="M1365 510 V455 Q1365 440 1350 440 H1230 Q1215 440 1215 425 V400" class="external"/>
+
+  <rect x="70" y="800" width="1460" height="58" rx="18" fill="#f0ebe2" stroke="#d7ccc8" stroke-width="2"/>
+  <circle cx="105" cy="829" r="9" fill="#5f8da8"/>
+  <text x="125" y="836" class="small">RedisServer owns image, readiness, mapped details, and container cleanup</text>
+  <circle cx="860" cy="829" r="9" fill="#8e72b5"/>
+  <text x="880" y="836" class="small">The workshop probe stays fixed, bounded, synchronous, and non-production</text>
+</svg>
