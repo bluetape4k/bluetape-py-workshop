@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1300" viewBox="0 0 1800 1300" role="img" aria-labelledby="title desc">
+  <title id="title">Bounded payload processing sequence</title>
+  <desc id="desc">A caller explicitly selects a fixed JSON or Fory service. The service validates exact metadata and applies encoded, compressed, and decompressed limits before invoking the selected deserializer.</desc>
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&amp;family=Comic+Mono&amp;display=swap');
+      .title { font: 42px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #263238; }
+      .subtitle { font: 20px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #546e7a; }
+      .participant-title { font: 24px 'Architects Daughter', 'Comic Sans MS', cursive; fill: #263238; }
+      .participant-subtitle { font: 16px 'Comic Mono', monospace; fill: #546e7a; }
+      .label { font: 17px 'Comic Mono', monospace; fill: #37474f; }
+      .frame-label { font: 18px 'Architects Daughter', cursive; }
+      .lifeline { stroke: #b0bec5; stroke-width: 3; stroke-dasharray: 10 9; }
+      .activation { fill: #dcebf4; stroke: #5f8da8; stroke-width: 2.5; }
+      .frame { stroke: #90a4ae; stroke-width: 3; }
+      .alt { fill: none; stroke: #90a4ae; stroke-width: 3; rx: 22; }
+      .divider { stroke: #90a4ae; stroke-width: 2.5; stroke-dasharray: 10 8; }
+      .call { fill: none; stroke: #5f8da8; stroke-width: 4; marker-end: url(#seq-blue); }
+      .success { fill: none; stroke: #6f9a65; stroke-width: 4; marker-end: url(#seq-green); }
+      .return { fill: none; stroke: #4f8f8b; stroke-width: 4; stroke-dasharray: 10 7; marker-end: url(#seq-teal); }
+      .error { fill: none; stroke: #c56b5d; stroke-width: 4; marker-end: url(#seq-red); }
+      .optional { fill: none; stroke: #8e72b5; stroke-width: 4; marker-end: url(#seq-purple); }
+      .pill-blue { fill: #e7f1f6; stroke: #5f8da8; stroke-width: 2; }
+      .pill-green { fill: #e7f1e3; stroke: #6f9a65; stroke-width: 2; }
+      .pill-red { fill: #f8e5e1; stroke: #c56b5d; stroke-width: 2; }
+      .pill-purple { fill: #eee7f7; stroke: #8e72b5; stroke-width: 2; }
+      .number { font: 16px 'Comic Mono', monospace; fill: #37474f; text-anchor: middle; }
+    </style>
+    <marker id="seq-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#5f8da8"/></marker>
+    <marker id="seq-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#6f9a65"/></marker>
+    <marker id="seq-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#4f8f8b"/></marker>
+    <marker id="seq-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#c56b5d"/></marker>
+    <marker id="seq-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#8e72b5"/></marker>
+  </defs>
+
+  <rect width="1800" height="1300" rx="34" fill="#fbf8f1" stroke="#d7ccc8" stroke-width="4" class="frame"/>
+  <text x="70" y="65" class="title">Bounded Payload Processing Sequence</text>
+  <text x="70" y="100" class="subtitle">Reject the envelope as early as possible; invoke JSON or Fory only after every byte bound passes</text>
+
+  <g>
+    <rect x="70" y="140" width="280" height="105" rx="22" fill="#ffe7c7" stroke="#d69b55" stroke-width="3"/>
+    <text x="210" y="184" text-anchor="middle" class="participant-title">Caller</text><text x="210" y="216" text-anchor="middle" class="participant-subtitle">explicit composition root</text>
+    <rect x="480" y="140" width="340" height="105" rx="22" fill="#dcebf4" stroke="#5f8da8" stroke-width="3"/>
+    <text x="650" y="184" text-anchor="middle" class="participant-title">Fixed Payload Service</text><text x="650" y="216" text-anchor="middle" class="participant-subtitle">JSON default or Fory optional</text>
+    <rect x="950" y="140" width="300" height="105" rx="22" fill="#e3f0df" stroke="#6f9a65" stroke-width="3"/>
+    <text x="1100" y="184" text-anchor="middle" class="participant-title">Transport Codecs</text><text x="1100" y="216" text-anchor="middle" class="participant-subtitle">base64url + bounded gzip</text>
+    <rect x="1380" y="140" width="350" height="105" rx="22" fill="#e8def5" stroke="#8e72b5" stroke-width="3"/>
+    <text x="1555" y="184" text-anchor="middle" class="participant-title">Serde Provider</text><text x="1555" y="216" text-anchor="middle" class="participant-subtitle">JSON UNTRUSTED / Fory TRUSTED</text>
+  </g>
+
+  <path d="M210 245 V1205" class="lifeline"/><path d="M650 245 V1205" class="lifeline"/><path d="M1100 245 V1205" class="lifeline"/><path d="M1555 245 V1205" class="lifeline"/>
+  <rect x="640" y="290" width="20" height="835" rx="10" class="activation"/>
+  <rect x="1090" y="495" width="20" height="455" rx="10" class="activation"/>
+  <rect x="1545" y="955" width="20" height="110" rx="10" class="activation"/>
+
+  <path d="M210 320 H640" class="call"/><rect x="235" y="283" width="36" height="36" rx="18" class="pill pill-blue"/><text x="253" y="307" class="number num">1</text><text x="285" y="307" class="label">deserialize(EncodedPayload)</text>
+  <path d="M660 385 H730 Q745 385 745 400 V410 Q745 425 730 425 H660" class="call"/><rect x="675" y="348" width="36" height="36" rx="18" class="pill pill-blue"/><text x="693" y="372" class="number num">2</text><text x="725" y="372" class="label">check exact algorithm + trust metadata</text>
+
+  <rect x="95" y="420" width="1610" height="175" rx="22" class="alt"/>
+  <text x="120" y="452" class="frame-label" fill="#c56b5d">alt unsupported metadata or encoded input too large</text>
+  <path d="M650 505 H210" class="error"/><rect x="235" y="468" width="36" height="36" rx="18" class="pill pill-red"/><text x="253" y="492" class="number num">3</text><text x="300" y="492" class="label">reject before any codec/provider call</text>
+  <path d="M95 535 H1705" class="divider"/>
+  <text x="120" y="570" class="frame-label" fill="#6f9a65">else exact envelope and max_encoded_size pass</text>
+
+  <path d="M660 645 H1090" class="success"/><rect x="685" y="608" width="36" height="36" rx="18" class="pill pill-green"/><text x="703" y="632" class="number num">4</text><text x="735" y="632" class="label">base64url decode</text>
+  <path d="M1110 710 H1180 Q1195 710 1195 725 V735 Q1195 750 1180 750 H1110" class="success"/><rect x="1125" y="673" width="36" height="36" rx="18" class="pill pill-green"/><text x="1143" y="697" class="number num">5</text><text x="1175" y="697" class="label">check max_compressed_size</text>
+
+  <rect x="95" y="745" width="1610" height="205" rx="22" class="alt"/>
+  <text x="120" y="777" class="frame-label" fill="#c56b5d">alt compressed bytes or gzip output exceed a limit</text>
+  <path d="M1090 830 H650" class="error"/><rect x="675" y="793" width="36" height="36" rx="18" class="pill pill-red"/><text x="693" y="817" class="number num">6</text><text x="735" y="817" class="label">TransportLimitError / DecompressionLimitError</text>
+  <path d="M650 875 H210" class="error"/><rect x="235" y="838" width="36" height="36" rx="18" class="pill pill-red"/><text x="253" y="862" class="number num">7</text><text x="300" y="862" class="label">surface the original bounded failure</text>
+  <path d="M95 900 H1705" class="divider"/>
+  <text x="120" y="935" class="frame-label" fill="#6f9a65">else gzip output is within max_decompressed_size</text>
+
+  <path d="M1110 990 H1545" class="optional"/><rect x="1135" y="953" width="36" height="36" rx="18" class="pill pill-purple"/><text x="1153" y="977" class="number num">8</text><text x="1185" y="977" class="label">deserialize with the already-selected provider</text>
+  <path d="M1545 1050 H660" class="return"/><rect x="675" y="1013" width="36" height="36" rx="18" class="pill pill-green"/><text x="693" y="1037" class="number num">9</text><text x="735" y="1037" class="label">validated domain value</text>
+  <path d="M640 1110 H210" class="return"/><rect x="235" y="1073" width="36" height="36" rx="18" class="pill pill-green"/><text x="253" y="1097" class="number num">10</text><text x="300" y="1097" class="label">return without automatic format selection</text>
+
+  <rect x="95" y="1180" width="1610" height="68" rx="18" fill="#f0ebe2" stroke="#d7ccc8" stroke-width="2"/>
+  <text x="120" y="1222" class="participant-subtitle">Payload metadata is validated, never used as a dynamic registry key. Fory remains an explicit trusted-internal option.</text>
+</svg>

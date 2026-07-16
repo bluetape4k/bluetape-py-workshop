@@ -11,7 +11,9 @@
 계약으로 검증하는 저장소 기반은 실행할 수 있습니다. 실행 가능한 domain
 scenario는 [검증된 주문 접수](examples/order_intake/README.ko.md),
 [제한된 catalog enrichment](examples/catalog_enrichment/README.ko.md),
-[캐시 기반 product catalog](examples/cached_product_catalog/README.ko.md)입니다.
+[캐시 기반 product catalog](examples/cached_product_catalog/README.ko.md),
+default JSON과 optional Apache Fory 신뢰 프로필을 분리한
+[제한 기반 payload 처리](examples/bounded_payload_processing/README.ko.md)입니다.
 각 예제는 서로 맞춘 다국어 안내, Architecture, Sequence Diagram을 제공합니다.
 
 현재 이슈, 의존 순서, 검증 근거와 다음 작업은 [WIP.md](WIP.md)에서 확인하세요.
@@ -34,7 +36,7 @@ scenario는 [검증된 주문 접수](examples/order_intake/README.ko.md),
 - uv 0.11.28. 프로젝트 설정이 다른 uv 버전을 거부합니다.
 - 공개 `bluetape-py` 저장소에 접근할 수 있는 Git 환경.
 - 결정적인 foundation, 주문 접수, catalog enrichment, cached product catalog
-  경로에는 Docker가 필요하지 않습니다.
+  및 bounded payload processing 경로에는 Docker가 필요하지 않습니다.
 
 ## 설치
 
@@ -67,6 +69,11 @@ GitHub Release는 workshop 설치 source가 아닙니다. 지원하는 경로는
 Apache Fory와 native compression provider는 기본 환경에 설치하지 않습니다.
 Testcontainers wrapper import가 Docker에 접속하거나 container, process, background
 thread를 시작하지 않는 것도 테스트합니다.
+
+제한 기반 payload 예제도 이 기준선을 유지합니다. default JSON 경로는 root 환경에서
+실행하고, trusted-internal Fory 경로는 일회용 `.venv-fory` 환경에만
+`pyfory==1.3.0`을 설치합니다. 정확한 실행, 테스트, 정리 명령은
+[다국어 예제 안내](examples/bounded_payload_processing/README.ko.md)를 참고하세요.
 
 ## 검증
 
