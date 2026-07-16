@@ -1,3 +1,6 @@
+import re
+import xml.etree.ElementTree as ET
+from itertools import pairwise
 from pathlib import Path
 
 EXAMPLE = Path("examples/redis_load_coordination")
@@ -85,3 +88,53 @@ def test_diagram_assets_exist_and_are_embedded() -> None:
         link = f"docs/images/{name}"
         assert link in english
         assert link in korean
+
+
+def test_architecture_card_gaps_leave_room_for_arrowheads() -> None:
+    root = ET.parse(EXAMPLE / "docs" / "images" / "architecture.svg").getroot()
+    namespace = {"svg": "http://www.w3.org/2000/svg"}
+
+    markers = root.findall(".//svg:marker", namespace)
+    assert markers
+    assert {
+        (float(marker.attrib["markerWidth"]), float(marker.attrib["markerHeight"]))
+        for marker in markers
+    } == {(14.0, 14.0)}
+
+    cards = [
+        rect
+        for rect in root.findall(".//svg:rect", namespace)
+        if rect.attrib.get("class") == "card"
+    ]
+    stacks = {
+        x: sorted(
+            (
+                (float(card.attrib["y"]), float(card.attrib["height"]))
+                for card in cards
+                if float(card.attrib["x"]) == x
+            ),
+            key=lambda dimensions: dimensions[0],
+        )
+        for x in (405.0, 775.0)
+    }
+    for stack in stacks.values():
+        assert len(stack) == 3
+        gaps = [next_y - (y + height) for (y, height), (next_y, _) in pairwise(stack)]
+        assert min(gaps) >= 55.0
+
+    redis = next(card for card in cards if card.attrib.get("stroke") == "#d65a4a")
+    redis_top = float(redis.attrib["y"])
+    for stack in stacks.values():
+        provider_y, provider_height = stack[-1]
+        assert redis_top - (provider_y + provider_height) >= 70.0
+
+    redis_entry_paths = [
+        path.attrib["d"]
+        for path in root.findall(".//svg:path", namespace)
+        if path.attrib.get("class") == "coord" and "Q" in path.attrib.get("d", "")
+    ]
+    assert len(redis_entry_paths) == 2
+    for path in redis_entry_paths:
+        terminal = re.search(r"Q\d+ \d+ \d+ (?P<exit_y>\d+) V(?P<target_y>\d+)$", path)
+        assert terminal is not None
+        assert float(terminal["target_y"]) - float(terminal["exit_y"]) >= 28.0
