@@ -30,10 +30,11 @@ explicit approval and auto-merge is forbidden.
   `165 passed, 1 skipped`; Docker server `28.4.0` reachable; no labeled
   Bluetape Redis test container present
 - Current gate: [PR #17](https://github.com/bluetape4k/bluetape-py-workshop/pull/17)
-  is open after local Type A verification and six-lens implementation review
-  passed with P0=0/P1=0; exact-head hosted CI/review verification remains
-- Next action: verify PR #17's final head, CI, reviews, threads, and mergeability,
-  then stop for fresh merge approval
+  is merge-ready after local Type A verification, six-lens review at
+  P0=0/P1=0, hosted CI, current review/thread inspection, and mergeability
+  checks passed on its exact head
+- Next action: stop for fresh explicit merge approval; do not enable auto-merge
+  or change the PR head before that decision
 - Runnable now: `uv run --locked python -m examples.order_intake`
 - Runnable now: `uv run --locked python -m examples.catalog_enrichment`
 - Runnable now: `uv run --locked python -m examples.cached_product_catalog`
