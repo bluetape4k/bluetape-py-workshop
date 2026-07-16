@@ -15,6 +15,7 @@ RESP probe, and explicit success/failure cleanup.
 
 Active branch: `feat/issue-7-redis-test-server`
 Base branch: `develop`
+Pull request: [#17](https://github.com/bluetape4k/bluetape-py-workshop/pull/17)
 Stop boundary: report the exact PR head as merge-ready; merging requires a fresh
 explicit approval and auto-merge is forbidden.
 
@@ -28,11 +29,11 @@ explicit approval and auto-merge is forbidden.
 - Baseline validation: dependency boundary `19 passed`; repository
   `165 passed, 1 skipped`; Docker server `28.4.0` reachable; no labeled
   Bluetape Redis test container present
-- Current gate: local Type A verification and six-lens implementation review
-  pass with P0=0/P1=0; PR creation and exact-head hosted CI/review verification
-  remain
-- Next action: create the approved PR, verify its exact head, CI, reviews,
-  threads, and mergeability, then stop for fresh merge approval
+- Current gate: [PR #17](https://github.com/bluetape4k/bluetape-py-workshop/pull/17)
+  is open after local Type A verification and six-lens implementation review
+  passed with P0=0/P1=0; exact-head hosted CI/review verification remains
+- Next action: verify PR #17's final head, CI, reviews, threads, and mergeability,
+  then stop for fresh merge approval
 - Runnable now: `uv run --locked python -m examples.order_intake`
 - Runnable now: `uv run --locked python -m examples.catalog_enrichment`
 - Runnable now: `uv run --locked python -m examples.cached_product_catalog`
