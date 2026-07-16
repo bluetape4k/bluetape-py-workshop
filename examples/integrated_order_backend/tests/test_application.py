@@ -6,11 +6,12 @@ import pytest
 from bluetape.cache import AsyncTTLCache, CacheStats
 from bluetape.compression import GzipCompressor
 
-from examples.bounded_payload_processing import JsonPayloadService
+from examples.bounded_payload_processing import JsonPayloadService, TransportLimitError
 from examples.cached_product_catalog import AsyncProductCatalogService, ProductSummary
-from examples.catalog_enrichment import CatalogEnrichmentService
+from examples.catalog_enrichment import CatalogEnrichmentFailed, CatalogEnrichmentService
 from examples.integrated_order_backend import (
     CachedCatalogProvider,
+    InvalidOrderBackendCommand,
     OrderBackendApplication,
     OrderBackendClosedError,
     OrderBackendCommand,
@@ -98,6 +99,24 @@ class FailingHandler(logging.Handler):
         raise RuntimeError("logging unavailable")
 
 
+class CaptureHandler(logging.Handler):
+    def __init__(self) -> None:
+        super().__init__()
+        self.records: list[logging.LogRecord] = []
+
+    def emit(self, record: logging.LogRecord) -> None:
+        self.records.append(record)
+
+
+class ErrorProcessor(Processor):
+    def __init__(self, error: Exception) -> None:
+        super().__init__()
+        self.error = error
+
+    async def process(self, request: OrderBackendCommand):
+        raise self.error
+
+
 class EmptyRecommendationProvider:
     async def fetch(self, product_ids: tuple[str, ...]):
         return {}
@@ -118,11 +137,39 @@ class FailOnceApplication(OrderBackendApplication):
         await super()._close_once(snapshot)
 
 
+class GatedFailCloseApplication(OrderBackendApplication):
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
+        self.started = asyncio.Event()
+        self.release = asyncio.Event()
+        self.observed = asyncio.Event()
+        self.attempts = 0
+
+    async def _close_once(self, snapshot) -> None:
+        self.attempts += 1
+        if self.attempts == 1:
+            self.started.set()
+            await self.release.wait()
+            raise RuntimeError("late close failure")
+        await super()._close_once(snapshot)
+
+    def _observe_close(self, task) -> None:
+        super()._observe_close(task)
+        self.observed.set()
+
+
 def logger(*, failing: bool = False) -> logging.Logger:
     value = logging.Logger("integrated-order-backend-application-test")
     if failing:
         value.addHandler(FailingHandler())
     return value
+
+
+def capture_logger() -> tuple[logging.Logger, CaptureHandler]:
+    value = logger()
+    handler = CaptureHandler()
+    value.addHandler(handler)
+    return value, handler
 
 
 def application(
@@ -198,6 +245,66 @@ async def test_process_uses_one_named_task_and_delegates_stats() -> None:
         await app.process(command())
 
 
+async def test_success_and_close_emit_fixed_lifecycle_events() -> None:
+    processor = Processor()
+    app_logger, handler = capture_logger()
+    app = OrderBackendApplication(
+        service=processor,  # type: ignore[arg-type]
+        logger=app_logger,
+        request_timeout=1.0,
+        shutdown_grace_timeout=1.0,
+        shutdown_cancel_timeout=1.0,
+    )
+
+    await app.process(command())
+    await app.aclose()
+
+    assert [record.getMessage() for record in handler.records] == [
+        "order_backend.request_started",
+        "order_backend.request_succeeded",
+        "order_backend.shutdown_started",
+        "order_backend.shutdown_completed",
+    ]
+
+
+@pytest.mark.parametrize(
+    ("error", "kind"),
+    [
+        (InvalidOrderBackendCommand("command", "invalid"), "invalid_order"),
+        (CatalogEnrichmentFailed(()), "catalog_enrichment_failed"),
+        (
+            TransportLimitError(stage="encoded", actual_size=2, limit=1),
+            "payload_rejected",
+        ),
+        (RuntimeError("private provider detail"), "unexpected_error"),
+    ],
+)
+async def test_request_failure_event_uses_only_fixed_error_kind(
+    error: Exception,
+    kind: str,
+) -> None:
+    app_logger, handler = capture_logger()
+    app = OrderBackendApplication(
+        service=ErrorProcessor(error),  # type: ignore[arg-type]
+        logger=app_logger,
+        request_timeout=1.0,
+        shutdown_grace_timeout=1.0,
+        shutdown_cancel_timeout=1.0,
+    )
+
+    with pytest.raises(type(error)):
+        await app.process(command())
+    await app.aclose()
+
+    failure = next(
+        record
+        for record in handler.records
+        if record.getMessage() == "order_backend.request_failed"
+    )
+    assert failure.error_kind == kind  # type: ignore[attr-defined]
+    assert "private provider detail" not in failure.getMessage()
+
+
 async def test_timeout_cancels_owned_task_and_close_can_be_retried() -> None:
     processor = ResistantProcessor()
     app = application(processor, request_timeout=0.001)
@@ -234,9 +341,50 @@ async def test_late_failure_is_observed_after_timeout_returns() -> None:
         loop.set_exception_handler(previous)
 
 
+async def test_timeout_and_pending_shutdown_emit_fixed_safe_diagnostics() -> None:
+    processor = ResistantProcessor()
+    app_logger, handler = capture_logger()
+    app = OrderBackendApplication(
+        service=processor,  # type: ignore[arg-type]
+        logger=app_logger,
+        request_timeout=0.001,
+        shutdown_grace_timeout=0.001,
+        shutdown_cancel_timeout=0.001,
+    )
+
+    with pytest.raises(TimeoutError):
+        await asyncio.wait_for(app.process(command()), timeout=1)
+    await asyncio.wait_for(processor.cancelled.wait(), timeout=1)
+    with pytest.raises(OrderBackendShutdownError):
+        await asyncio.wait_for(app.aclose(), timeout=1)
+
+    failure = next(
+        record
+        for record in handler.records
+        if record.getMessage() == "order_backend.shutdown_failed"
+    )
+    assert failure.pending_count == 1  # type: ignore[attr-defined]
+    assert [record.getMessage() for record in handler.records] == [
+        "order_backend.request_started",
+        "order_backend.request_timed_out",
+        "order_backend.shutdown_started",
+        "order_backend.shutdown_failed",
+    ]
+
+    processor.release.set()
+    await app.aclose()
+
+
 async def test_caller_cancellation_cancels_owned_task_promptly() -> None:
     processor = ResistantProcessor()
-    app = application(processor)
+    app_logger, handler = capture_logger()
+    app = OrderBackendApplication(
+        service=processor,  # type: ignore[arg-type]
+        logger=app_logger,
+        request_timeout=1.0,
+        shutdown_grace_timeout=0.01,
+        shutdown_cancel_timeout=0.01,
+    )
     caller = asyncio.create_task(app.process(command()))
     await asyncio.wait_for(processor.started.wait(), timeout=1)
 
@@ -244,6 +392,10 @@ async def test_caller_cancellation_cancels_owned_task_promptly() -> None:
     with pytest.raises(asyncio.CancelledError):
         await asyncio.wait_for(caller, timeout=1)
     await asyncio.wait_for(processor.cancelled.wait(), timeout=1)
+    assert [record.getMessage() for record in handler.records] == [
+        "order_backend.request_started",
+        "order_backend.request_cancelled",
+    ]
 
     processor.release.set()
     await asyncio.wait_for(app.aclose(), timeout=1)
@@ -412,6 +564,35 @@ async def test_abnormal_close_completion_can_be_retried(cancel: bool) -> None:
         await app.aclose()
     await app.aclose()
     assert app.attempts == 2
+
+
+async def test_close_failure_is_observed_after_every_waiter_cancels() -> None:
+    processor = Processor()
+    app = GatedFailCloseApplication(
+        service=processor,  # type: ignore[arg-type]
+        logger=logger(),
+        request_timeout=1.0,
+        shutdown_grace_timeout=1.0,
+        shutdown_cancel_timeout=1.0,
+    )
+    loop = asyncio.get_running_loop()
+    reports: list[dict[str, object]] = []
+    previous = loop.get_exception_handler()
+    loop.set_exception_handler(lambda _loop, context: reports.append(context))
+    try:
+        waiter = asyncio.create_task(app.aclose())
+        await asyncio.wait_for(app.started.wait(), timeout=1)
+        waiter.cancel()
+        with pytest.raises(asyncio.CancelledError):
+            await waiter
+
+        app.release.set()
+        await asyncio.wait_for(app.observed.wait(), timeout=1)
+        assert reports == []
+        await app.aclose()
+        assert app.attempts == 2
+    finally:
+        loop.set_exception_handler(previous)
 
 
 def test_application_rejects_use_from_a_second_event_loop() -> None:
