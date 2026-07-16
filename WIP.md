@@ -8,38 +8,42 @@ workshop foundation and runnable examples.
 
 ## Current Target
 
-Issue [#7](https://github.com/bluetape4k/bluetape-py-workshop/issues/7):
-build a Redis integration-test workshop that composes the ecosystem-owned
-`RedisServer`, wrapper-provided connection details, a bounded application-owned
-RESP probe, and explicit success/failure cleanup.
+Issue [#8](https://github.com/bluetape4k/bluetape-py-workshop/issues/8):
+build an Integrated framework-neutral order backend that composes validated
+order intake, bounded enrichment, one shared async catalog cache, untrusted JSON
+payloads, overall request deadlines, and retryable finite shutdown.
 
-Active branch: `feat/issue-7-redis-test-server`
+Active branch: `feat/issue-8-integrated-order-backend`
 Base branch: `develop`
-Pull request: [#17](https://github.com/bluetape4k/bluetape-py-workshop/pull/17)
-Stop boundary: report the exact PR head as merge-ready; merging requires a fresh
-explicit approval and auto-merge is forbidden.
+Pull request: Not created
+Stop boundary: finish exact-head local verification, create the already-approved
+PR from this branch to `develop`, verify hosted CI/review state, then stop for a
+fresh explicit merge approval. Auto-merge is forbidden.
 
 ## Resume Checkpoint
 
-- Branch/base head: `feat/issue-7-redis-test-server` /
-  `55c0555bb0ac778df838db077afd1cbcf4eed21e`
-- Last completed gate: issue #6 merged through
-  [PR #16](https://github.com/bluetape4k/bluetape-py-workshop/pull/16), local
-  `develop` synced, and its worktree/local branch removed
-- Baseline validation: dependency boundary `19 passed`; repository
-  `165 passed, 1 skipped`; Docker server `28.4.0` reachable; no labeled
-  Bluetape Redis test container present
-- Current gate: [PR #17](https://github.com/bluetape4k/bluetape-py-workshop/pull/17)
-  is merge-ready after local Type A verification, six-lens review at
-  P0=0/P1=0, hosted CI, current review/thread inspection, and mergeability
-  checks passed on its exact head
-- Next action: stop for fresh explicit merge approval; do not enable auto-merge
-  or change the PR head before that decision
+- Branch/base head: `feat/issue-8-integrated-order-backend` /
+  `15bbe2efced086eb06ccf67aa03f4efb7633e7bb`
+- Last completed gate: issue #7 is present on `develop` through
+  [PR #17](https://github.com/bluetape4k/bluetape-py-workshop/pull/17); Issue #8
+  approved design, plan, risk record, and both P0=0/P1=0 reviews are committed
+- Current implementation: aggregate contracts, cache adapter, validation-first
+  service, deadline-safe application lifecycle, fixed composition root, exact
+  five-event CLI, bilingual guides, and both source-backed diagram pairs
+- Current validation: integrated example `59 passed`; Ruff and format pass;
+  architecture `markers=4`, `cards=10`, `geometry_failures=0`; sequence
+  `markers=5`, `connectors=16`, `geometry_failures=0`, style audit PASS; both
+  final PNGs inspected at full size
+- Full repository validation at the current head: pending Task 8 exact-head gate
+- Next action: register root discovery, then run full deterministic verification,
+  six-lens implementation review, lesson capture, exact-head push, and PR creation
 - Runnable now: `uv run --locked python -m examples.order_intake`
 - Runnable now: `uv run --locked python -m examples.catalog_enrichment`
 - Runnable now: `uv run --locked python -m examples.cached_product_catalog`
 - Runnable now: `uv run --locked python -m examples.bounded_payload_processing`
 - Runnable now: `uv run --locked python -m examples.redis_test_server`
+- Runnable now: `uv run --locked python -m examples.integrated_order_backend`
+- Integrated tests: `uv run --locked pytest examples/integrated_order_backend/tests -q`
 - Deterministic Redis tests: `uv run --locked pytest -m "not testcontainers" examples/redis_test_server/tests -q`
 - Serial Docker test: `uv run --locked pytest -m testcontainers examples/redis_test_server/tests/test_redis_integration.py -q`
 - Focused default tests: `uv run --locked pytest examples/bounded_payload_processing/tests -q --ignore=examples/bounded_payload_processing/tests/test_fory_service.py`
@@ -47,20 +51,15 @@ explicit approval and auto-merge is forbidden.
 - Optional runnable: after activating `.venv-fory`, `python -m examples.bounded_payload_processing.fory_demo`
 - Optional tests: after activating `.venv-fory`, `pytest examples/bounded_payload_processing/tests/test_fory_service.py -q`
 
-Current artifacts: [issue #7](https://github.com/bluetape4k/bluetape-py-workshop/issues/7),
-[written design](docs/superpowers/specs/2026-07-16-issue-7-redis-test-server-design.md),
-[design review](docs/superpowers/reviews/2026-07-16-issue-7-design-review.md),
-[implementation plan](docs/superpowers/plans/2026-07-16-issue-7-redis-test-server-plan.md),
-[risk record](docs/superpowers/risks/2026-07-16-issue-7-redis-test-server-risk.md),
-[plan review](docs/superpowers/reviews/2026-07-16-issue-7-plan-review.md), and
-[Redis example guide](examples/redis_test_server/README.md), plus the
-[implementation review](docs/superpowers/reviews/2026-07-16-issue-7-implementation-review.md)
-and the reusable
-[test-infrastructure ownership lesson](docs/superpowers/lessons/2026-07-16-issue-7-test-infrastructure-ownership.md), alongside
-the milestone dependency map below. Issues #2, #3, and #4 closed through
-[PR #12](https://github.com/bluetape4k/bluetape-py-workshop/pull/12),
-[PR #13](https://github.com/bluetape4k/bluetape-py-workshop/pull/13), and
-[PR #14](https://github.com/bluetape4k/bluetape-py-workshop/pull/14).
+Current artifacts: [issue #8](https://github.com/bluetape4k/bluetape-py-workshop/issues/8),
+[written design](docs/superpowers/specs/2026-07-16-issue-8-integrated-order-backend-design.md),
+[design review](docs/superpowers/reviews/2026-07-16-issue-8-design-review.md),
+[implementation plan](docs/superpowers/plans/2026-07-16-issue-8-integrated-order-backend-plan.md),
+[risk record](docs/superpowers/risks/2026-07-16-issue-8-integrated-order-backend-risk.md),
+[plan review](docs/superpowers/reviews/2026-07-16-issue-8-plan-review.md), and the
+[integrated example guide](examples/integrated_order_backend/README.md). The
+implementation review and reusable composition/lifecycle lesson are pending the
+final exact-head verification gate.
 
 ## Dependency Baseline
 
@@ -99,8 +98,8 @@ the milestone dependency map below. Issues #2, #3, and #4 closed through
 | 3 | [#4](https://github.com/bluetape4k/bluetape-py-workshop/issues/4) | Bounded catalog enrichment service | #2 | Completed |
 | 4 | [#5](https://github.com/bluetape4k/bluetape-py-workshop/issues/5) | Cached product catalog service | #2 | Completed |
 | 5 | [#6](https://github.com/bluetape4k/bluetape-py-workshop/issues/6) | Bounded payload processing service | #2 | Completed |
-| 6 | [#7](https://github.com/bluetape4k/bluetape-py-workshop/issues/7) | Redis-backed integration-test workshop | #2 | In progress |
-| 7 | [#8](https://github.com/bluetape4k/bluetape-py-workshop/issues/8) | Integrated framework-neutral order backend | #3, #4, #5, #6 | Pending |
+| 6 | [#7](https://github.com/bluetape4k/bluetape-py-workshop/issues/7) | Redis-backed integration-test workshop | #2 | Completed |
+| 7 | [#8](https://github.com/bluetape4k/bluetape-py-workshop/issues/8) | Integrated framework-neutral order backend | #3, #4, #5, #6 | In progress |
 
 ## Example Documentation Contract
 
@@ -220,7 +219,21 @@ connection details. The bounded RESP teaching probe has fixed operations and
 input/response limits. Integration tests prove success, application-body
 failure cleanup, and fresh state without leaving labeled containers behind.
 
-Local verification on Python 3.13.14, uv 0.11.28, and Docker server 28.4.0:
+Issue #8 adds a deterministic composed application lane:
+
+```bash
+uv run --locked python -m examples.integrated_order_backend
+uv run --locked pytest examples/integrated_order_backend/tests -q
+```
+
+The application validates the whole aggregate before external work, preserves
+duplicate line occurrences, shares one cache across both example orders, fixes
+the external payload boundary to untrusted JSON, observes late task failures,
+and uses shielded finite request/close waits. Redis and trusted-internal Fory
+remain separate optional examples.
+
+Issue #7 exact-head verification on Python 3.13.14, uv 0.11.28, and Docker
+server 28.4.0:
 
 - dependency boundary: `19 passed`;
 - Redis deterministic lane: `55 passed, 1 deselected`;
@@ -230,6 +243,19 @@ Local verification on Python 3.13.14, uv 0.11.28, and Docker server 28.4.0:
 - labeled Redis containers: empty before and after the focused test and CLI;
 - Ruff format/lint, actionlint, `git diff --check`, and unchanged `uv.lock`: pass;
 - Architecture and Sequence XML/render/audits/full-size inspection: pass.
+
+Issue #8 implementation checkpoint before final exact-head verification:
+
+- integrated example: `59 passed`;
+- deterministic CLI: exact five safe events, cache `hits=1`, `misses=3`,
+  `loads=3`, with zero inflight/abandoned loads;
+- Ruff lint/format and `git diff --check`: pass for the implemented example;
+- Architecture PNG: `3600x2100`, marker/card/geometry/endpoint/corner audits
+  pass, full-size inspection pass;
+- Sequence PNG: `3600x2560`, `16` visible numbered messages, sequence style,
+  marker, geometry, endpoint, and corner audits pass, full-size inspection pass;
+- full repository deterministic lane, actionlint, six-lens implementation
+  review, lesson, remote CI, and PR review state: pending Task 8.
 
 ## Holds and Exclusions
 
@@ -268,3 +294,7 @@ Local verification on Python 3.13.14, uv 0.11.28, and Docker server 28.4.0:
 - 2026-07-16: implement issue #7 with one application-owned `RedisServer`
   context and a bounded RESP teaching probe; exclude Docker tests by default
   and require explicit serial selection for real-container evidence.
+- 2026-07-16: implement issue #8 by preserving the focused service contracts
+  while one outer application owns request deadlines, terminal exception
+  observation, and retryable finite shutdown; keep Redis and Fory as separate
+  optional learning lanes.

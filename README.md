@@ -15,8 +15,12 @@ scenarios now include [validated order intake](examples/order_intake/README.md),
 [bounded payload processing](examples/bounded_payload_processing/README.md) with
 separate default JSON and optional Apache Fory trust profiles, and a
 [Redis test server workshop](examples/redis_test_server/README.md) with explicit
-container lifecycle ownership. Each example provides aligned bilingual
-guidance, Architecture, and Sequence Diagram assets.
+container lifecycle ownership. The
+[integrated order backend](examples/integrated_order_backend/README.md) combines
+order intake, enrichment, shared caching, bounded JSON payloads, request
+deadlines, and retryable shutdown in one realistic two-order scenario. Each
+example provides aligned bilingual guidance, Architecture, and Sequence Diagram
+assets.
 
 Follow [WIP.md](WIP.md) for the current issue, dependency order, validation
 evidence, and next action.
@@ -40,8 +44,8 @@ evidence, and next action.
 - Git access to the public `bluetape-py` repository.
 - Docker is not required for the deterministic foundation, order-intake,
   catalog-enrichment, cached-product-catalog, or bounded-payload-processing
-  lanes. It is required only for the explicitly selected Redis integration and
-  runnable CLI lanes.
+  lanes, or for the integrated order backend. It is required only for the
+  explicitly selected Redis integration and Redis CLI lanes.
 
 ## Setup
 
@@ -88,6 +92,13 @@ integration lane starts the commit-pinned `bluetape-testcontainers`
 after both successful and failing application bodies. See its
 [bilingual example guide](examples/redis_test_server/README.md).
 
+The integrated order backend preserves the same baseline and leaves Redis and
+Fory as separate optional examples. Its fixed composition root reuses one cache
+across two in-memory orders, exposes safe public cache statistics, fixes the
+external artifact boundary to untrusted JSON, and owns request/close tasks in
+one application lifecycle. See its
+[bilingual example guide](examples/integrated_order_backend/README.md).
+
 ## Validation
 
 Run the same locked gates used by CI:
@@ -111,6 +122,13 @@ uv run --locked pytest -m testcontainers examples/redis_test_server/tests/test_r
 uv run --locked python -m examples.redis_test_server
 ```
 
+Run the deterministic integrated scenario and its focused tests:
+
+```bash
+uv run --locked python -m examples.integrated_order_backend
+uv run --locked pytest examples/integrated_order_backend/tests -q
+```
+
 ## Example Documentation Contract
 
 Every runnable example from issue #3 onward provides aligned `README.md` and
@@ -132,6 +150,7 @@ source.
 ## Current Limits
 
 Milestone `0.1.0` does not introduce an ASGI/FastAPI adapter, a production Redis
-provider, package publication, or release automation. The Redis example is test
-infrastructure, not a production Redis client or cache provider, and every
-Docker-backed path runs sequentially.
+provider, persistent order store, authentication/authorization adapter, package
+publication, or release automation. The Redis example is test infrastructure,
+not a production Redis client or cache provider, and every Docker-backed path
+runs sequentially.
