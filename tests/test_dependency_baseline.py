@@ -37,10 +37,19 @@ OPTIONAL_PACKAGES = {
 }
 FORBIDDEN_LOCKED_DISTRIBUTIONS = {"cramjam", "lz4", "zstandard"}
 FORBIDDEN_DEFAULT_DISTRIBUTIONS = FORBIDDEN_LOCKED_DISTRIBUTIONS | {
+    "anyio",
     "bluetape-cache-redis",
+    "fastapi",
+    "httpcore",
+    "httpx",
+    "pydantic",
+    "pydantic-core",
     "pyfory",
     "redis",
+    "starlette",
+    "uvicorn",
 }
+WEB_DISTRIBUTIONS = {"fastapi", "httpx", "uvicorn"}
 
 
 def _load_toml(path: str) -> dict[str, object]:
@@ -68,6 +77,11 @@ def test_project_declares_optional_providers() -> None:
     project = _load_toml("pyproject.toml")
 
     assert project["project"]["optional-dependencies"] == {
+        "fastapi-order-api": [
+            "fastapi>=0.139.2,<0.140",
+            "httpx>=0.28.1,<0.29",
+            "uvicorn>=0.51.0,<0.52",
+        ],
         "fory": ["bluetape-serde[fory]==0.1.0"],
         "redis-coordination": ["bluetape-cache-redis==0.1.0"],
     }
@@ -105,6 +119,19 @@ def test_lock_resolves_every_bluetape_distribution_to_the_full_commit() -> None:
     assert locked["redis"]["version"] == "8.0.1"
     assert locked["pyfory"]["version"] == "1.3.0"
     assert FORBIDDEN_LOCKED_DISTRIBUTIONS.isdisjoint(locked)
+
+
+def test_lock_contains_the_isolated_web_extra() -> None:
+    locked = {item["name"]: item for item in _load_toml("uv.lock")["package"]}
+    root = locked["bluetape-py-workshop"]
+
+    assert WEB_DISTRIBUTIONS <= locked.keys()
+    assert root["optional-dependencies"]["fastapi-order-api"] == [
+        {"name": "fastapi"},
+        {"name": "httpx"},
+        {"name": "uvicorn"},
+    ]
+    assert WEB_DISTRIBUTIONS.isdisjoint(dependency["name"] for dependency in root["dependencies"])
 
 
 @pytest.mark.parametrize(("distribution", "package_info"), PACKAGES.items())
