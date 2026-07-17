@@ -221,14 +221,39 @@ def test_post_orders_returns_only_the_allowlisted_success_shape() -> None:
 )
 def test_invalid_requests_use_the_stable_redacted_problem(body, headers) -> None:
     backend = InstrumentedBackend(result=_result())
-    client, _, _ = _client(backend=backend)
+    client, logger, handler = _client(backend=backend)
 
-    with client:
+    with log_context(request_id="outer"), client:
         response = client.post("/orders", headers=headers, json=body)
+        logger.info("after-validation")
+        assert get_log_context()["request_id"] == "outer"
 
     assert response.status_code == 422
     assert response.json()["code"] in {"invalid_request", "invalid_order"}
     assert set(response.json()) <= {"code", "message", "request_id", "field", "line_index"}
+    assert "raw-input" not in response.text
+    assert handler.records[-1].request_id == "outer"
+
+
+def test_unknown_field_name_is_not_reflected_in_validation_problem() -> None:
+    backend = InstrumentedBackend(result=_result())
+    client, _, _ = _client(backend=backend)
+    body = {**_body(), "customer_secret": "raw-input"}
+
+    with client:
+        response = client.post(
+            "/orders",
+            headers={"X-Request-ID": "req-1001"},
+            json=body,
+        )
+
+    assert response.status_code == 422
+    assert response.json() == {
+        "code": "invalid_request",
+        "message": "Request validation failed.",
+        "request_id": "req-1001",
+    }
+    assert "customer_secret" not in response.text
     assert "raw-input" not in response.text
 
 
@@ -318,26 +343,29 @@ def test_duplicate_request_id_and_non_json_content_are_rejected_as_422() -> None
 )
 def test_backend_failures_map_to_stable_redacted_problems(failure, status, code, event) -> None:
     backend = InstrumentedBackend(failure=failure)
-    client, _, handler = _client(backend=backend, raise_server_exceptions=False)
+    client, logger, handler = _client(backend=backend, raise_server_exceptions=False)
 
-    with client:
+    with log_context(request_id="outer"), client:
         response = client.post(
             "/orders",
             headers={"X-Request-ID": "req-1001"},
             json=_body(),
         )
+        logger.info("after-failure")
+        assert get_log_context()["request_id"] == "outer"
 
     assert response.status_code == status
     assert response.json()["code"] == code
     assert response.json()["request_id"] == "req-1001"
     assert "provider-secret" not in response.text
     assert "secret-artifact" not in response.text
-    record = handler.records[-1]
+    record = handler.records[-2]
     assert record.getMessage() == event
     assert record.request_id == "req-1001"
     assert record.status == status
     assert set(record.__dict__) >= {"error_kind"}
     assert "provider-secret" not in record.getMessage()
+    assert handler.records[-1].request_id == "outer"
 
 
 def test_openapi_documents_the_explicit_success_and_problem_contracts() -> None:

@@ -31,6 +31,10 @@ class OrderBackend(Protocol):
 
 type BackendFactory = Callable[[], OrderBackend]
 
+_SAFE_VALIDATION_PATH_PARTS = frozenset(
+    {"body", "partner_id", "order_id", "lines", "sku", "quantity"}
+)
+
 
 def _emit(
     logger: logging.Logger,
@@ -93,8 +97,10 @@ def _safe_validation_field(error: RequestValidationError) -> str | None:
     for part in parts:
         if isinstance(part, int):
             safe.append(f"[{part}]")
-        elif isinstance(part, str) and part.isidentifier():
+        elif isinstance(part, str) and part in _SAFE_VALIDATION_PATH_PARTS:
             safe.append(("." if safe else "") + part)
+        else:
+            return None
     field = "".join(safe)
     return field[:128] or None
 

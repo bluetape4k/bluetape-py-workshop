@@ -33,10 +33,11 @@ forbidden.
   Starlette, Pydantic, HTTPX, and Uvicorn; `.venv-fastapi` installs only the
   `fastapi-order-api` extra and its lockfile graph
 - Current artifacts: approved Type A spec and plan with converged review,
-  implementation Tasks 1-7, aligned English/Korean example guides, and
+  implementation Tasks 1-8, aligned English/Korean example guides, and
   source-backed Architecture and Sequence Diagram SVG/PNG pairs
-- Current focused validation: optional FastAPI code/docs suite `64 passed`;
-  default full suite `306 passed, 8 skipped, 1 deselected`; Ruff,
+- Current focused validation: optional FastAPI code/docs suite `65 passed`;
+  dependency isolation `31 passed`; default full suite
+  `312 passed, 9 skipped, 1 deselected`; Ruff,
   XML/CairoSVG 2x render, connector/geometry/endpoint/corner/sequence audits,
   full-size PNG inspection, locale parity, and diff hygiene pass
 - Issue [#20](https://github.com/bluetape4k/bluetape-py-workshop/issues/20)
@@ -45,8 +46,8 @@ forbidden.
 - Upstream [bluetape-py #21](https://github.com/bluetape4k/bluetape-py/issues/21)
   and [#22](https://github.com/bluetape4k/bluetape-py/issues/22) remain separate
   reusable-adapter gates; this example does not copy a future adapter contract
-- Next action: complete Type A review and lesson artifacts, rerun the exact
-  head, then create the approved PR
+- Next action: commit the converged Type A review and lesson artifacts, rerun
+  the exact head, then create the approved PR
 - Runnable now: `uv run --locked python -m examples.order_intake`
 - Runnable now: `uv run --locked python -m examples.catalog_enrichment`
 - Runnable now: `uv run --locked python -m examples.cached_product_catalog`
@@ -387,8 +388,9 @@ Issue #23 current local checkpoint:
   crossings or intrusions, and geometry/endpoint/mixed-corner audits pass;
 - Sequence PNG: `3000x2800`, `15` visible numbered messages, `15` connectors,
   `5` markers, and sequence-style/geometry/endpoint/mixed-corner audits pass;
-- implementation review, durable Type A lesson, and exact-head final validation
-  remain before PR creation.
+- six-perspective implementation review repaired two P1 findings and converged
+  to `P0=0/P1=0`; the durable Type A lesson is present; exact-head final
+  validation remains before PR creation.
 
 ## Holds and Exclusions
 
