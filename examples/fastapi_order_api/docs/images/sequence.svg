@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1400" viewBox="0 0 1500 1400" role="img" aria-labelledby="title desc">
+  <title id="title">Direct FastAPI order request and lifespan sequence</title>
+  <desc id="desc">FastAPI constructs one backend during lifespan startup, validates and processes one order under request context, maps validation and timeout branches, resets context, and closes the backend before deleting state.</desc>
+  <defs>
+    <style>
+      text { font-family: 'Architects Daughter', 'Comic Sans MS', 'Comic Mono', 'SFMono-Regular', monospace; }
+      .frame { fill: #fbf8f1; stroke: #d7ccc8; stroke-width: 3; }
+      .title { font-size: 42px; fill: #263238; }
+      .subtitle { font-size: 20px; fill: #546e7a; }
+      .header { stroke-width: 3; }
+      .participant { font-size: 21px; fill: #263238; text-anchor: middle; }
+      .role { font-family: 'Comic Mono', 'SFMono-Regular', monospace; font-size: 13px; fill: #546e7a; text-anchor: middle; }
+      .lifeline { fill: none; stroke: #b0bec5; stroke-width: 3; stroke-dasharray: 10 9; }
+      .activation { fill: #dcebf4; stroke: #5f8da8; stroke-width: 2; }
+      .callBlue { fill: none; stroke: #5f8da8; stroke-width: 4; marker-end: url(#arrow-blue); }
+      .callGreen { fill: none; stroke: #6f9a65; stroke-width: 4; marker-end: url(#arrow-green); }
+      .callAmber { fill: none; stroke: #b07a36; stroke-width: 4; marker-end: url(#arrow-amber); }
+      .returnTeal { fill: none; stroke: #3b968f; stroke-width: 4; stroke-dasharray: 10 7; marker-end: url(#arrow-teal); }
+      .returnRed { fill: none; stroke: #c56b5d; stroke-width: 4; stroke-dasharray: 10 7; marker-end: url(#arrow-red); }
+      .label { stroke-width: 2; }
+      .num { font-family: 'Comic Mono', 'SFMono-Regular', monospace; font-size: 14px; font-weight: 700; text-anchor: middle; dominant-baseline: middle; }
+      .detail { font-family: 'Comic Mono', 'SFMono-Regular', monospace; font-size: 15px; fill: #37474f; }
+      .alt { fill: none; stroke: #90a4ae; stroke-width: 3; }
+      .branchDivider { stroke: #90a4ae; stroke-width: 2.5; stroke-dasharray: 9 7; }
+      .branchLabel { font-size: 17px; font-weight: 700; }
+      .note { font-family: 'Comic Mono', 'SFMono-Regular', monospace; font-size: 15px; fill: #546e7a; }
+    </style>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#5f8da8"/></marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#6f9a65"/></marker>
+    <marker id="arrow-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#b07a36"/></marker>
+    <marker id="arrow-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#3b968f"/></marker>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="16" markerHeight="16" orient="auto" markerUnits="userSpaceOnUse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#c56b5d"/></marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#455a64" flood-opacity="0.12"/></filter>
+  </defs>
+
+  <rect x="30" y="30" width="1440" height="1340" rx="28" class="frame"/>
+  <text x="70" y="85" class="title">Direct FastAPI Order API Sequence</text>
+  <text x="70" y="119" class="subtitle">One lifespan-owned backend, one request context, stable branches, close before state deletion</text>
+
+  <g filter="url(#shadow)">
+    <rect x="45" y="150" width="190" height="100" rx="20" fill="#ffe7c7" stroke="#d69b55" class="header"/>
+    <text x="140" y="192" class="participant">Partner</text><text x="140" y="222" class="role">JSON caller</text>
+    <rect x="335" y="150" width="190" height="100" rx="20" fill="#dcebf4" stroke="#5f8da8" class="header"/>
+    <text x="430" y="192" class="participant">FastAPI</text><text x="430" y="222" class="role">transport policy</text>
+    <rect x="625" y="150" width="190" height="100" rx="20" fill="#e8def5" stroke="#8e72b5" class="header"/>
+    <text x="720" y="192" class="participant">App State</text><text x="720" y="222" class="role">backend + context</text>
+    <rect x="915" y="150" width="190" height="100" rx="20" fill="#dcebf4" stroke="#5f8da8" class="header"/>
+    <text x="1010" y="192" class="participant">Backend</text><text x="1010" y="222" class="role">deadline + cleanup</text>
+    <rect x="1205" y="150" width="190" height="100" rx="20" fill="#e3f0df" stroke="#6f9a65" class="header"/>
+    <text x="1300" y="192" class="participant">Services</text><text x="1300" y="222" class="role">domain + packages</text>
+  </g>
+
+  <path d="M140 250 V1320" class="lifeline"/><path d="M430 250 V1320" class="lifeline"/>
+  <path d="M720 250 V1320" class="lifeline"/><path d="M1010 250 V1320" class="lifeline"/>
+  <path d="M1300 250 V1320" class="lifeline"/>
+  <rect x="421" y="285" width="18" height="1000" rx="7" class="activation"/>
+  <rect x="711" y="345" width="18" height="900" rx="7" class="activation"/>
+  <rect x="1001" y="285" width="18" height="1000" rx="7" class="activation"/>
+  <rect x="1291" y="675" width="18" height="135" rx="7" class="activation"/>
+
+  <path d="M430 310 H1010" class="message callBlue"/>
+  <rect x="460" y="277" width="34" height="28" rx="14" fill="#dcebf4" stroke="#5f8da8" class="label"/><text x="477" y="291" fill="#365f75" class="num">1</text><text x="510" y="299" class="detail">lifespan constructs backend</text>
+  <path d="M430 370 H720" class="message callAmber"/>
+  <rect x="460" y="337" width="34" height="28" rx="14" fill="#ffe7c7" stroke="#b07a36" class="label"/><text x="477" y="351" fill="#8a5c20" class="num">2</text><text x="510" y="359" class="detail">store app.state.order_backend</text>
+  <path d="M140 450 H430" class="message callBlue"/>
+  <rect x="170" y="417" width="34" height="28" rx="14" fill="#dcebf4" stroke="#5f8da8" class="label"/><text x="187" y="431" fill="#365f75" class="num">3</text><text x="220" y="439" class="detail">POST /orders + request ID</text>
+  <path d="M430 510 H720" class="message callAmber"/>
+  <rect x="460" y="477" width="34" height="28" rx="14" fill="#ffe7c7" stroke="#b07a36" class="label"/><text x="477" y="491" fill="#8a5c20" class="num">4</text><text x="510" y="499" class="detail">validate DTO; open log context</text>
+  <path d="M720 570 H430" class="message returnTeal"/>
+  <rect x="460" y="537" width="34" height="28" rx="14" fill="#d9efec" stroke="#3b968f" class="label"/><text x="477" y="551" fill="#25736d" class="num">5</text><text x="510" y="559" class="detail">shared backend reference</text>
+  <path d="M430 630 H1010" class="message callBlue"/>
+  <rect x="460" y="597" width="34" height="28" rx="14" fill="#dcebf4" stroke="#5f8da8" class="label"/><text x="477" y="611" fill="#365f75" class="num">6</text><text x="510" y="619" class="detail">process immutable command</text>
+  <path d="M1010 690 H1300" class="message callGreen"/>
+  <rect x="1040" y="657" width="34" height="28" rx="14" fill="#e3f0df" stroke="#6f9a65" class="label"/><text x="1057" y="671" fill="#4f7b47" class="num">7</text><text x="1090" y="679" class="detail">validate, enrich, cache, encode</text>
+  <path d="M1300 750 H1010" class="message returnTeal"/>
+  <rect x="1040" y="717" width="34" height="28" rx="14" fill="#d9efec" stroke="#3b968f" class="label"/><text x="1057" y="731" fill="#25736d" class="num">8</text><text x="1090" y="739" class="detail">ProcessedOrder</text>
+  <path d="M1010 810 H430" class="message returnTeal"/>
+  <rect x="460" y="777" width="34" height="28" rx="14" fill="#d9efec" stroke="#3b968f" class="label"/><text x="477" y="791" fill="#25736d" class="num">9</text><text x="510" y="799" class="detail">backend result</text>
+  <path d="M720 870 H430" class="message returnTeal"/>
+  <rect x="460" y="837" width="42" height="28" rx="14" fill="#d9efec" stroke="#3b968f" class="label"/><text x="481" y="851" fill="#25736d" class="num">10</text><text x="515" y="859" class="detail">allowlist response; reset context</text>
+  <path d="M430 930 H140" class="message returnTeal"/>
+  <rect x="170" y="897" width="42" height="28" rx="14" fill="#d9efec" stroke="#3b968f" class="label"/><text x="191" y="911" fill="#25736d" class="num">11</text><text x="225" y="919" class="detail">200 OK</text>
+
+  <rect x="70" y="975" width="1360" height="185" rx="18" class="alt" fill="none"/>
+  <text x="95" y="1008" fill="#a84f42" class="branchLabel">alt validation fails before backend work</text>
+  <path d="M430 1050 H140" class="message returnRed"/>
+  <rect x="170" y="1017" width="42" height="28" rx="14" fill="#f6ddd7" stroke="#c56b5d" class="label"/><text x="191" y="1031" fill="#a84f42" class="num">12</text><text x="225" y="1039" class="detail">422 invalid_request</text>
+  <path d="M70 1080 H1430" class="branchDivider"/>
+  <text x="95" y="1110" fill="#a84f42" class="branchLabel">else backend deadline expires after owned task cancellation</text>
+  <path d="M430 1140 H140" class="message returnRed"/>
+  <rect x="170" y="1107" width="42" height="28" rx="14" fill="#f6ddd7" stroke="#c56b5d" class="label"/><text x="191" y="1121" fill="#a84f42" class="num">13</text><text x="225" y="1129" class="detail">504 order_timeout</text>
+
+  <path d="M430 1220 H1010" class="message callAmber"/>
+  <rect x="460" y="1187" width="42" height="28" rx="14" fill="#ffe7c7" stroke="#b07a36" class="label"/><text x="481" y="1201" fill="#8a5c20" class="num">14</text><text x="515" y="1209" class="detail">shutdown awaits backend.aclose()</text>
+  <path d="M430 1280 H720" class="message callAmber"/>
+  <rect x="460" y="1247" width="42" height="28" rx="14" fill="#ffe7c7" stroke="#b07a36" class="label"/><text x="481" y="1261" fill="#8a5c20" class="num">15</text><text x="515" y="1269" class="detail">delete state only after close</text>
+
+  <rect x="70" y="1325" width="1360" height="32" rx="16" fill="#f0ebe2" stroke="#d7ccc8" stroke-width="2"/>
+  <text x="95" y="1347" class="note">CancelledError bypasses HTTP problem mapping; the backend cancels and observes its owned request task.</text>
+</svg>

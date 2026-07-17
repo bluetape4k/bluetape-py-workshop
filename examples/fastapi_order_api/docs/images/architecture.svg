@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="720" viewBox="0 0 1800 720" role="img" aria-labelledby="title desc">
+  <title id="title">Direct FastAPI order API architecture</title>
+  <desc id="desc">Static ownership map from the partner request through FastAPI transport and lifespan state to one integrated order backend, its services, and the bluetape-py packages they use.</desc>
+  <defs>
+    <style>
+      text { font-family: 'Architects Daughter', 'Comic Sans MS', 'Comic Mono', 'SFMono-Regular', monospace; }
+      .title { font-size: 42px; fill: #263238; }
+      .subtitle { font-size: 20px; fill: #546e7a; }
+      .card { stroke-width: 3; }
+      .card-title { font-size: 22px; fill: #263238; text-anchor: middle; }
+      .role { font-family: 'Comic Mono', 'SFMono-Regular', monospace; font-size: 15px; fill: #455a64; text-anchor: middle; }
+      .small { font-family: 'Comic Mono', 'SFMono-Regular', monospace; font-size: 13px; fill: #546e7a; text-anchor: middle; }
+      .connector { fill: none; stroke: #5f8da8; stroke-width: 4; stroke-linecap: round; marker-end: url(#arrow-blue); }
+      .label { font-family: 'Comic Mono', 'SFMono-Regular', monospace; font-size: 13px; fill: #365f75; text-anchor: middle; }
+      .note { font-family: 'Comic Mono', 'SFMono-Regular', monospace; font-size: 15px; fill: #546e7a; }
+    </style>
+    <marker id="arrow-blue" viewBox="0 0 14 14" refX="12" refY="7" markerWidth="14" markerHeight="14" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1 L13 7 L1 13 Z" fill="#5f8da8"/></marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#455a64" flood-opacity="0.13"/></filter>
+  </defs>
+
+  <rect width="1800" height="720" fill="#fbf8f1"/>
+  <path d="M60 120 H1740" stroke="#d7ccc8" stroke-width="3" stroke-linecap="round"/>
+  <text x="60" y="70" class="title">Direct FastAPI Order API Architecture</text>
+  <text x="60" y="103" class="subtitle">Transport owns HTTP policy; lifespan owns one backend; reusable behavior stays framework-neutral</text>
+
+  <g filter="url(#shadow)">
+    <rect x="60" y="230" width="230" height="270" rx="22" fill="#ffe7c7" stroke="#d69b55" class="card"/>
+    <text x="175" y="282" class="card-title">Partner</text>
+    <text x="175" y="326" class="role">POST /orders</text>
+    <text x="175" y="360" class="role">X-Request-ID</text>
+    <text x="175" y="407" class="small">bounded JSON</text>
+    <text x="175" y="437" class="small">correlation only</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="350" y="230" width="230" height="270" rx="22" fill="#dcebf4" stroke="#5f8da8" class="card"/>
+    <text x="465" y="282" class="card-title">FastAPI Transport</text>
+    <text x="465" y="326" class="role">strict DTOs</text>
+    <text x="465" y="360" class="role">stable problems</text>
+    <text x="465" y="407" class="small">request context</text>
+    <text x="465" y="437" class="small">redacted logs</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="640" y="230" width="230" height="270" rx="22" fill="#e8def5" stroke="#8e72b5" class="card"/>
+    <text x="755" y="282" class="card-title">Lifespan + State</text>
+    <text x="755" y="326" class="role">construct once</text>
+    <text x="755" y="360" class="role">app.state backend</text>
+    <text x="755" y="407" class="small">close before delete</text>
+    <text x="755" y="437" class="small">retain on failure</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="930" y="230" width="230" height="270" rx="22" fill="#dcebf4" stroke="#5f8da8" class="card"/>
+    <text x="1045" y="275" class="card-title">OrderBackend</text>
+    <text x="1045" y="305" class="card-title">Application</text>
+    <text x="1045" y="350" class="role">overall deadline</text>
+    <text x="1045" y="384" class="role">task ownership</text>
+    <text x="1045" y="425" class="small">process / aclose</text>
+    <text x="1045" y="455" class="small">CancelledError preserved</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="1220" y="230" width="230" height="270" rx="22" fill="#e3f0df" stroke="#6f9a65" class="card"/>
+    <text x="1335" y="282" class="card-title">Backend Services</text>
+    <text x="1335" y="326" class="role">order intake</text>
+    <text x="1335" y="360" class="role">catalog enrichment</text>
+    <text x="1335" y="394" class="role">cached catalog</text>
+    <text x="1335" y="437" class="small">bounded payload</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="1510" y="230" width="230" height="270" rx="22" fill="#f6ddd7" stroke="#c56b5d" class="card"/>
+    <text x="1625" y="282" class="card-title">bluetape-py</text>
+    <text x="1625" y="326" class="role">AsyncTTLCache</text>
+    <text x="1625" y="360" class="role">compression + serde</text>
+    <text x="1625" y="394" class="role">logging context</text>
+    <text x="1625" y="437" class="small">testing helpers</text>
+  </g>
+
+  <path d="M290 365 H350" class="connector"/>
+  <path d="M580 365 H640" class="connector"/>
+  <path d="M870 365 H930" class="connector"/>
+  <path d="M1160 365 H1220" class="connector"/>
+  <path d="M1450 365 H1510" class="connector"/>
+  <text x="320" y="345" class="label">JSON</text>
+  <text x="610" y="345" class="label">owns</text>
+  <text x="900" y="345" class="label">shares</text>
+  <text x="1190" y="345" class="label">delegates</text>
+  <text x="1480" y="345" class="label">uses</text>
+
+  <rect x="60" y="565" width="1680" height="70" rx="22" fill="#f0ebe2" stroke="#d7ccc8" stroke-width="2"/>
+  <text x="90" y="607" class="note">FastAPI never recreates backend services per request; optional web dependencies also stay outside the default install.</text>
+</svg>
