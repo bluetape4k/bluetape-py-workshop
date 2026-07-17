@@ -1,6 +1,6 @@
 # Issue #23 Direct FastAPI Order API Design
 
-**Status:** Proposed for implementation approval  
+**Status:** Approved after Step 2-R review repair
 **Issue:** [#23](https://github.com/bluetape4k/bluetape-py-workshop/issues/23)  
 **Milestone:** `0.2.0`  
 **Branch:** `feat/fastapi-order-api`  
@@ -9,7 +9,7 @@
 ## Outcome
 
 Add an independently runnable, workshop-owned Direct FastAPI example that
-accepts `POST /orders`, converts a bounded HTTP request into the existing
+accepts `POST /orders`, converts a bounded decoded order model into the existing
 framework-neutral `OrderBackendCommand`, and returns an allowlisted order
 summary. One FastAPI lifespan owns one `OrderBackendApplication`; the existing
 backend remains the authority for request deadlines, task observation,
@@ -80,6 +80,11 @@ examples/fastapi_order_api/
     ├── test_application.py     route, mapping, context, lifespan, cancellation
     ├── test_dependencies.py    optional/default environment isolation
     └── test_documentation.py   locale, commands, sources, diagrams
+
+tests/test_dependency_baseline.py   default web-distribution absence
+tests/test_documentation_contract.py root locale/navigation/diagram registration
+README.md / README.ko.md             root example navigation
+WIP.md                               exact issue/branch/checkpoint state
 ```
 
 The names above are example-local. No reusable middleware, adapter, or helper is
@@ -123,6 +128,10 @@ is removed, between 1 and 128 characters, and contains only letters, digits,
 `.`, `_`, `:`, or `-`. Invalid or duplicated request-id headers are rejected;
 the server does not echo an unsafe value.
 
+The request ID is correlation metadata only. It is not an idempotency key, and
+the example does not deduplicate or replay requests. Clients must not
+automatically retry a `POST` merely because the same request ID can be reused.
+
 The JSON body is strict and forbids unknown fields. `partner_id`, `order_id`,
 and each `sku` accept 1 through 128 characters; `lines` accepts 1 through 100
 items; and `quantity` is a strict integer from 1 through 1,000,000:
@@ -147,7 +156,9 @@ dataclasses instead of duplicating its normalization policy in Pydantic.
 
 ### Success
 
-Success returns `201 Created` with this allowlisted shape:
+Success returns `200 OK` with this allowlisted shape. The example processes an
+order command but does not create an addressable persisted HTTP resource, so it
+does not use `201 Created` or invent a `Location` header:
 
 ```json
 {
@@ -205,8 +216,13 @@ The FastAPI lifespan performs these steps:
 1. construct exactly one backend before accepting requests;
 2. store it in `app.state.order_backend`;
 3. yield to serve any number of requests;
-4. remove the state reference during shutdown;
-5. await `backend.aclose()` exactly once.
+4. await `backend.aclose()` exactly once during shutdown;
+5. remove the state reference only after successful close.
+
+If close fails, the state reference remains available for shutdown diagnostics
+and deterministic tests, while the original exception propagates. The lifespan
+does not silently retry because the process owner must decide whether another
+finite close attempt is safe.
 
 The HTTP layer adds no second request timeout. The existing backend's 2-second
 deadline is authoritative. This prevents nested timeout ambiguity and detached
@@ -237,12 +253,20 @@ loopback-only development process:
 UV_PROJECT_ENVIRONMENT=.venv-fastapi uv sync --locked \
   --extra fastapi-order-api --python 3.13.14
 UV_PROJECT_ENVIRONMENT=.venv-fastapi uv run --locked \
-  --extra fastapi-order-api python -m examples.fastapi_order_api
+  --extra fastapi-order-api python -m examples.fastapi_order_api --port 8000
 ```
 
-The entry point binds `127.0.0.1`, uses one process, and is for workshop use
-only. Worker topology, TLS, proxy headers, deployment, persistence, auth, and
-production tuning are explicitly unsupported.
+The entry point accepts only `--port` in the range 1 through 65535, binds fixed
+host `127.0.0.1`, uses one process, and is for workshop use only. The CLI test
+reserves a loopback port and passes it explicitly. Worker topology, TLS, proxy
+headers, deployment, persistence, auth, and production tuning are explicitly
+unsupported.
+
+The Pydantic model bounds the decoded transport shape, not the number of raw
+HTTP bytes consumed before validation. FastAPI/Uvicorn does not make a raw body
+limit part of this example. README security guidance must name this limitation
+and require an upstream server or gateway body limit before production use;
+the example must not claim denial-of-service-safe request buffering.
 
 ## Test Strategy
 
@@ -251,7 +275,7 @@ Implementation follows test-driven development.
 1. **Dependency isolation:** default metadata/import probes prove all web
    distributions absent; optional-extra probes prove exact imports and lock
    membership without weakening existing Fory or Redis isolation.
-2. **Transport contract:** `TestClient` context proves 201 success, strict JSON
+2. **Transport contract:** `TestClient` context proves 200 success, strict JSON
    validation, forbidden fields, request-id validation, 100-line bound, and
    allowlisted output.
 3. **Failure mapping:** inject one typed failure at a time and assert exact
@@ -262,8 +286,8 @@ Implementation follows test-driven development.
    exactly one `aclose()`, shutdown failure visibility, and no request before
    startup or after shutdown.
 6. **Cancellation:** call the async route function with a constructed Starlette
-   request and injected blocking backend, using event-driven synchronization
-   with no real sleeps; cancel the endpoint task, assert native
+   request and a real `OrderBackendApplication` whose injected provider is held
+   by events, using no real sleeps; cancel the endpoint task, assert native
    `CancelledError`, release backend cleanup, and prove no named request task
    remains terminally unobserved.
 7. **CLI:** start the module on a test-selected loopback port, wait with a
@@ -286,6 +310,8 @@ evidence.
 business scenario, ownership boundary, exact setup/run/curl/test/stop commands,
 expected response, error table, security/redaction policy, cancellation,
 shutdown, troubleshooting, unsupported production use, and upstream gate.
+The guide lists the deterministic demo SKUs, states that request IDs provide
+correlation rather than idempotency, and warns against automatic POST retries.
 
 The Architecture diagram is a static ownership map with separate cards for the
 partner, FastAPI transport, lifespan/app state, existing
@@ -307,6 +333,8 @@ applicable, full-size PNG inspection, and README link/locale parity.
 ## Security and Trust Boundaries
 
 - Accept only JSON and bounded model shapes; forbid unknown fields.
+- Describe the decoded-model bound honestly; production deployments require a
+  separate raw request-body byte limit before FastAPI parsing.
 - Never log or return request bodies, raw Pydantic input, provider errors,
   exception text, artifact bytes, stack traces, or secrets.
 - Treat request IDs as untrusted input; validate before logging or echoing.
