@@ -13,6 +13,7 @@ _PRODUCTS = {
 }
 _RECOMMENDATIONS = {
     "SKU-1": "PAIR-SKU-9",
+    "SKU-2": "PAIR-SKU-7",
     "SKU-3": "PAIR-SKU-8",
 }
 
