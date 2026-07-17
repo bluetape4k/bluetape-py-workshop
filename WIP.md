@@ -14,10 +14,9 @@ framework-neutral `OrderBackendApplication`.
 
 Active branch: `feat/fastapi-order-api`
 Base branch: `develop`
-Pull request: pending creation after local Type A verification
-Stop boundary: create the approved PR to `develop`, verify exact-head hosted
-CI/review state, then stop for a fresh explicit merge approval. Auto-merge is
-forbidden.
+Pull request: [#24](https://github.com/bluetape4k/bluetape-py-workshop/pull/24)
+Stop boundary: verify the PR's exact-head hosted CI/review state, then stop for
+a fresh explicit merge approval. Auto-merge is forbidden.
 
 ## Resume Checkpoint
 
@@ -46,8 +45,11 @@ forbidden.
 - Upstream [bluetape-py #21](https://github.com/bluetape4k/bluetape-py/issues/21)
   and [#22](https://github.com/bluetape4k/bluetape-py/issues/22) remain separate
   reusable-adapter gates; this example does not copy a future adapter contract
-- Next action: commit the converged Type A review and lesson artifacts, rerun
-  the exact head, then create the approved PR
+- Delivery state: PR [#24](https://github.com/bluetape4k/bluetape-py-workshop/pull/24)
+  is the authoritative hosted surface; its live head, CI, reviews, comments,
+  and unresolved threads must all be current before merge approval
+- Next action: pass PR #24 exact-head hosted verification, report merge-ready,
+  and stop for fresh explicit merge approval
 - Runnable now: `uv run --locked python -m examples.order_intake`
 - Runnable now: `uv run --locked python -m examples.catalog_enrichment`
 - Runnable now: `uv run --locked python -m examples.cached_product_catalog`
