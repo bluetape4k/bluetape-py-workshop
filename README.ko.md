@@ -22,17 +22,24 @@ enrichment, shared cache, 제한된 JSON payload, request deadline, retry 가능
 가진 두 instance가 Redis를 통해 owner-bound result 하나를 재사용하고 조정되지 않은
 fallback을 사용하지 않는
 [Redis load coordination 예제](examples/redis_load_coordination/README.ko.md)입니다.
-각 예제는 서로 맞춘 다국어 안내, Architecture, Sequence Diagram을 제공합니다.
+[Direct FastAPI 주문 API](examples/fastapi_order_api/README.ko.md)는
+framework-neutral backend를 strict transport validation, lifespan-owned backend,
+안정적으로 redaction한 problem, cancellation 보존을 갖춘 loopback 전용
+`POST /orders` service로 노출합니다. 각 예제는 서로 맞춘 다국어 안내,
+Architecture, Sequence Diagram을 제공합니다.
 
 마일스톤 `0.2.0`은 research-only
 [ASGI와 FastAPI 경계 결정](docs/research/asgi-fastapi-boundary/README.ko.md)으로
 시작합니다. 기존 framework-neutral backend를 둘러싼 현실적인 Direct FastAPI
 `POST /orders` 예제를 권장하되, 재사용 가능한 web adapter는 upstream
-`bluetape-py` 이슈 #21과 #22 뒤로 제한합니다. 이 결정에서는 FastAPI dependency나
-HTTP 구현을 추가하지 않습니다.
+`bluetape-py` 이슈 #21과 #22 뒤로 제한합니다. 이슈
+[#23](https://github.com/bluetape4k/bluetape-py-workshop/issues/23)은 재사용 가능한
+`bluetape-fastapi` 계약을 주장하지 않고 이 결정을 application-owned 예제로
+구현합니다.
 
-이슈 [#10](https://github.com/bluetape4k/bluetape-py-workshop/issues/10)은 독립적으로
-실행 가능한 Redis load-coordination 학습 예제를 추가합니다. Near-cache invalidation은
+이슈 [#10](https://github.com/bluetape4k/bluetape-py-workshop/issues/10)은
+[PR #22](https://github.com/bluetape4k/bluetape-py-workshop/pull/22)의 최종 architecture
+간격 수정까지 완료했습니다. Near-cache invalidation은
 분리했으며 public RESP3 push 경계가 upstream에 제공될 때까지
 [#20](https://github.com/bluetape4k/bluetape-py-workshop/issues/20)에서 blocked 상태입니다.
 
@@ -60,8 +67,10 @@ Framework-specific 예제를 추가하기 전에 Architecture와 Sequence Diagra
 - [English: ASGI and FastAPI Workshop Boundary](docs/research/asgi-fastapi-boundary/README.md)
 - [ASGI와 FastAPI Workshop 경계](docs/research/asgi-fastapi-boundary/README.ko.md)
 
-다음 구현은 별도 이슈로 추적해야 합니다. 현재 결정은 framework code, dependency,
-재사용 가능한 workshop adapter를 추가하지 않습니다.
+이슈 [#23](https://github.com/bluetape4k/bluetape-py-workshop/issues/23)은 선택한
+Direct FastAPI 경로를 [다국어 예제](examples/fastapi_order_api/README.ko.md)로
+구현합니다. FastAPI, HTTPX, Uvicorn은 `.venv-fastapi`에 격리하며, 이 구현은
+재사용 가능한 workshop adapter가 아닙니다.
 
 ## 요구 사항
 
@@ -70,7 +79,7 @@ Framework-specific 예제를 추가하기 전에 Architecture와 Sequence Diagra
 - 공개 `bluetape-py` 저장소에 접근할 수 있는 Git 환경.
 - 결정적인 foundation, 주문 접수, catalog enrichment, cached product catalog
   및 bounded payload processing, 통합 주문 backend 경로에는 Docker가 필요하지
-  않습니다. 명시적으로 선택한 Redis integration과 Redis CLI 경로에서만 Docker가
+  않으며 Direct FastAPI 예제에도 Docker가 필요하지 않습니다. 명시적으로 선택한 Redis integration과 Redis CLI 경로에서만 Docker가
   필요합니다.
 
 ## 설치
@@ -130,6 +139,12 @@ Redis load-coordination 학습 예제도 default baseline을 보존합니다.
 codec, disposable `RedisServer` 하나를 조합합니다. 자세한 내용은
 [다국어 예제 안내](examples/redis_load_coordination/README.ko.md)를 참고하세요.
 
+Direct FastAPI 학습 예제도 default baseline을 보존합니다. `fastapi-order-api`
+extra는 FastAPI, HTTPX, Uvicorn, Starlette, Pydantic을 `.venv-fastapi`에만
+설치합니다. Lifespan-owned backend 하나가 strict `POST /orders` 계약을 제공하고,
+재사용 가능한 동작은 통합 backend에 그대로 둡니다. 자세한 내용은
+[다국어 예제 안내](examples/fastapi_order_api/README.ko.md)를 참고하세요.
+
 ## 검증
 
 CI와 같은 locked gate를 실행합니다.
@@ -169,6 +184,14 @@ UV_PROJECT_ENVIRONMENT=.venv-redis uv run --locked --extra redis-coordination py
 UV_PROJECT_ENVIRONMENT=.venv-redis uv run --locked --extra redis-coordination pytest -m testcontainers examples/redis_load_coordination/tests/test_redis_integration.py -q
 ```
 
+격리된 환경에 optional Direct FastAPI 주문 API를 설치하고 실행하고 테스트합니다.
+
+```bash
+UV_PROJECT_ENVIRONMENT=.venv-fastapi uv sync --locked --extra fastapi-order-api --python 3.13.14
+UV_PROJECT_ENVIRONMENT=.venv-fastapi uv run --locked --extra fastapi-order-api python -m examples.fastapi_order_api --port 8000
+UV_PROJECT_ENVIRONMENT=.venv-fastapi uv run --locked --extra fastapi-order-api pytest examples/fastapi_order_api/tests -q
+```
+
 ## 예제 문서 계약
 
 이슈 #3부터 모든 실행 가능한 예제는 서로 일치하는 `README.md`와 `README.ko.md`에
@@ -188,10 +211,10 @@ Diagram source와 rendered asset은 구현 code가 생긴 뒤에만 만듭니다
 
 ## 현재 제한 사항
 
-마일스톤 `0.1.0`은 ASGI/FastAPI adapter, persistent order store,
-authentication/authorization adapter, package publication, release automation을
-추가하지 않았습니다. 이슈 #9는 이후 web 경계를 정의하지만 여전히 adapter를
-추가하지 않습니다. Redis 예제는 test infrastructure와 load coordination을 가르치며
+마일스톤 `0.1.0`은 ASGI/FastAPI adapter를 추가하지 않았습니다. 마일스톤
+`0.2.0`은 application-owned Direct FastAPI 이슈 #23 예제를 포함하지만, 재사용
+가능한 adapter, persistent order store, authentication/authorization adapter,
+package publication, release automation은 여전히 제공하지 않습니다. Redis 예제는 test infrastructure와 load coordination을 가르치며
 production deployment recipe가 아닙니다. Production TLS, ACL, monitoring, rollback은
 operator 책임으로 남습니다. Near-cache invalidation은 이슈 #20에서 blocked 상태이며,
 모든 Docker-backed 경로를 순차 실행합니다.

@@ -21,18 +21,25 @@ order intake, enrichment, shared caching, bounded JSON payloads, request
 deadlines, and retryable shutdown in one realistic two-order scenario. The
 [Redis load coordination example](examples/redis_load_coordination/README.md)
 then shows two instances with separate local caches reusing one owner-bound
-result through Redis without an uncoordinated fallback. Each example provides
-aligned bilingual guidance, Architecture, and Sequence Diagram assets.
+result through Redis without an uncoordinated fallback. The
+[Direct FastAPI order API](examples/fastapi_order_api/README.md) now exposes the
+framework-neutral backend as a loopback-only `POST /orders` service with strict
+transport validation, one lifespan-owned backend, stable redacted problems, and
+preserved cancellation. Each example provides aligned bilingual guidance,
+Architecture, and Sequence Diagram assets.
 
 Milestone `0.2.0` begins with a research-only
 [ASGI and FastAPI boundary decision](docs/research/asgi-fastapi-boundary/README.md).
 It recommends a realistic Direct FastAPI `POST /orders` example around the
 existing framework-neutral backend, while keeping reusable web adapters gated
-on upstream `bluetape-py` issues #21 and #22. No FastAPI dependency or HTTP
-implementation is introduced by that decision.
+on upstream `bluetape-py` issues #21 and #22. Issue
+[#23](https://github.com/bluetape4k/bluetape-py-workshop/issues/23) implements
+that decision as an application-owned example without claiming a reusable
+`bluetape-fastapi` contract.
 
 Issue [#10](https://github.com/bluetape4k/bluetape-py-workshop/issues/10)
-adds the independently runnable Redis load-coordination lesson. Near-cache
+is complete, including the final architecture spacing correction in
+[PR #22](https://github.com/bluetape4k/bluetape-py-workshop/pull/22). Near-cache
 invalidation remains separate and blocked in
 [#20](https://github.com/bluetape4k/bluetape-py-workshop/issues/20) until the
 public RESP3 push boundary is available upstream.
@@ -62,8 +69,11 @@ adding a framework-specific example:
 - [ASGI and FastAPI Workshop Boundary](docs/research/asgi-fastapi-boundary/README.md)
 - [한국어: ASGI와 FastAPI Workshop 경계](docs/research/asgi-fastapi-boundary/README.ko.md)
 
-The next implementation must be tracked separately. The current decision does
-not add framework code, dependencies, or a reusable workshop adapter.
+Issue [#23](https://github.com/bluetape4k/bluetape-py-workshop/issues/23)
+implements the selected Direct FastAPI path in
+[the bilingual example](examples/fastapi_order_api/README.md). FastAPI, HTTPX,
+and Uvicorn remain isolated in `.venv-fastapi`; the implementation is not a
+reusable workshop adapter.
 
 ## Requirements
 
@@ -72,7 +82,7 @@ not add framework code, dependencies, or a reusable workshop adapter.
 - Git access to the public `bluetape-py` repository.
 - Docker is not required for the deterministic foundation, order-intake,
   catalog-enrichment, cached-product-catalog, or bounded-payload-processing
-  lanes, or for the integrated order backend. It is required only for the
+  lanes, the integrated order backend, or the Direct FastAPI example. It is required only for the
   explicitly selected Redis integration and Redis CLI lanes.
 
 ## Setup
@@ -135,6 +145,12 @@ two separate `AsyncTTLCache` instances, the upstream
 `RedisServer`. See the
 [bilingual example guide](examples/redis_load_coordination/README.md).
 
+The Direct FastAPI lesson preserves the same baseline. Its `fastapi-order-api`
+extra installs FastAPI, HTTPX, Uvicorn, Starlette, and Pydantic only in
+`.venv-fastapi`. One lifespan-owned backend serves a strict `POST /orders`
+contract without moving reusable behavior out of the integrated backend. See
+the [bilingual example guide](examples/fastapi_order_api/README.md).
+
 ## Validation
 
 Run the same locked gates used by CI:
@@ -175,6 +191,15 @@ UV_PROJECT_ENVIRONMENT=.venv-redis uv run --locked --extra redis-coordination py
 UV_PROJECT_ENVIRONMENT=.venv-redis uv run --locked --extra redis-coordination pytest -m testcontainers examples/redis_load_coordination/tests/test_redis_integration.py -q
 ```
 
+Install, run, and test the optional Direct FastAPI order API in its isolated
+environment:
+
+```bash
+UV_PROJECT_ENVIRONMENT=.venv-fastapi uv sync --locked --extra fastapi-order-api --python 3.13.14
+UV_PROJECT_ENVIRONMENT=.venv-fastapi uv run --locked --extra fastapi-order-api python -m examples.fastapi_order_api --port 8000
+UV_PROJECT_ENVIRONMENT=.venv-fastapi uv run --locked --extra fastapi-order-api pytest examples/fastapi_order_api/tests -q
+```
+
 ## Example Documentation Contract
 
 Every runnable example from issue #3 onward provides aligned `README.md` and
@@ -195,9 +220,11 @@ source.
 
 ## Current Limits
 
-Milestone `0.1.0` did not introduce an ASGI/FastAPI adapter, persistent order
-store, authentication/authorization adapter, package publication, or release
-automation. Issue #9 defines the later web boundary but still adds no adapter.
+Milestone `0.1.0` did not introduce an ASGI/FastAPI adapter. Milestone `0.2.0`
+now includes the application-owned Direct FastAPI issue #23 example, but still
+does not provide a reusable adapter, persistent order store,
+authentication/authorization adapter, package publication, or release
+automation.
 The Redis examples teach test infrastructure and load coordination, not a
 production deployment recipe: production TLS, ACLs, monitoring, and rollback
 remain operator responsibilities. Near-cache invalidation remains blocked in

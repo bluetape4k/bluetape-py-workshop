@@ -38,11 +38,12 @@ def test_wip_keeps_the_dependency_order_and_current_issue() -> None:
         WIP.index(f"| {order} | [#{issue}]") for order, issue in enumerate(range(2, 9), start=1)
     ]
     assert positions == sorted(positions)
-    assert "Issue [#10]" in WIP
-    assert "Redis load coordination" in WIP
-    assert "feat/issue-10-redis-load-coordination" in WIP
-    assert "PR #19" in WIP
-    assert "836ff2090eb6a998b7247e9bf89ea3d77065c29d" in WIP
+    assert "Issue [#23]" in WIP
+    assert "Direct FastAPI" in WIP
+    assert "feat/fastapi-order-api" in WIP
+    assert "PR #22" in WIP
+    assert "a750245e5afec772ccd1af6ae41c483281a4cf99" in WIP
+    assert "Issue #10 completed" in WIP
     assert "Issue [#20]" in WIP and "blocked:upstream" in WIP
     assert "uv run --locked python -m examples.integrated_order_backend" in WIP
     assert 'pytest -m "not testcontainers"' in WIP
@@ -67,6 +68,8 @@ def test_readme_pair_links_every_runnable_example() -> None:
     assert "examples/integrated_order_backend/README.ko.md" in KOREAN
     assert "examples/redis_load_coordination/README.md" in ENGLISH
     assert "examples/redis_load_coordination/README.ko.md" in KOREAN
+    assert "examples/fastapi_order_api/README.md" in ENGLISH
+    assert "examples/fastapi_order_api/README.ko.md" in KOREAN
 
 
 def test_readme_pair_documents_deterministic_and_docker_redis_lanes() -> None:
@@ -86,6 +89,20 @@ def test_readme_pair_documents_deterministic_and_docker_redis_lanes() -> None:
     for command in commands:
         assert command in ENGLISH
         assert command in KOREAN
+
+
+def test_readme_pair_documents_the_optional_fastapi_lane() -> None:
+    commands = (
+        "UV_PROJECT_ENVIRONMENT=.venv-fastapi uv sync --locked "
+        "--extra fastapi-order-api --python 3.13.14",
+        "--extra fastapi-order-api python -m examples.fastapi_order_api --port 8000",
+        "--extra fastapi-order-api pytest examples/fastapi_order_api/tests -q",
+    )
+    for command in commands:
+        assert command in ENGLISH
+        assert command in KOREAN
+    assert "Issue [#23]" in ENGLISH
+    assert "이슈 [#23]" in KOREAN
 
 
 def test_agents_keeps_authoritative_commands_and_rules() -> None:
@@ -170,8 +187,8 @@ def test_asgi_fastapi_boundary_research_embeds_required_diagrams() -> None:
 def test_root_roadmap_exposes_current_milestone_boundaries() -> None:
     assert "docs/research/asgi-fastapi-boundary/README.md" in ENGLISH
     assert "docs/research/asgi-fastapi-boundary/README.ko.md" in KOREAN
-    assert "Issue [#10]" in WIP
-    assert "feat/issue-10-redis-load-coordination" in WIP
+    assert "Issue [#23]" in WIP
+    assert "feat/fastapi-order-api" in WIP
     assert "0.2.0" in WIP
-    assert "Issue #9 completed" in WIP
+    assert "Issue #10 completed" in WIP
     assert "Issue [#20]" in WIP and "blocked:upstream" in WIP

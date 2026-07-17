@@ -8,12 +8,11 @@ web and Redis expansion boundary.
 
 ## Current Target
 
-Issue [#10](https://github.com/bluetape4k/bluetape-py-workshop/issues/10):
-provide a realistic Redis load coordination example in which two application
-instances keep separate local caches but reuse one owner-bound result through
-the upstream public coordinator.
+Issue [#23](https://github.com/bluetape4k/bluetape-py-workshop/issues/23):
+provide a realistic Direct FastAPI `POST /orders` example around the existing
+framework-neutral `OrderBackendApplication`.
 
-Active branch: `feat/issue-10-redis-load-coordination`
+Active branch: `feat/fastapi-order-api`
 Base branch: `develop`
 Pull request: pending creation after local Type A verification
 Stop boundary: create the approved PR to `develop`, verify exact-head hosted
@@ -22,29 +21,32 @@ forbidden.
 
 ## Resume Checkpoint
 
-- Branch/base head: `feat/issue-10-redis-load-coordination` /
-  `836ff2090eb6a998b7247e9bf89ea3d77065c29d`
-- Issue #9 completed through
-  [PR #19](https://github.com/bluetape4k/bluetape-py-workshop/pull/19), merged as
-  `836ff2090eb6a998b7247e9bf89ea3d77065c29d`
-- Current topology: two caller-owned `AsyncRedisProvider` clients, two separate
-  `AsyncTTLCache` instances, one versioned Redis coordination namespace, one
-  strict `ProductSummaryCodec`, and one authoritative loader call
-- Optional dependency boundary: default sync remains free of
-  `bluetape-cache-redis` and `redis`; `.venv-redis` installs the
-  `redis-coordination` extra from the exact pinned upstream commit
-- Current artifacts: approved Type A spec/plan/risk records, implementation,
-  aligned English/Korean example guides, and source-backed Architecture and
-  Sequence Diagram SVG/PNG pairs
-- Current validation: default `296 passed, 5 skipped, 1 deselected`; optional
-  deterministic `36 passed, 1 deselected`; serial Docker Redis `1 passed`;
-  Ruff, XML/render/audits, full-size PNG inspection, locale/link parity, and
-  diff hygiene pass
+- Branch/base head: `feat/fastapi-order-api` /
+  `a750245e5afec772ccd1af6ae41c483281a4cf99`
+- Issue #10 completed through the architecture clearance correction in
+  [PR #22](https://github.com/bluetape4k/bluetape-py-workshop/pull/22), merged as
+  `a750245e5afec772ccd1af6ae41c483281a4cf99`
+- Current topology: one loopback-only FastAPI app, one lifespan-owned backend,
+  strict request DTOs, stable redacted problem responses, one authoritative
+  backend deadline, and explicit close-before-state-delete shutdown
+- Optional dependency boundary: default sync remains free of FastAPI,
+  Starlette, Pydantic, HTTPX, and Uvicorn; `.venv-fastapi` installs only the
+  `fastapi-order-api` extra and its lockfile graph
+- Current artifacts: approved Type A spec and plan with converged review,
+  implementation Tasks 1-7, aligned English/Korean example guides, and
+  source-backed Architecture and Sequence Diagram SVG/PNG pairs
+- Current focused validation: optional FastAPI code/docs suite `64 passed`;
+  default full suite `306 passed, 8 skipped, 1 deselected`; Ruff,
+  XML/CairoSVG 2x render, connector/geometry/endpoint/corner/sequence audits,
+  full-size PNG inspection, locale parity, and diff hygiene pass
 - Issue [#20](https://github.com/bluetape4k/bluetape-py-workshop/issues/20)
   keeps near-cache invalidation `blocked:upstream`; no private RESP3 API,
   Pub/Sub, or polling workaround is included in #10
-- Next action: commit the converged implementation review and lesson, rerun the
-  exact head, then create the approved PR
+- Upstream [bluetape-py #21](https://github.com/bluetape4k/bluetape-py/issues/21)
+  and [#22](https://github.com/bluetape4k/bluetape-py/issues/22) remain separate
+  reusable-adapter gates; this example does not copy a future adapter contract
+- Next action: complete Type A review and lesson artifacts, rerun the exact
+  head, then create the approved PR
 - Runnable now: `uv run --locked python -m examples.order_intake`
 - Runnable now: `uv run --locked python -m examples.catalog_enrichment`
 - Runnable now: `uv run --locked python -m examples.cached_product_catalog`
@@ -62,11 +64,15 @@ forbidden.
 - Redis optional setup: `UV_PROJECT_ENVIRONMENT=.venv-redis uv sync --locked --extra redis-coordination --python 3.13.14`
 - Redis optional tests: `UV_PROJECT_ENVIRONMENT=.venv-redis uv run --locked --extra redis-coordination pytest -m "not testcontainers" examples/redis_load_coordination/tests -q`
 - Redis serial Docker test: `UV_PROJECT_ENVIRONMENT=.venv-redis uv run --locked --extra redis-coordination pytest -m testcontainers examples/redis_load_coordination/tests/test_redis_integration.py -q`
+- FastAPI optional setup: `UV_PROJECT_ENVIRONMENT=.venv-fastapi uv sync --locked --extra fastapi-order-api --python 3.13.14`
+- FastAPI optional runnable: `UV_PROJECT_ENVIRONMENT=.venv-fastapi uv run --locked --extra fastapi-order-api python -m examples.fastapi_order_api --port 8000`
+- FastAPI optional tests: `UV_PROJECT_ENVIRONMENT=.venv-fastapi uv run --locked --extra fastapi-order-api pytest examples/fastapi_order_api/tests -q`
 
-Current artifacts: [issue #10](https://github.com/bluetape4k/bluetape-py-workshop/issues/10),
-[implementation plan](docs/superpowers/plans/2026-07-17-issue-10-redis-load-coordination-plan.md),
-[English example guide](examples/redis_load_coordination/README.md),
-[Korean example guide](examples/redis_load_coordination/README.ko.md), and
+Current artifacts: [issue #23](https://github.com/bluetape4k/bluetape-py-workshop/issues/23),
+[design](docs/superpowers/specs/2026-07-17-issue-23-fastapi-order-api-design.md),
+[implementation plan](docs/superpowers/plans/2026-07-17-issue-23-fastapi-order-api-plan.md),
+[English example guide](examples/fastapi_order_api/README.md),
+[Korean example guide](examples/fastapi_order_api/README.ko.md), and
 [blocked invalidation follow-up #20](https://github.com/bluetape4k/bluetape-py-workshop/issues/20).
 
 ## Dependency Baseline
@@ -99,6 +105,9 @@ Current artifacts: [issue #10](https://github.com/bluetape4k/bluetape-py-worksho
 #8 + upstream bluetape-py #21/#22 evidence
   └─> #9 ASGI/FastAPI workshop boundary
 
+#8 + #9
+  └─> #23 Direct FastAPI order API
+
 #5 + upstream bluetape-py #54/#55
   └─> #10 Redis load coordination
 
@@ -118,8 +127,9 @@ Current artifacts: [issue #10](https://github.com/bluetape4k/bluetape-py-worksho
 | 6 | [#7](https://github.com/bluetape4k/bluetape-py-workshop/issues/7) | Redis-backed integration-test workshop | #2 | Completed |
 | 7 | [#8](https://github.com/bluetape4k/bluetape-py-workshop/issues/8) | Integrated framework-neutral order backend | #3, #4, #5, #6 | Completed |
 | 8 | [#9](https://github.com/bluetape4k/bluetape-py-workshop/issues/9) | ASGI/FastAPI workshop boundary decision | #8, upstream #21/#22 evidence | Completed |
-| 9 | [#10](https://github.com/bluetape4k/bluetape-py-workshop/issues/10) | Redis load coordination | #5, upstream #54/#55 | In progress |
+| 9 | [#10](https://github.com/bluetape4k/bluetape-py-workshop/issues/10) | Redis load coordination | #5, upstream #54/#55 | Completed |
 | 10 | [#20](https://github.com/bluetape4k/bluetape-py-workshop/issues/20) | Redis near-cache invalidation | #10, upstream #56, public RESP3 push | blocked:upstream |
+| 11 | [#23](https://github.com/bluetape4k/bluetape-py-workshop/issues/23) | Direct FastAPI order API | #8, #9 | In progress |
 
 ## Example Documentation Contract
 
@@ -265,6 +275,19 @@ The default environment remains free of `bluetape-cache-redis` and `redis`.
 The optional example uses public upstream APIs only, runs deterministic tests
 before its serial Docker lane, and never falls back to an uncoordinated load.
 
+Issue #23 adds an isolated optional Direct FastAPI lane:
+
+```bash
+UV_PROJECT_ENVIRONMENT=.venv-fastapi uv sync --locked --extra fastapi-order-api --python 3.13.14
+UV_PROJECT_ENVIRONMENT=.venv-fastapi uv run --locked --extra fastapi-order-api python -m examples.fastapi_order_api --port 8000
+UV_PROJECT_ENVIRONMENT=.venv-fastapi uv run --locked --extra fastapi-order-api pytest examples/fastapi_order_api/tests -q
+```
+
+The server binds only to `127.0.0.1`, owns one backend through FastAPI
+lifespan, accepts strict bounded JSON at `POST /orders`, and returns stable
+redacted problem responses. The default environment remains free of FastAPI,
+Starlette, Pydantic, HTTPX, and Uvicorn.
+
 Issue #7 exact-head verification on Python 3.13.14, uv 0.11.28, and Docker
 server 28.4.0:
 
@@ -324,7 +347,7 @@ Issue #9 local research checkpoint:
 - rebase merge SHA: `836ff2090eb6a998b7247e9bf89ea3d77065c29d`;
 - post-merge local sync and owned worktree/branch cleanup: pass.
 
-Issue #10 current local checkpoint:
+Issue #10 completed local checkpoint:
 
 - exact upstream source: `bluetape-cache-redis==0.1.0` at
   `4b7458f22cea0a9e757b5fbf7f5ff4bc8c23cb9a`;
@@ -344,10 +367,34 @@ Issue #10 current local checkpoint:
 - durable Type A lesson: present; post-lesson default/optional/Docker/CLI,
   Ruff, actionlint, and diff validation: pass.
 
+Issue #23 current local checkpoint:
+
+- optional dependency isolation: FastAPI, Starlette, Pydantic, HTTPX, and
+  Uvicorn remain absent from the default environment;
+- strict request DTO and request-ID boundary: bounded values, duplicate-header
+  rejection, fixed invalid sentinel, and context restoration proven;
+- lifespan ownership: one backend per app, close-before-state-delete ordering,
+  retained state on close failure, and cancellation propagation proven;
+- HTTP contract: loopback-only `POST /orders`, JSON-only input, explicit
+  allowlisted success output, stable redacted 422/503/504/500 responses, and
+  one authoritative backend deadline;
+- CLI: fixed `127.0.0.1`, one worker, no reload or proxy-header trust, with
+  subprocess startup/request/shutdown smoke proof;
+- example README pair: reciprocal locale navigation, exact commands, expected
+  outcomes, trust boundaries, failure/cancellation guidance, and embedded
+  Architecture and Sequence Diagram PNG/SVG pairs;
+- Architecture PNG: `3600x1440`, `6` cards, `5` connectors, `1` marker, no
+  crossings or intrusions, and geometry/endpoint/mixed-corner audits pass;
+- Sequence PNG: `3000x2800`, `15` visible numbered messages, `15` connectors,
+  `5` markers, and sequence-style/geometry/endpoint/mixed-corner audits pass;
+- implementation review, durable Type A lesson, and exact-head final validation
+  remain before PR creation.
+
 ## Holds and Exclusions
 
-- Issue #9 is research-only; no ASGI/FastAPI adapter or FastAPI dependency is
-  introduced.
+- Issue #9 remains a completed research decision. Issue #23 introduces FastAPI
+  only through the isolated `fastapi-order-api` optional extra and does not
+  introduce or copy a reusable ASGI/FastAPI adapter contract.
 - Issue #20 remains `blocked:upstream` on public near-cache invalidation and
   RESP3 push consumption; #10 contains no private API or workaround.
 - Tagging, package publishing, GitHub Release creation, and milestone closure
@@ -392,3 +439,7 @@ Issue #10 current local checkpoint:
 - 2026-07-17: split ready load coordination from blocked near-cache
   invalidation; implement #10 with separate local caches/providers and the
   public upstream coordinator, while retaining invalidation as blocked #20.
+- 2026-07-17: implement #23 as a workshop-owned Direct FastAPI transport around
+  the existing framework-neutral backend; keep web dependencies optional,
+  bind the teaching CLI to loopback, retain one backend deadline, and defer a
+  reusable adapter to upstream #21/#22.
