@@ -18,6 +18,11 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+fastapi-order-api = [
+    "fastapi>=0.139.2,<0.140",
+    "httpx>=0.28.1,<0.29",
+    "uvicorn>=0.51.0,<0.52",
+]
 fory = ["bluetape-serde[fory]==0.1.0"]
 redis-coordination = ["bluetape-cache-redis==0.1.0"]
 
