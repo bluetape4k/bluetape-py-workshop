@@ -10,3 +10,4 @@ build/
 .worktrees/
 .omx/
 
+.bluetape/
